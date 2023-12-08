@@ -30,7 +30,7 @@ module.exports = (sequelize) => {
 			},
 			discount: {
 				type: DataTypes.INTEGER,
-				allowNull: false,
+				allowNull: true,
 				validate: {
 					isPositive(value) {
 						if (value < 0) {
@@ -47,7 +47,7 @@ module.exports = (sequelize) => {
 			},
 			quantity: {
 				type: DataTypes.INTEGER,
-				allowNull: true,
+				allowNull: false,
 			},
 			enabled: {
 				type: DataTypes.BOOLEAN,
