@@ -64,6 +64,10 @@ module.exports = (sequelize) => {
 				type: DataTypes.DECIMAL(10, 2),
 				allowNull: true,
 			},
+			barcode: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			}
 		},
 		{
 			timestamps: false,
