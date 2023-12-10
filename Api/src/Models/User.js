@@ -53,13 +53,10 @@ module.exports = (sequelize) => {
 					len: [0, 50],
 				},
 			},
-			cost_center: {
-				type: DataTypes.STRING,
+			branch: {
+				type: DataTypes.ARRAY(DataTypes.UUIDV4),
 				allowNull: true,
-				validate: {
-					len: [0, 50],
-				} /* cost center? a que hace referencia ese nombre? */,
-			},
+			},/*asi un empleado puede tener acceso a varias sucursales*/
 			enabled: {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
