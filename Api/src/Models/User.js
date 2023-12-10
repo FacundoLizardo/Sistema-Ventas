@@ -1,81 +1,81 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define("User",
-        {
-            user_id: {
-                type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
-                primaryKey: true,
-                allowNull: false
-            },
-            first_name: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    len: [0, 50],
-                }
-            },
-            last_name: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    len: [0, 50]
-                }
-            },
-            email: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                unique: true,
-                validate:
-                {
-                    isEmail: true
-                }
-            },
-            address: {
-                type: DataTypes.STRING,
-                allowNull: true,
-                validate: {
-                    len: [0, 50]
-                }
-            },
-            phone_number: {
-                type: DataTypes.STRING,
-                allowNull: true,
-                validate: {
-                    len: [0, 50]
-                }
-            },
-            cuit: {
-                type: DataTypes.STRING,
-                allowNull: true,
-                validate: {
-                    len: [0, 50]
-                }
-            },
-            cost_center: {
-                type: DataTypes.STRING,
-                allowNull: true,
-                validate: {
-                    len: [0, 50]
-                }
-            },
-            enabled: {
+	sequelize.define(
+		"User",
+		{
+			user_id: {
+				type: DataTypes.UUID,
+				defaultValue: DataTypes.UUIDV4,
+				primaryKey: true,
+				allowNull: false,
+			},
+			first_name: {
+				type: DataTypes.STRING,
+				allowNull: false,
+				validate: {
+					len: [0, 50],
+				},
+			},
+			last_name: {
+				type: DataTypes.STRING,
+				allowNull: false,
+				validate: {
+					len: [0, 50],
+				},
+			},
+			email: {
+				type: DataTypes.STRING,
+				allowNull: false,
+				unique: true,
+				validate: {
+					isEmail: true,
+				},
+			},
+			address: {
+				type: DataTypes.STRING,
+				allowNull: true,
+				validate: {
+					len: [0, 50],
+				},
+			},
+			phone_number: {
+				type: DataTypes.STRING,
+				allowNull: true,
+				validate: {
+					len: [0, 50],
+				},
+			},
+			cuit: {
+				type: DataTypes.STRING,
+				allowNull: true,
+				validate: {
+					len: [0, 50],
+				},
+			},
+			cost_center: {
+				type: DataTypes.STRING,
+				allowNull: true,
+				validate: {
+					len: [0, 50],
+				} /* cost center? a que hace referencia ese nombre? */,
+			},
+			enabled: {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
 			},
-            password: {
+			password: {
 				type: DataTypes.STRING,
-				allowNull: true, 
-                /* Ver tema de seguridad "hashes" */
+				allowNull: true,
+				/* Ver tema de seguridad "hashes" */
 			},
-            role: {
+			role: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
-        },
-        {
-            timestamps: false,
-        }
-    );
+		},
+		{
+			timestamps: false,
+		}
+	);
 };
