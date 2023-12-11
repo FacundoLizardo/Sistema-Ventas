@@ -44,6 +44,13 @@ module.exports = (sequelize) => {
 			profit_percentage: {
 				type: DataTypes.INTEGER,
 				allowNull: true,
+				validate: {
+					isPositive(value) {
+						if (value <= 0) {
+							throw new Error('The profit percentage must be a positive number.');
+						}
+					}
+				}
 			},
 			quantity: {
 				type: DataTypes.INTEGER,

@@ -56,19 +56,14 @@ module.exports = (sequelize) => {
 			branch: {
 				type: DataTypes.ARRAY(DataTypes.UUIDV4),
 				allowNull: true,
-			},/*asi un empleado puede tener acceso a varias sucursales*/
+			},
 			enabled: {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
 			},
-			password: {
-				type: DataTypes.STRING,
-				allowNull: true,
-				/* Ver tema de seguridad "hashes" */
-			},
 			role: {
 				type: DataTypes.STRING,
-				allowNull: true,
+				allowNull: false,
 			},
 		},
 		{
