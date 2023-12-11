@@ -22,10 +22,6 @@ module.exports = (sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-			branch: {
-				type: DataTypes.STRING,
-				allowNull: false,
-			},
 			is_storage: {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
@@ -44,6 +40,10 @@ module.exports = (sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
+			phone_number: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			}
 		},
 		{
 			timestamps: true,
