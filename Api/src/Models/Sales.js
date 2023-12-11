@@ -24,6 +24,19 @@ module.exports = (sequelize) => {
 				allowNull: false,
 				defaultValue: 0,
 			},
+			debt_amount: {
+				type: DataTypes.DECIMAL(10, 2),
+				allowNull: false,
+				validate: {
+					isFloat: {
+						msg: "The debt should be a decimal number.",
+					},
+					min: {
+						args: [0],
+						msg: "The amount o debt should be equal or higher than 0.",
+					},
+				},
+			},
 			branch: {
 				type: DataTypes.STRING,
 				allowNull: false,

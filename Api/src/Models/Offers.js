@@ -11,7 +11,7 @@ module.exports = (sequelize) => {
 				allowNull: false,
 			},
 			products: {
-				type: DataTypes.ARRAY(DataTypes.UUIDV4), // Corrección: ARRAY debe recibir solo el tipo de dato dentro de los paréntesis
+				type: DataTypes.ARRAY(DataTypes.UUIDV4),
 				allowNull: false,
 			},
 			image_url: {
@@ -19,7 +19,7 @@ module.exports = (sequelize) => {
 				allowNull: true,
 			},
 			discount_percentage: {
-				type: DataTypes.FLOAT,
+				type: DataTypes.DECIMAL(10, 2),
 				allowNull: false,
 				validate: {
 					isFloat: {
@@ -33,16 +33,10 @@ module.exports = (sequelize) => {
 						args: [100],
 						msg: "The discount should be equal or less than 100.",
 					},
-					customValidator(value) {
-						const decimals = (value.toString().split(".")[1] || "").length;
-						if (decimals > 2) {
-							throw new Error("The discount can not have more than 2 decimals.");
-						}
-					},
 				},
 			},
 			price: {
-				type: DataTypes.FLOAT,
+				type: DataTypes.DECIMAL(10, 2),
 				allowNull: false,
 				validate: {
 					isFloat: {
@@ -51,12 +45,6 @@ module.exports = (sequelize) => {
 					min: {
 						args: [0],
 						msg: "The price should be equal or higher than 0.",
-					},
-					customValidator(value) {
-						const decimals = (value.toString().split(".")[1] || "").length;
-						if (decimals > 2) {
-							throw new Error("The price can not have more than 2 decimals.");
-						}
 					},
 				},
 			},

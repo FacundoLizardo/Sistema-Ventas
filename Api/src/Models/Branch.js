@@ -2,23 +2,23 @@ const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
 	sequelize.define(
-"Branch",
+		"Branch",
 		{
-            branch_id: {
+			branch_id: {
 				type: DataTypes.UUID,
 				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
 				allowNull: false,
 			},
-            afip_id: {
+			afip_id: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			},
+			name: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-            name: {
-				type: DataTypes.STRING,
-				allowNull: false,
-			},
-            location: {
+			location: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
@@ -26,21 +26,21 @@ module.exports = (sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-            is_storage: {
+			is_storage: {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
 				defaultValue: false,
 			},
-            enable: {
+			enable: {
 				type: DataTypes.BOOLEAN,
-				allowNull:false,
-               defaultValue: true,
+				allowNull: false,
+				defaultValue: true,
 			},
-            manager: {
-				type: DataTypes.ARRAY(DataTypes.UUID),
+			manager: {
+				type: DataTypes.ARRAY(DataTypes.UUIDV4),
 				allowNull: true,
 			},
-            hours: {
+			hours: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
