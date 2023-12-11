@@ -10,6 +10,7 @@ const OffersModel = require("./Models/Offers.js");
 const PurchasesModel = require("./Models/Purchases.js");
 const SalesModel = require("./Models/Sales.js");
 const SuppliersModel = require("./Models/Suppliers.js");
+const Cash_RegisterModel = require("./Models/Cash_Register.js");
 
 const { DB_USER, DB_PASSWORD, DB_HOST, DBURL } = process.env;
 
@@ -31,8 +32,9 @@ OffersModel(sequelize);
 PurchasesModel(sequelize);
 SalesModel(sequelize);
 SuppliersModel(sequelize);
+Cash_RegisterModel(sequelize);
 
-const { Product, User, Branch, Customers, Offers, Purchases, Sales, Suppliers } = sequelize.models;
+const { Product, User, Branch, Customers, Offers, Purchases, Sales, Suppliers, Cash_Register } = sequelize.models;
 
 module.exports = {
 	...sequelize.models,
