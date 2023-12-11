@@ -71,6 +71,10 @@ module.exports = (sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
+			customers_id: {
+				type: DataTypes.STRING,
+				allowNull: false,
+			}
 		},
 		{
 			timestamps: true,
