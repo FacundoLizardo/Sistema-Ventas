@@ -15,17 +15,25 @@ module.exports = (sequelize) => {
 				allowNull: true,
 			},
 			products: {
-				type: DataTypes.ARRAY(DataTypes.UUIDV4),
+				type: DataTypes.JSONB,
 				allowNull: false,
+				defaultValue: [],
 			},
 			amount: {
 				type: DataTypes.DECIMAL(10, 2),
 				allowNull: false,
 			},
-			comment: {
+			comments: {
 				type: DataTypes.STRING,
 				allowNull: true,
+				validate: {
+					len: [0, 255]
+				}
 			},
+			barcode: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			}
 		},
 		{
 			timestamps: true,
