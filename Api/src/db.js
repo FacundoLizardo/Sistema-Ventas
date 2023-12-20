@@ -2,18 +2,9 @@ require("dotenv").config();
 const { Sequelize } = require("sequelize");
 const pg = require("pg");
 
-const ProductModel = require("./Models/Product.js");
-const UserModel = require("./Models/User.js");
-const BranchModel = require("./Models/Branch.js");
-const CostumersModel = require("./Models/Costumers.js");
-const OffersModel = require("./Models/Offers.js");
-const PurchasesModel = require("./Models/Purchases.js");
-const SalesModel = require("./Models/Sales.js");
-const SuppliersModel = require("./Models/Suppliers.js");
-const Cash_RegisterModel = require("./Models/Cash_Register.js");
+/* ----- Database connection ----- */
 
 const { DB_USER, DB_PASSWORD, DB_HOST, DBURL } = process.env;
-
 const sequelize = new Sequelize(
 	`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/sistema_ventas`,
 	//DBURL,
@@ -23,6 +14,18 @@ const sequelize = new Sequelize(
 		dialectModule: pg,
 	}
 );
+
+/* ----- Models ----- */
+
+const ProductModel = require("./Models/Product.js");
+const UserModel = require("./Models/User.js");
+const BranchModel = require("./Models/Branch.js");
+const CostumersModel = require("./Models/Costumers.js");
+const OffersModel = require("./Models/Offers.js");
+const PurchasesModel = require("./Models/Purchases.js");
+const SalesModel = require("./Models/Sales.js");
+const SuppliersModel = require("./Models/Suppliers.js");
+const Cash_RegisterModel = require("./Models/Cash_Register.js");
 
 ProductModel(sequelize);
 UserModel(sequelize);
