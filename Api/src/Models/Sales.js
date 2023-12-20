@@ -11,7 +11,7 @@ module.exports = (sequelize) => {
 				allowNull: false,
 			},
 			products: {
-				type: DataTypes.ARRAY(DataTypes.UUIDV4),
+				type: DataTypes.ARRAY(DataTypes.UUID),
 				allowNull: false,
 			},
 			amount: {

@@ -33,7 +33,7 @@ module.exports = (sequelize) => {
 				defaultValue: true,
 			},
 			manager: {
-				type: DataTypes.ARRAY(DataTypes.UUIDV4),
+				type: DataTypes.ARRAY(DataTypes.UUID),
 				allowNull: true,
 			},
 			hours: {

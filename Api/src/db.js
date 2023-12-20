@@ -5,7 +5,7 @@ const pg = require("pg");
 const ProductModel = require("./Models/Product.js");
 const UserModel = require("./Models/User.js");
 const BranchModel = require("./Models/Branch.js");
-const CustomersModel = require("./Models/Customers.js");
+const CostumersModel = require("./Models/Costumers.js");
 const OffersModel = require("./Models/Offers.js");
 const PurchasesModel = require("./Models/Purchases.js");
 const SalesModel = require("./Models/Sales.js");
@@ -27,14 +27,14 @@ const sequelize = new Sequelize(
 ProductModel(sequelize);
 UserModel(sequelize);
 BranchModel(sequelize);
-CustomersModel(sequelize);
+CostumersModel(sequelize);
 OffersModel(sequelize);
 PurchasesModel(sequelize);
 SalesModel(sequelize);
 SuppliersModel(sequelize);
 Cash_RegisterModel(sequelize);
 
-const { Product, User, Branch, Customers, Offers, Purchases, Sales, Suppliers, Cash_Register } = sequelize.models;
+const { Product, User, Branch, Costumers, Offers, Purchases, Sales, Suppliers, Cash_Register } = sequelize.models;
 
 module.exports = {
 	...sequelize.models,
