@@ -3,10 +3,10 @@ const { getProduct, getProducts, postProducts, putProduct, deleteProduct } = req
 
 const router = Router();
 
-router.get("/", getProduct);
+router.get("/:id", getProduct);
 router.get("/", getProducts);
 router.post("/", postProducts);
-router.put("/", putProduct);
-router.delete("/", deleteProduct);
+router.put("/:id", putProduct);
+router.delete("/:id", deleteProduct);
 
 module.exports = router;
