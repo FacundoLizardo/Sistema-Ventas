@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-    sequelize.define("Product",
+    sequelize.define("Cash_Register",
         {
             cash_id: {
                 type: DataTypes.UUID,

@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 
-module.exports = (sequelize) => {
+const Product = (sequelize) => {
 	sequelize.define("Product",
 		{
 			product_id: {
@@ -81,3 +81,5 @@ module.exports = (sequelize) => {
 		}
 	);
 };
+
+module.exports = Product

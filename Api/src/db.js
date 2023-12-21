@@ -40,6 +40,6 @@ Cash_RegisterModel(sequelize);
 const { Product, User, Branch, Costumers, Offers, Purchases, Sales, Suppliers, Cash_Register } = sequelize.models;
 
 module.exports = {
-	...sequelize.models,
+	Product, User, Branch, Costumers, Offers, Purchases, Sales, Suppliers, Cash_Register,
 	conn: sequelize,
 };
