@@ -1,0 +1,33 @@
+.navbarContainer {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  text-align: center;
+  display: flex;
+
+  & nav {
+    display: flex;
+    width: 50%;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+
+    & ul {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+
+      & li a {
+        background-color: var(--bg-color-off);
+        display: flex;
+        width: 130px;
+        height: 130px;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--radius);
+        cursor: pointer;
+      }
+    }
+  }
+}
