@@ -3,16 +3,16 @@ const { DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
     sequelize.define("Cash_Register",
         {
-            cash_id: {
+            cashId: {
                 type: DataTypes.UUID,
                 primaryKey: true,
                 allowNull: false,
             },
-            initial_amount: {
+            initialAmount: {
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: true,
             },
-            final_amount: {
+            finalAmount: {
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: true,
             },
@@ -24,7 +24,7 @@ module.exports = (sequelize) => {
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: true,
             },
-            total_cash_register: {
+            totalCashRegister: {
                 type: DataTypes.JSONB,
                 allowNull: false,
                 defaultValue: [],

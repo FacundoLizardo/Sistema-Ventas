@@ -4,7 +4,7 @@ module.exports = (sequelize) => {
 	sequelize.define(
 		"Offer",
 		{
-			offer_id: {
+			offerId: {
 				type: DataTypes.UUID,
 				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
@@ -14,11 +14,11 @@ module.exports = (sequelize) => {
 				type: DataTypes.ARRAY(DataTypes.UUID),
 				allowNull: false,
 			},
-			image_url: {
+			imageUrl: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
-			discount_percentage: {
+			discountPercentage: {
 				type: DataTypes.DECIMAL(10, 2),
 				allowNull: false,
 				validate: {

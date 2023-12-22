@@ -4,13 +4,13 @@ module.exports = (sequelize) => {
 	sequelize.define(
 		"Purchase",
 		{
-			purchase_id: {
+			purchaseId: {
 				type: DataTypes.UUID,
 				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
 				allowNull: false,
 			},
-			supplier_id: {
+			supplierId: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},

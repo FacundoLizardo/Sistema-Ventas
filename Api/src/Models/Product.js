@@ -3,7 +3,7 @@ const { DataTypes } = require("sequelize");
 const Product = (sequelize) => {
 	sequelize.define("Product",
 		{
-			product_id: {
+			productId: {
 				type: DataTypes.UUID,
 				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
@@ -24,7 +24,7 @@ const Product = (sequelize) => {
 				type: DataTypes.DECIMAL(10, 2),
 				allowNull: true,
 			},
-			final_price: {
+			finalPrice: {
 				type: DataTypes.DECIMAL(10, 2),
 				allowNull: true,
 			},
@@ -41,7 +41,7 @@ const Product = (sequelize) => {
 					}
 				}
 			},
-			profit_percentage: {
+			profitPercentage: {
 				type: DataTypes.INTEGER,
 				allowNull: true,
 				validate: {
@@ -60,7 +60,7 @@ const Product = (sequelize) => {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
 			},
-			notes_description: {
+			notesDescription: {
 				type: DataTypes.STRING,
 				allowNull: true,
 				validate: {

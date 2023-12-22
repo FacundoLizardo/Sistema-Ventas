@@ -4,20 +4,20 @@ module.exports = (sequelize) => {
 	sequelize.define(
 		"User",
 		{
-			user_id: {
+			userId: {
 				type: DataTypes.UUID,
 				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
 				allowNull: false,
 			},
-			first_name: {
+			firstName: {
 				type: DataTypes.STRING,
 				allowNull: false,
 				validate: {
 					len: [0, 50],
 				},
 			},
-			last_name: {
+			lastName: {
 				type: DataTypes.STRING,
 				allowNull: false,
 				validate: {
@@ -39,7 +39,7 @@ module.exports = (sequelize) => {
 					len: [0, 50],
 				},
 			},
-			phone_number: {
+			phoneNumber: {
 				type: DataTypes.STRING,
 				allowNull: true,
 				validate: {

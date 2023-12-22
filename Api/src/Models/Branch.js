@@ -4,13 +4,13 @@ module.exports = (sequelize) => {
 	sequelize.define(
 		"Branch",
 		{
-			branch_id: {
+			branchId: {
 				type: DataTypes.UUID,
 				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
 				allowNull: false,
 			},
-			afip_id: {
+			afipId: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
@@ -22,7 +22,7 @@ module.exports = (sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-			is_storage: {
+			isStorage: {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
 				defaultValue: false,
@@ -40,7 +40,7 @@ module.exports = (sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
-			phone_number: {
+			phoneNumber: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			}

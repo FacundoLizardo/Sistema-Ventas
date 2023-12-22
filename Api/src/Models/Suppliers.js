@@ -4,7 +4,7 @@ module.exports = (sequelize) => {
 	sequelize.define(
 		"Supplier",
 		{
-			supplier_id: {
+			supplierId: {
 				type: DataTypes.UUID,
 				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
@@ -21,7 +21,7 @@ module.exports = (sequelize) => {
 				type: DataTypes.ARRAY(DataTypes.UUID),
 				allowNull: true,
 			},
-			phone_number: {
+			phoneNumber: {
 				type: DataTypes.STRING,
 				allowNull: true,
 				validate: {
@@ -36,7 +36,7 @@ module.exports = (sequelize) => {
 					isEmail: true,
 				},
 			},
-			web_url: {
+			webUrl: {
 				type: DataTypes.STRING,
 				allowNull: true,
 				validate: {
@@ -52,7 +52,7 @@ module.exports = (sequelize) => {
 				type: DataTypes.ARRAY(DataTypes.STRING),
 				allowNull: true,
 			},
-			frecuent_products: {
+			frecuentProducts: {
 				type: DataTypes.ARRAY(DataTypes.UUID),
 				allowNull: true,
 			},

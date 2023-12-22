@@ -18,14 +18,14 @@ module.exports = (sequelize) => {
 					},
 				},
 			},
-			first_name: {
+			firstName: {
 				type: DataTypes.STRING,
 				allowNull: false,
 				validate: {
 					len: [0, 50],
 				},
 			},
-			last_name: {
+			lastName: {
 				type: DataTypes.STRING,
 				allowNull: false,
 				validate: {
@@ -47,14 +47,14 @@ module.exports = (sequelize) => {
 					len: [0, 50],
 				},
 			},
-			phone_number: {
+			phoneNumber: {
 				type: DataTypes.STRING,
 				allowNull: true,
 				validate: {
 					len: [0, 50],
 				},
 			},
-			date_of_birth: {
+			dateOfBirth: {
 				type: DataTypes.DATE,
 				allowNull: true,
 				validate: {
@@ -65,7 +65,7 @@ module.exports = (sequelize) => {
 					},
 				},
 			},
-			enable_debt: {
+			enableDebt: {
 				type: DataTypes.BOOLEAN,
 				defaultValue: false,
 			},

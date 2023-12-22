@@ -4,7 +4,7 @@ module.exports = (sequelize) => {
 	sequelize.define(
 		"Sale",
 		{
-			sale_id: {
+			saleId: {
 				type: DataTypes.UUID,
 				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
@@ -23,12 +23,12 @@ module.exports = (sequelize) => {
 				allowNull: false,
 				defaultValue: 0,
 			},
-			extra_charge: {
+			extraCharge: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 				defaultValue: 0,
 			},
-			debt_amount: {
+			debtAmount: {
 				type: DataTypes.DECIMAL(10, 2),
 				allowNull: false,
 				validate: {
@@ -45,14 +45,14 @@ module.exports = (sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-			payment_type: {
+			paymentType: {
 				type: DataTypes.STRING,
 				allowNull: false,
 				validate: {
 					isIn: [["credit", "debit", "cash", "mercadoPago"]],
 				},
 			},
-			MP_id: {
+			MercadoPagoId: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
@@ -71,7 +71,7 @@ module.exports = (sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
-			customers_id: {
+			customersId: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			}
