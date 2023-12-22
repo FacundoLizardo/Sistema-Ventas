@@ -1,11 +1,11 @@
 const { Product } = require("../../db")
 
-const createProduct = async (name, category, cost, final_price, discount, profit_percentage, quantity, enabled, notes_description, taxes, barcode) => {
+const createProductController = async (name, category, cost, finalPrice, discount, profitPercentage, quantity, enabled, notesDescription, taxes, barcode) => {
     try {
         const [product, created] = await Product.findOrCreate({
             where: { name: name },
             defaults: {
-                name, category, cost, final_price, discount, profit_percentage, quantity, enabled, notes_description, taxes, barcode
+                name, category, cost, finalPrice, discount, profitPercentage, quantity, enabled, notesDescription, taxes, barcode
             }
         });
 
@@ -16,4 +16,4 @@ const createProduct = async (name, category, cost, final_price, discount, profit
     }
 }
 
-module.exports = createProduct;
+module.exports = createProductController;

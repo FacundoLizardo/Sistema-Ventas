@@ -1,6 +1,6 @@
 const { Product } = require("../../db")
 
-const getAllProducts = async () => {
+const getAllProductsController = async () => {
     try {
         const products = await Product.findAll();
         return products || [];
@@ -9,4 +9,4 @@ const getAllProducts = async () => {
     }
 }
 
-module.exports = getAllProducts
+module.exports = getAllProductsController
