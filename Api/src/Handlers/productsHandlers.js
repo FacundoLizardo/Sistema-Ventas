@@ -1,8 +1,8 @@
-const createProductController = require("../Controllers/Products/createProductController");
-const deleteProductController = require("../Controllers/Products/deleteProductController");
-const getAllProductsController = require("../Controllers/Products/getAllProductsController");
-const getProductByIdController = require("../Controllers/Products/getProductByIdController");
-const updateProductController = require("../Controllers/Products/updateProductController");
+const createProductController = require("../Controllers/products/createProductController");
+const deleteProductController = require("../Controllers/products/deleteProductController");
+const getAllProductsController = require("../Controllers/products/getAllProductsController");
+const getProductByIdController = require("../Controllers/products/getProductByIdController");
+const updateProductController = require("../Controllers/products/updateProductController");
 
 
 
