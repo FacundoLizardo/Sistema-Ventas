@@ -1,6 +1,13 @@
+import { useCart } from "../../context/cart/cart";
 import style from "./CardProduct.module.css";
 
 const CardProduct = ({ product }) => {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = async () => {
+    await addToCart(product);
+  };
+
   return (
     <div className={style.cardProductContainer}>
       <div className={style.info}>
@@ -19,7 +26,7 @@ const CardProduct = ({ product }) => {
         </div>
         <div>0</div>
         <div>
-          <button>+</button>
+          <button onClick={() => handleAddToCart(product)}>+</button>
         </div>
       </div>
     </div>

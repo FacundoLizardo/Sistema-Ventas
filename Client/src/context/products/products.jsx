@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 
 const ProductContext = createContext();
 
-const ProductContextProvider = ({ children }) => {
+const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const URL = import.meta.env.VITE_URL_BACKEND;
 
@@ -24,4 +24,4 @@ const ProductContextProvider = ({ children }) => {
   );
 };
 
-export { ProductContext, ProductContextProvider };
+export { ProductContext, ProductProvider };

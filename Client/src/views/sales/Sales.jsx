@@ -10,9 +10,13 @@ const Sales = () => {
     <section className={style.salesContainer}>
       <div className={style.tableContainer}>
         <ul>
-          {products.map((product, index) => (
-            <CardProduct product={product} key={index} />
-          ))}
+          {products ? (
+            products.map((product, index) => (
+              <CardProduct product={product} key={index} />
+            ))
+          ) : (
+            <div>No hay productos</div>
+          )}
         </ul>
       </div>
     </section>
