@@ -1,12 +1,11 @@
 .salesContainer {
   width: 90%;
+  max-width: 1024px;
   margin: auto;
 
-  .tableContainer {
-    & th,
-    td {
-      padding: 8px; /* Espaciado interno de las celdas */
-      border: 1px solid var(--border);
-    }
+  & ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 }
