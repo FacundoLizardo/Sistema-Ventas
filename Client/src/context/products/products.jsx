@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
 import { createContext, useEffect, useState } from "react";
 
 const ProductContext = createContext();

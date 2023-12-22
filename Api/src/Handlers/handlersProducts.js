@@ -27,10 +27,10 @@ const getProducts = async (req, res) => {
 }
 
 const postProducts = async (req, res) => {
-    const { product_id, name, category, cost, final_price, discount, profit_percentage, quantity, enabled, notes_description, taxes, barcode } = req.body
-    if (!product_id || !name || !category || !cost || !final_price || !discount || !profit_percentage || !quantity || !enabled || !notes_description || !taxes || !barcode) { return res.status(404).json("Missing information.") }
+    const { name, category, cost, final_price, discount, profit_percentage, quantity, enabled, notes_description, taxes, barcode } = req.body
+    if (!name || !category || !quantity) { return res.status(404).json("Missing information.") }
     try {
-        const newProduct = await createProduct(product_id, name, category, cost, final_price, discount, profit_percentage, quantity, enabled, notes_description, taxes, barcode)
+        const newProduct = await createProduct(name, category, cost, final_price, discount, profit_percentage, quantity, enabled, notes_description, taxes, barcode)
         return res.status(200).json(newProduct);
     } catch (error) {
         return res.status(500).json({ error: error.message });
