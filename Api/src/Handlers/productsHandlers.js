@@ -25,7 +25,7 @@ const getProducts = async (req, res) => {
             ? res.status(200).json({ success: true, products })
             : res.status(404).json({ success: false, message: "No products found." })
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(400).json({ error: error.message });
     }
 }
 
@@ -36,7 +36,7 @@ const postProducts = async (req, res) => {
         const newProduct = await createProductController(name, category, cost, finalPrice, discount, profitPercentage, quantity, enabled, notesDescription, taxes, barcode)
         return res.status(200).json(newProduct);
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(400).json({ error: error.message });
     }
 }
 
@@ -61,7 +61,7 @@ const putProduct = async (req, res) => {
         );
         res.status(200).json(updatedProduct);
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(400).json({ error: error.message });
     }
 }
 
@@ -73,7 +73,7 @@ const deleteProduct = async (req, res) => {
 
 
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(400).json({ error: error.message });
     }
 }
 

@@ -1,11 +1,24 @@
-import { useCart } from "../../context/cart/cart";
 import style from "./CardProduct.module.css";
+import { useCart } from "../../context/cart/cart";
 
 const CardProduct = ({ product }) => {
   const { addToCart } = useCart();
 
-  const handleAddToCart = async () => {
-    await addToCart(product);
+  const handleAddToCart = async (product) => {
+    const cleanProduct = {
+      name: product.name,
+      category: product.category,
+      cost: product.cost,
+      finalPrice: product.finalPrice,
+      discount: product.discount,
+      profitPercentage: product.profitPercentage,
+      quantity: product.quantity,
+      enabled: product.enabled,
+      notesDescription: product.notesDescription,
+      taxes: product.taxes,
+      barcode: product.barcode,
+    };
+    await addToCart(cleanProduct);
   };
 
   return (

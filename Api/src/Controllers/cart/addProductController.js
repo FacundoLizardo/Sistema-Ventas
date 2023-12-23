@@ -3,6 +3,7 @@ const { Product } = require("../../db")
 const addProductController = async (name, category, cost, finalPrice, discount, profitPercentage, quantity, enabled, notesDescription, taxes, barcode) => {
     try {
         const newProduct = new Product({
+
             name,
             category,
             cost,

@@ -1,6 +1,15 @@
 require("dotenv").config();
 const { Sequelize } = require("sequelize");
 const pg = require("pg");
+const ProductModel = require("./Models/Product.js");
+const UserModel = require("./Models/User.js");
+const BranchModel = require("./Models/Branch.js");
+const CostumersModel = require("./Models/Costumers.js");
+const OffersModel = require("./Models/Offers.js");
+const PurchasesModel = require("./Models/Purchases.js");
+const SaleModel = require("./Models/Sale.js");
+const SuppliersModel = require("./Models/Suppliers.js");
+const Cash_RegisterModel = require("./Models/Cash_Register.js");
 
 /* ----- Database connection ----- */
 
@@ -17,29 +26,23 @@ const sequelize = new Sequelize(
 
 /* ----- Models ----- */
 
-const ProductModel = require("./Models/Product.js");
-const UserModel = require("./Models/User.js");
-const BranchModel = require("./Models/Branch.js");
-const CostumersModel = require("./Models/Costumers.js");
-const OffersModel = require("./Models/Offers.js");
-const PurchasesModel = require("./Models/Purchases.js");
-const SalesModel = require("./Models/Sales.js");
-const SuppliersModel = require("./Models/Suppliers.js");
-const Cash_RegisterModel = require("./Models/Cash_Register.js");
-
 ProductModel(sequelize);
 UserModel(sequelize);
 BranchModel(sequelize);
 CostumersModel(sequelize);
 OffersModel(sequelize);
 PurchasesModel(sequelize);
-SalesModel(sequelize);
+SaleModel(sequelize);
 SuppliersModel(sequelize);
 Cash_RegisterModel(sequelize);
 
-const { Product, User, Branch, Costumers, Offers, Purchases, Sales, Suppliers, Cash_Register } = sequelize.models;
+const { Product, User, Branch, Costumers, Offers, Purchases, Sale, Suppliers, Cash_Register } = sequelize.models;
+
+Product.belongsToMany(Sale, { through: "listProducts" });
+Sale.belongsToMany(Product, { through: "listProducts" })
+
 
 module.exports = {
-	Product, User, Branch, Costumers, Offers, Purchases, Sales, Suppliers, Cash_Register,
+	Product, User, Branch, Costumers, Offers, Purchases, Sale, Suppliers, Cash_Register,
 	conn: sequelize,
 };

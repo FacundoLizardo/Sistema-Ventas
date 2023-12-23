@@ -11,8 +11,9 @@ module.exports = (sequelize) => {
 				allowNull: false,
 			},
 			products: {
-				type: DataTypes.ARRAY(DataTypes.UUID),
-				allowNull: false,
+				type: DataTypes.JSONB,
+				allowNull: true,
+				defaultValue: [],
 			},
 			amount: {
 				type: DataTypes.DECIMAL(10, 2),
@@ -52,7 +53,7 @@ module.exports = (sequelize) => {
 					isIn: [["credit", "debit", "cash", "mercadoPago"]],
 				},
 			},
-			MercadoPagoId: {
+			mercadoPagoId: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
