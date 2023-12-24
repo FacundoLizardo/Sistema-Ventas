@@ -40,9 +40,8 @@ CartModel(sequelize);
 
 const { Product, User, Branch, Costumers, Offers, Purchases, Sale, Suppliers, Cash_Register, Cart } = sequelize.models;
 
-Product.belongsToMany(Cart, { through: "CartProducts" });
-Cart.belongsToMany(Product, { through: "CartProducts" })
-
+Cart.belongsToMany(Product, { through: 'cartProducts', as: 'products' });
+Product.belongsToMany(Cart, { through: 'cartProducts', as: 'carts' });
 
 module.exports = {
 	Product, User, Branch, Costumers, Offers, Purchases, Sale, Suppliers, Cash_Register, Cart,
