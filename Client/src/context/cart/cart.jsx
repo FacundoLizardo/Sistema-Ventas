@@ -1,23 +1,21 @@
 /* eslint-disable no-case-declarations */
-import { createContext, useContext, useReducer } from "react";
-import axios from "axios";
+import { createContext, useContext, useEffect, useReducer } from "react";
+import { ADD_TO_CART } from "./cartTypes";
 
 const CartContext = createContext();
-const URL = import.meta.env.VITE_URL_BACKEND;
 
 const initialState = {
-  cart: [],
+  cart: JSON.parse(localStorage.getItem("cart")) || [],
 };
 
 console.log("initialState", initialState);
 
 const CartReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "ADD_TO_CART":
-      const updatedProducts = [...state.cart, action.payload];
+    case ADD_TO_CART:
       return {
         ...state,
-        cart: updatedProducts,
+        cart: [...state.cart, action.payload],
       };
 
     default:
@@ -28,25 +26,25 @@ const CartReducer = (state = initialState, action) => {
 const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(CartReducer, initialState);
 
-  const addToCart = async (productData) => {
-    try {
-      const response = await axios.post(`${URL}/sales`, productData);
-      console.log("carrito: ", response);
-      /* dispatch({ type: "ADD_TO_CART", payload: response.data }); */
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  };
+  useEffect(() => {
+		localStorage.setItem("cart", JSON.stringify(state.cart));
+	}, [state.cart]);
 
   return (
-    <CartContext.Provider value={{ state, addToCart }}>
+    <CartContext.Provider value={{ state, dispatch }}>
       {children}
     </CartContext.Provider>
   );
 };
 
 export const useCart = () => {
-  return useContext(CartContext);
+  const context = useContext(CartContext);
+
+	if (!context) {
+		throw new Error("useCart debe utilizarse dentro de un CartProvider");
+	}
+
+	return context;
 };
 
 export default CartProvider;

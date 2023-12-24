@@ -2,10 +2,11 @@ import style from "./CardProduct.module.css";
 import { useCart } from "../../context/cart/cart";
 
 const CardProduct = ({ product }) => {
-  const { addToCart } = useCart();
+  const { state, dispatch } = useCart();
 
   const handleAddToCart = async (product) => {
-    await addToCart(product);
+    console.log(product);
+    dispatch({ type: "ADD_TO_CART", payload: product });
   };
 
   return (
