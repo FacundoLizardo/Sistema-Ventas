@@ -1,6 +1,6 @@
 const { Product } = require("../../db");
 
-const updateProductController = async (productId, name, category, cost, finalPrice, discount, profitPercentage, quantity, enabled, notesDescription, taxes, barcode) => {
+const putProductController = async (productId, name, category, cost, finalPrice, discount, profitPercentage, quantity, enabled, notesDescription, taxes, barcode) => {
     try {
         const updatedProduct = await Product.update(
             {
@@ -27,4 +27,4 @@ const updateProductController = async (productId, name, category, cost, finalPri
     }
 };
 
-module.exports = updateProductController;
+module.exports = putProductController;

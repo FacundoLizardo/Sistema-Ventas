@@ -30,7 +30,7 @@ const CartProvider = ({ children }) => {
 
   const addToCart = async (productData) => {
     try {
-      const response = await axios.post(`${URL}/cart`, productData);
+      const response = await axios.post(`${URL}/sales`, productData);
       console.log("carrito: ", response);
       /* dispatch({ type: "ADD_TO_CART", payload: response.data }); */
     } catch (error) {

@@ -10,6 +10,7 @@ const PurchasesModel = require("./Models/Purchases.js");
 const SaleModel = require("./Models/Sale.js");
 const SuppliersModel = require("./Models/Suppliers.js");
 const Cash_RegisterModel = require("./Models/Cash_Register.js");
+const CartModel = require("./Models/Cart.js");
 
 /* ----- Database connection ----- */
 
@@ -35,14 +36,15 @@ PurchasesModel(sequelize);
 SaleModel(sequelize);
 SuppliersModel(sequelize);
 Cash_RegisterModel(sequelize);
+CartModel(sequelize);
 
-const { Product, User, Branch, Costumers, Offers, Purchases, Sale, Suppliers, Cash_Register } = sequelize.models;
+const { Product, User, Branch, Costumers, Offers, Purchases, Sale, Suppliers, Cash_Register, Cart } = sequelize.models;
 
-Product.belongsToMany(Sale, { through: "listProducts" });
-Sale.belongsToMany(Product, { through: "listProducts" })
+Product.belongsToMany(Cart, { through: "CartProducts" });
+Cart.belongsToMany(Product, { through: "CartProducts" })
 
 
 module.exports = {
-	Product, User, Branch, Costumers, Offers, Purchases, Sale, Suppliers, Cash_Register,
+	Product, User, Branch, Costumers, Offers, Purchases, Sale, Suppliers, Cash_Register, Cart,
 	conn: sequelize,
 };
