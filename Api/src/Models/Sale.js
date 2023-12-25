@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
 				type: DataTypes.UUID,
 				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
-				allowNull: false,
+				allowNull: true,
 			},
 			products: {
 				type: DataTypes.JSONB,
@@ -42,13 +42,14 @@ module.exports = (sequelize) => {
 					},
 				},
 			},
-			branch: {
+			local: {
 				type: DataTypes.STRING,
-				allowNull: false,
-			},
+				allowNull: false, 
+			},	
 			paymentType: {
 				type: DataTypes.STRING,
 				allowNull: false,
+				defaultValue: "cash",
 				validate: {
 					isIn: [["credit", "debit", "cash", "mercadoPago"]],
 				},
@@ -60,6 +61,7 @@ module.exports = (sequelize) => {
 			state: {
 				type: DataTypes.STRING,
 				allowNull: false,
+				defaultValue: "pending",
 				validate: {
 					isIn: [["completed", "pending", "cancelled", "failed", "voided"]],
 				},
@@ -74,7 +76,7 @@ module.exports = (sequelize) => {
 			},
 			customersId: {
 				type: DataTypes.STRING,
-				allowNull: false,
+				allowNull: true,
 			}
 		},
 		{

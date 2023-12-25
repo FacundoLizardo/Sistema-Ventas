@@ -8,7 +8,6 @@ const CartContext = createContext();
 const initialState = {
   cart: JSON.parse(localStorage.getItem("cart")) || [],
 };
-console.log(initialState);
 
 const Toast = Swal.mixin({
   toast: true,
@@ -37,7 +36,6 @@ const CartReducer = (state = initialState, action) => {
         });
 
         const updatedCartAdd = [...state.cart, action.payload];
-        console.log("Carrito después de agregar:", updatedCartAdd);
 
         return {
           ...state,
@@ -64,7 +62,6 @@ const CartReducer = (state = initialState, action) => {
         const updatedCart = [...state.cart];
         const indexToRemove = updatedCart.indexOf(findProduct);
         updatedCart.splice(indexToRemove, 1);
-        console.log("updatedCart", updatedCart);
 
         Toast.fire({
           icon: "error",

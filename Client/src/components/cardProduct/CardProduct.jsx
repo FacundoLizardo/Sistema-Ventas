@@ -12,6 +12,17 @@ const CardProduct = ({ product }) => {
     dispatch({ type: "REMOVE_FROM_CART", payload: product });
   };
 
+  const countProducts = (productId) => {
+    if (state.cart && state.cart.length > 0) {
+      const countProduct = state.cart.filter(
+        (item) => item.productId === productId
+      );
+      return countProduct.length;
+    } else {
+      return 0;
+    }
+  };
+
   return (
     <article className={style.cardProductContainer}>
       <div className={style.info}>
@@ -28,7 +39,7 @@ const CardProduct = ({ product }) => {
         <div>
           <button onClick={() => handleDeleteToCart(product)}>-</button>
         </div>
-        <div>0</div>
+        <div>{countProducts(product.productId)}</div>
         <div>
           <button onClick={() => handleAddToCart(product)}>+</button>
         </div>

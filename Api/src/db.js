@@ -38,6 +38,8 @@ Cash_RegisterModel(sequelize);
 
 const { Product, User, Branch, Costumers, Offers, Purchases, Sale, Suppliers, Cash_Register } = sequelize.models;
 
+Product.hasMany(Sale);
+Sale.belongsTo(Product);
 
 module.exports = {
 	Product, User, Branch, Costumers, Offers, Purchases, Sale, Suppliers, Cash_Register,
