@@ -13,7 +13,7 @@ const CardProduct = ({ product }) => {
   };
 
   return (
-    <div className={style.cardProductContainer}>
+    <article className={style.cardProductContainer}>
       <div className={style.info}>
         <div className={style.infoTop}>
           <h3>{product.name}</h3>
@@ -21,7 +21,7 @@ const CardProduct = ({ product }) => {
         </div>
         <div className={style.infoBottom}>
           <p>{product.category}</p>
-          <div>{}</div>
+          <p>Disponible: {product.quantity}</p>
         </div>
       </div>
       <div className={style.buttons}>
@@ -33,7 +33,7 @@ const CardProduct = ({ product }) => {
           <button onClick={() => handleAddToCart(product)}>+</button>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 

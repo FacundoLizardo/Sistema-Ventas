@@ -68,7 +68,7 @@ const CartReducer = (state = initialState, action) => {
 
         Toast.fire({
           icon: "error",
-          title: "¡Producto eliminado!",
+          title: "Producto eliminado",
           customClass: {
             popup: "mySwal",
           },
