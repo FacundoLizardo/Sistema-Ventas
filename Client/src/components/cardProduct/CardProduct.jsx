@@ -5,8 +5,11 @@ const CardProduct = ({ product }) => {
   const { state, dispatch } = useCart();
 
   const handleAddToCart = async (product) => {
-    console.log(product);
     dispatch({ type: "ADD_TO_CART", payload: product });
+  };
+
+  const handleDeleteToCart = async (product) => {
+    dispatch({ type: "REMOVE_FROM_CART", payload: product });
   };
 
   return (
@@ -23,7 +26,7 @@ const CardProduct = ({ product }) => {
       </div>
       <div className={style.buttons}>
         <div>
-          <button>-</button>
+          <button onClick={() => handleDeleteToCart(product)}>-</button>
         </div>
         <div>0</div>
         <div>
