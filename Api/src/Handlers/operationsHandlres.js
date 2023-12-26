@@ -1,9 +1,9 @@
+const getOperationsController = require("../Controllers/operations/getOperationsController")
 const postOperationController = require("../Controllers/operations/postOperationController")
 
 
 const getOperation = async (req, res) => {
     try {
-
     } catch (error) {
         return res.status(400).json({ error: error.message })
     }
@@ -11,7 +11,8 @@ const getOperation = async (req, res) => {
 
 const getOperations = async (req, res) => {
     try {
-
+        const operations = await getOperationsController()
+        return res.status(200).json({ success: true, operations })
     } catch (error) {
         return res.status(400).json({ error: error.message })
     }

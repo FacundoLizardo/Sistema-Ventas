@@ -5,10 +5,10 @@ module.exports = (sequelize) => {
 		"Operation",
 		{
 			operationsId: {
-				type: DataTypes.UUID,
-				defaultValue: DataTypes.UUIDV4,
+				type: DataTypes.INTEGER,
 				primaryKey: true,
-				allowNull: true,
+				autoIncrement: true,
+				allowNull: false,
 			},
 			products: {
 				type: DataTypes.JSONB,
@@ -44,8 +44,8 @@ module.exports = (sequelize) => {
 			},
 			local: {
 				type: DataTypes.STRING,
-				allowNull: false, 
-			},	
+				allowNull: false,
+			},
 			paymentType: {
 				type: DataTypes.STRING,
 				allowNull: false,
@@ -54,7 +54,7 @@ module.exports = (sequelize) => {
 					isIn: [["credit", "debit", "cash", "mercadoPago"]],
 				},
 			},
-			mercadoPagoId: {
+			invoiceNumber: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
@@ -66,15 +66,20 @@ module.exports = (sequelize) => {
 					isIn: [["completed", "pending", "cancelled", "failed", "voided"]],
 				},
 			},
-			delivery: {
-				type: DataTypes.STRING,
-				allowNull: true,
+			isdelivery: {
+				type: DataTypes.BOOLEAN,
+				allowNull: false,
+				defaultValue: false,
 			},
-			comments: {
+			deliveryAddress: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
 			customersId: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			},
+			comments: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			}

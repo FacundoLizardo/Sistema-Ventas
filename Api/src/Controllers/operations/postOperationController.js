@@ -1,9 +1,8 @@
-const Operations = require("../../db");
-
+const { Operation } = require("../../db")
 
 const postOperationController = async (products, amount, discount, extraCharge, debtAmount, local, paymentType, mercadoPagoId, state, delivery, comments, customersId) => {
     try {
-        const operation = await Operations.create({
+        const operation = await Operation.create({
             products, amount, discount, extraCharge, debtAmount, local, paymentType, mercadoPagoId, state, delivery, comments, customersId
         });
 
