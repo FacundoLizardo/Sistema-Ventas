@@ -1,14 +1,15 @@
 require("dotenv").config();
 const { Sequelize } = require("sequelize");
 const pg = require("pg");
+
 const ProductModel = require("./Models/Product.js");
 const UserModel = require("./Models/User.js");
 const BranchModel = require("./Models/Branch.js");
-const CostumersModel = require("./Models/Costumers.js");
-const OffersModel = require("./Models/Offers.js");
-const PurchasesModel = require("./Models/Purchases.js");
-const SaleModel = require("./Models/Sale.js");
-const SuppliersModel = require("./Models/Suppliers.js");
+const CostumerModel = require("./Models/Costumers.js");
+const OfferModel = require("./Models/Offers.js");
+const PurchaseModel = require("./Models/Purchases.js");
+const OperationModel = require("./Models/Operations.js");
+const SupplierModel = require("./Models/Suppliers.js");
 const Cash_RegisterModel = require("./Models/Cash_Register.js");
 
 /* ----- Database connection ----- */
@@ -29,19 +30,19 @@ const sequelize = new Sequelize(
 ProductModel(sequelize);
 UserModel(sequelize);
 BranchModel(sequelize);
-CostumersModel(sequelize);
-OffersModel(sequelize);
-PurchasesModel(sequelize);
-SaleModel(sequelize);
-SuppliersModel(sequelize);
+CostumerModel(sequelize);
+OfferModel(sequelize);
+PurchaseModel(sequelize);
+OperationModel(sequelize);
+SupplierModel(sequelize);
 Cash_RegisterModel(sequelize);
 
-const { Product, User, Branch, Costumers, Offers, Purchases, Sale, Suppliers, Cash_Register } = sequelize.models;
+const { Product, User, Branch, Costumers, Offers, Purchases, Operation, Suppliers, Cash_Register } = sequelize.models;
 
-Product.hasMany(Sale);
-Sale.belongsTo(Product);
+Product.hasMany(Operation);
+Operation.belongsTo(Product);
 
 module.exports = {
-	Product, User, Branch, Costumers, Offers, Purchases, Sale, Suppliers, Cash_Register,
+	Product, User, Branch, Costumers, Offers, Purchases, Operation, Suppliers, Cash_Register,
 	conn: sequelize,
 };
