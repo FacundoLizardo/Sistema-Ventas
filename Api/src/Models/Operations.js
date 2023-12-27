@@ -4,7 +4,7 @@ module.exports = (sequelize) => {
 	sequelize.define(
 		"Operation",
 		{
-			operationsId: {
+			operationId: {
 				type: DataTypes.INTEGER,
 				primaryKey: true,
 				autoIncrement: true,
@@ -31,7 +31,7 @@ module.exports = (sequelize) => {
 			},
 			debtAmount: {
 				type: DataTypes.DECIMAL(10, 2),
-				allowNull: false,
+				allowNull: true,
 				validate: {
 					isFloat: {
 						msg: "The debt should be a decimal number.",

@@ -9,11 +9,12 @@ const PayButton = () => {
   const baseURL = import.meta.env.VITE_URL_BACKEND;
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({
+    products: [],
     amount: 0,
     discount: 0,
     extraCharge: 0,
-    debtAmount: "",
-    local: "",
+    debtAmount: 0,
+    local: "prueba",
     paymentType: "cash",
     invoiceNumber: "",
     state: "pending",
@@ -25,7 +26,7 @@ const PayButton = () => {
 
   useEffect(() => {
     totalAmount();
-  }, [cart, modalData.discount]);
+  }, [modalData.discount]);
 
   const totalAmount = () => {
     const total = cart.reduce((total, product) => {
@@ -66,42 +67,78 @@ const PayButton = () => {
   };
 
   const handleModalOpen = () => {
+    setModalData((prevData) => ({
+      ...prevData,
+      products: cart,
+    }));
     setShowModal(true);
   };
 
-  const handleDiscount = (event) => {
-    const discountValue = event.target.value;
+  const handleFormValue = (event) => {
+    const { name, value } = event.target;
     setModalData((prevData) => ({
       ...prevData,
-      discount: discountValue,
+      [name]: value,
     }));
   };
 
   return (
     <section>
       {!showModal ? (
-        <button onClick={handleModalOpen}>Cargar datos</button>
+        <button onClick={handleModalOpen}>Completar Detalles de Venta</button>
       ) : (
         <form onSubmit={handleSubmit}>
           <div>
             <p>Monto sin descuento:</p>
-            <p>{showTotalAmount()}</p>
+            <p>$ {showTotalAmount()}</p>
           </div>
+
           <div>
             <label htmlFor="discount">Descuento:</label>
             <input
               type="number"
-              id="discount"
+              name="discount"
               value={modalData.discount}
               placeholder={modalData.discount}
-              onChange={handleDiscount}
+              onChange={handleFormValue}
               min="0"
               max="100"
             />
           </div>
+
+          {/* <div>
+            <label htmlFor="debtAmount">Monto pendiente:</label>
+            <input
+              type="numer"
+              name="debtAmount"
+              value={modalData.debtAmount}
+            />
+          </div> */}
+
+          <div>
+            <label htmlFor="local" name="local">
+              Sucursal:
+            </label>
+          </div>
+
+          <div>
+            <label htmlFor="paymentType">Forma de pago</label>
+            <select name="paymentType">
+              <option value="cash">Efectivo</option>
+              <option value="credit">Tarjeta de crédito</option>
+              <option value="debit">Tarjeta de débito</option>
+              <option value="mercadoPago">Mercado Pago</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="invoiceNumber">Cupón de cobro:</label>
+            <input type="text" name="invoiceNumber" />
+          </div>
+
           <div>
             <p>Total a pagar:</p>
-            <p>{modalData.amount}</p>
+            <p>$ {modalData.amount}</p>
           </div>
           <button type="submit">Comprar</button>
         </form>
