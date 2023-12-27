@@ -37,12 +37,30 @@ OperationModel(sequelize);
 SupplierModel(sequelize);
 Cash_RegisterModel(sequelize);
 
-const { Product, User, Branch, Costumers, Offers, Purchases, Operation, Suppliers, Cash_Register } = sequelize.models;
+const {
+	Product,
+	User,
+	Branch,
+	Costumers,
+	Offers,
+	Purchases,
+	Operation,
+	Suppliers,
+	Cash_Register,
+} = sequelize.models;
 
 Product.hasMany(Operation);
-Operation.belongsTo(Product);
+Operation.hasMany(Product);
 
 module.exports = {
-	Product, User, Branch, Costumers, Offers, Purchases, Operation, Suppliers, Cash_Register,
+	Product,
+	User,
+	Branch,
+	Costumers,
+	Offers,
+	Purchases,
+	Operation,
+	Suppliers,
+	Cash_Register,
 	conn: sequelize,
 };
