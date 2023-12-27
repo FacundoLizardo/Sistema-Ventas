@@ -1,3 +1,4 @@
+import style from "./PayButton.module.css";
 import { useEffect, useState } from "react";
 import { useCart } from "../../../context/cart/cart";
 import axios from "axios";
@@ -87,26 +88,27 @@ const PayButton = () => {
       {!showModal ? (
         <button onClick={handleModalOpen}>Completar Detalles de Venta</button>
       ) : (
-        <form onSubmit={handleSubmit}>
-          <div>
-            <p>Monto sin descuento:</p>
-            <p>$ {showTotalAmount()}</p>
-          </div>
+        <div className={style.modal}>
+          <div className={style.modalContent}>
+            <form onSubmit={handleSubmit} className={style.formContainer}>
+              <div className={style.item}>
+                <label htmlFor="totalAmount">Monto sin descuento:</label>
+                <p>$ {showTotalAmount()}</p>
+              </div>
 
-          <div>
-            <label htmlFor="discount">Descuento:</label>
-            <input
-              type="number"
-              name="discount"
-              value={modalData.discount}
-              placeholder={modalData.discount}
-              onChange={handleFormValue}
-              min="0"
-              max="100"
-            />
-          </div>
+              <div className={style.item}>
+                <label htmlFor="discount">Descuento por compra (%):</label>
+                <input
+                  type="number"
+                  name="discount"
+                  placeholder="Ingrese el descuento"
+                  onChange={handleFormValue}
+                  min="0"
+                  max="100"
+                />
+              </div>
 
-          {/* <div>
+              {/* <div className={style.item}>
             <label htmlFor="debtAmount">Monto pendiente:</label>
             <input
               type="numer"
@@ -115,33 +117,35 @@ const PayButton = () => {
             />
           </div> */}
 
-          <div>
-            <label htmlFor="local" name="local">
-              Sucursal:
-            </label>
-          </div>
+              <div className={style.item}>
+                <label htmlFor="local" name="local">
+                  Sucursal:
+                </label>
+              </div>
 
-          <div>
-            <label htmlFor="paymentType">Forma de pago</label>
-            <select name="paymentType">
-              <option value="cash">Efectivo</option>
-              <option value="credit">Tarjeta de crédito</option>
-              <option value="debit">Tarjeta de débito</option>
-              <option value="mercadoPago">Mercado Pago</option>
-            </select>
-          </div>
+              <div className={style.item}>
+                <label htmlFor="paymentType">Seleccionar forma de pago:</label>
+                <select name="paymentType" onChange={handleFormValue}>
+                  <option value="cash">Efectivo</option>
+                  <option value="credit">Tarjeta de crédito</option>
+                  <option value="debit">Tarjeta de débito</option>
+                  <option value="mercadoPago">Mercado Pago</option>
+                </select>
+              </div>
 
-          <div>
-            <label htmlFor="invoiceNumber">Cupón de cobro:</label>
-            <input type="text" name="invoiceNumber" />
-          </div>
+              <div className={style.item}>
+                <label htmlFor="invoiceNumber">Cupón de cobro:</label>
+                <input type="text" name="invoiceNumber" />
+              </div>
 
-          <div>
-            <p>Total a pagar:</p>
-            <p>$ {modalData.amount}</p>
+              <div className={style.total}>
+                <label>Total a pagar:</label>
+                <h2>$ {modalData.amount}</h2>
+              </div>
+              <button type="submit">Vender</button>
+            </form>
           </div>
-          <button type="submit">Comprar</button>
-        </form>
+        </div>
       )}
     </section>
   );
