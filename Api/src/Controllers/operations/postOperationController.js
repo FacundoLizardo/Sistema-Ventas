@@ -5,6 +5,7 @@ const postOperationController = async (products, amount, discount, extraCharge, 
         const operation = await Operation.create({
             products, amount, discount, extraCharge, debtAmount, local, paymentType, mercadoPagoId, state, delivery, comments, customersId
         });
+        console.log(operation);
 
         const operationId = operation.operationId
 

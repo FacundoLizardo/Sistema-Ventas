@@ -75,6 +75,10 @@ const PayButton = () => {
     setShowModal(true);
   };
 
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
   const handleFormValue = (event) => {
     const { name, value } = event.target;
     setModalData((prevData) => ({
@@ -143,6 +147,7 @@ const PayButton = () => {
                 <h2>$ {modalData.amount}</h2>
               </div>
               <button type="submit">Vender</button>
+              <button onClick={handleModalClose}>Volver</button>
             </form>
           </div>
         </div>
