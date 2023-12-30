@@ -5,6 +5,10 @@ const fs = require('fs')
 
 const postAfipVoucherController = async ({ ptoVta, cbteTipo, concepto, docTipo, docNro, importeGravado, importeExentoIva, importeIva, razonSocial, direccion, cuit, responsableInscripto, iibb, inicioActividad }) => {
 
+	const redColor = '\x1b[31m';
+	const resetColor = '\x1b[0m';
+	console.log(redColor + "GENERANDO VOUCHER" + resetColor);
+
 	try {
 
 		const lastVoucher = await afip.ElectronicBilling.getLastVoucher(ptoVta, cbteTipo);
@@ -60,7 +64,7 @@ const postAfipVoucherController = async ({ ptoVta, cbteTipo, concepto, docTipo, 
 
 		};
 
-		console.log("Valores de data: ", data);
+		console.log("Valores: ", data);
 
 		const voucherData = await afip.ElectronicBilling.createVoucher(data);
 
@@ -102,15 +106,9 @@ const postAfipTicketController = async (voucherData, data) => {
 			options: options
 		});
 
-		console.log(pdfData);
+		console.log("Datos del PDF generado:", pdfData);
 
-		/* if (pdfData && pdfData.content) {
-			fs.writeFileSync('voucher.pdf', pdfData.content, 'utf8');
-			console.log('PDF del voucher generado exitosamente');
-			return pdfData;
-		} else {
-			throw new Error('El contenido del PDF es indefinido o nulo');
-		} */
+
 	} catch (error) {
 		console.error('Ocurrió un error al generar el PDF:', error);
 		throw new Error(error);
@@ -121,6 +119,11 @@ const postAfipTicketController = async (voucherData, data) => {
 const emitVoucherAndGeneratePDF = async ({ ptoVta, cbteTipo, concepto, docTipo, docNro, importeGravado, importeExentoIva, importeIva, razonSocial, direccion, cuit, responsableInscripto, iibb, inicioActividad }) => {
 	try {
 		const { voucherData, data } = await postAfipVoucherController({ ptoVta, cbteTipo, concepto, docTipo, docNro, importeGravado, importeExentoIva, importeIva, razonSocial, direccion, cuit, responsableInscripto, iibb, inicioActividad });
+
+		console.log("Voucher creado exitosamente:");
+		console.log(voucherData);
+		console.log(data);
+
 		await postAfipTicketController(voucherData, data);
 	} catch (error) {
 		console.error('Ocurrió un error:', error);
