@@ -124,7 +124,7 @@ const emitVoucherAndGeneratePDF = async ({ ptoVta, cbteTipo, concepto, docTipo, 
 		console.log(voucherData);
 		console.log(data);
 
-		await postAfipTicketController(voucherData, data);
+		return await postAfipTicketController(voucherData, data);
 	} catch (error) {
 		console.error('Ocurrió un error:', error);
 	}

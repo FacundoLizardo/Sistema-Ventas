@@ -54,7 +54,7 @@ body {
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   color: var(--text-secondary-color);
   background-color: var(--bg-color);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 @media screen and (min-width: 768px) {
