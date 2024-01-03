@@ -2,7 +2,7 @@ import style from "./Sales.module.css";
 import { useContext } from "react";
 import { ProductContext } from "../../context/products/products";
 import CardProduct from "../../components/cardProduct/CardProduct";
-import PayButton from "../../components/buttons/payButton/payButton";
+import FormAfip from "../../components/buttons/formAfip/FormAfip";
 
 const Sales = () => {
   const { products } = useContext(ProductContext);
@@ -20,8 +20,8 @@ const Sales = () => {
           )}
         </ul>
       </div>
-      <div>
-        <PayButton />
+      <div className={style.formContainer}>
+        <FormAfip />
       </div>
     </section>
   );

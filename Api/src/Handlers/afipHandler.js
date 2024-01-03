@@ -1,12 +1,17 @@
-const emitVoucherAndGeneratePDF = require("../Controllers/afip/postAfipTicketController");
+const postFacturaAController = require("../Controllers/afip/postFacturaAController");
 
 const postAfip = async (req, res) => {
-    const { ptoVta, cbteTipo, concepto, docTipo, docNro, importeGravado, importeExentoIva, importeIva, razonSocial, direccion, cuit, responsableInscripto, iibb, inicioActividad } = req.body
+    const { products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva } = req.body
     try {
-        const afipInvoice = await emitVoucherAndGeneratePDF({ ptoVta, cbteTipo, concepto, docTipo, docNro, importeGravado, importeExentoIva, importeIva, razonSocial, direccion, cuit, responsableInscripto, iibb, inicioActividad });
-        return res.status(200).json({ success: true, afipInvoice })
+        if (cbteTipo === 1) {
+
+            const afipInvoice = await postFacturaAController({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva });
+            return res.status(200).json({ success: true, afipInvoice })
+        }
+
     } catch (error) {
-        return res.status(400).json({ error: error.message })
+        console.error('Error in postAfip:', error);
+        return res.status(400).json({ error: error.message });
     }
 }
 

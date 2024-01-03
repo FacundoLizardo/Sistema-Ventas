@@ -1,5 +1,5 @@
 .salesContainer {
-  width: 90%;
+  width: 90dvw;
   min-height: 100dvh;
   max-width: 1024px;
   margin: auto;
@@ -21,5 +21,10 @@
       width: 100%;
       gap: 10px;
     }
+  }
+
+  & .formContainer {
+    display: flex;
+    width: 100%;
   }
 }
