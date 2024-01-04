@@ -52,6 +52,8 @@ const {
 Product.hasMany(Operation);
 Operation.hasMany(Product);
 
+// crear relacion usuario operaciones, uno a muchos (usuario/operaciones) y viceversa
+
 module.exports = {
 	Product,
 	User,
