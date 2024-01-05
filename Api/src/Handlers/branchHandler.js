@@ -1,8 +1,8 @@
-const postBranchController = require("../Controllers/Branchs/postBranchController");
-const deleteBranchController = require("../Controllers/Branchs/deleteBranchController");
-const getAllBranchsController = require("../Controllers/Branchs/getAllBranchsController");
-const getBranchByIdController = require("../Controllers/Branchs/getBranchByIdController");
-const putBranchController = require("../Controllers/Branchs/putBranchController");
+const postBranchController = require("../Controllers/branch/postBranchController");
+// const deleteBranchController = require("../Controllers/branch/deleteBranchController");
+// const getAllBranchsController = require("../Controllers/branch/getAllBranchsController");
+// const getBranchByIdController = require("../Controllers/branch/getBranchByIdController");
+// const putBranchController = require("../Controllers/branch/putBranchController");
 
 const getBranch = async (req, res) => {
 	const { id } = req.params;
@@ -27,13 +27,31 @@ const getBranchs = async (req, res) => {
 	}
 };
 
-const postBranchs = async (req, res) => {
-	const { name } = req.body;
-	if (!name || !category || !quantity) {
+const postBranch = async (req, res) => {
+	const {
+		afipId,
+		name,
+		location,
+		isStorage,
+		enable,
+		manager,
+		hours,
+		phoneNumber,
+	} = req.body;
+	if (!name || !location) {
 		return res.status(404).json("Missing information.");
 	}
 	try {
-		const newBranch = await postBranchController(name);
+		const newBranch = await postBranchController(
+			afipId,
+			name,
+			location,
+			isStorage,
+			enable,
+			manager,
+			hours,
+			phoneNumber
+		);
 		return res.status(200).json(newBranch);
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
@@ -65,7 +83,7 @@ const deleteBranch = async (req, res) => {
 module.exports = {
 	getBranch,
 	getBranchs,
-	postBranchs,
+	postBranch,
 	putBranch,
 	deleteBranch,
 };
