@@ -1,6 +1,8 @@
 const getUserByIdController = require("../Controllers/user/getUserController");
 const postUserController = require("../Controllers/user/postUserController");
 const putUserController = require("../Controllers/user/putUserController");
+const getAllUsersController = require("../Controllers/user/getAllUsersController");
+const deleteUserController = require("../Controllers/user/deleteUserController");
 const getUser = async (req, res) => {
 	const id = req.params;
 	try {
@@ -15,9 +17,12 @@ const getUser = async (req, res) => {
 
 const getUsers = async (req, res) => {
 	try {
-		res.status(200).json("ruta get users");
+		const products = await getAllUsersController();
+		products
+			? res.status(200).json({ success: true, products })
+			: res.status(404).json({ success: false, message: "No products found." });
 	} catch (error) {
-		res.status(400).json({ error: error.message });
+		return res.status(400).json({ error: error.message });
 	}
 };
 
@@ -64,7 +69,6 @@ const putUser = async (req, res) => {
 			email,
 			address,
 			phoneNumber,
-
 			branch,
 			enabled,
 			role,
@@ -89,9 +93,11 @@ const putUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
 	try {
-		res.status(200).json("ruta delete user");
+		const cuit = req.params.id;
+		const deletedUser = await deleteUserController(cuit);
+		res.status(200).json(deletedUser);
 	} catch (error) {
-		res.status(400).json({ error: error.message });
+		return res.status(400).json({ error: error.message });
 	}
 };
 
