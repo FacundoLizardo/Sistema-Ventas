@@ -12,6 +12,19 @@ const postUserController = async (
 	role
 ) => {
 	try {
+		// Crea una instancia del modelo sin guardarla en la base de datos para validar errores con .validate()
+		await User.build({
+			firstName,
+			lastName,
+			email,
+			address,
+			phoneNumber,
+			cuit,
+			branch,
+			enabled,
+			role,
+		}).validate();
+
 		const [newUser, created] = await User.findOrCreate({
 			where: { cuit: cuit },
 			defaults: {
@@ -31,11 +44,23 @@ const postUserController = async (
 			? newUser
 			: "User not created because it already exists or something is wrong, please try again";
 	} catch (error) {
-		throw new Error(error.message);
+		// Captura las excepciones de validación y retorna los mensajes de error
+		if (
+			error.name === "SequelizeValidationError" ||
+			error.name === "SequelizeUniqueConstraintError"
+		) {
+			const validationErrors = error.errors.map((err) => ({
+				field: err.path,
+				message: err.message,
+			}));
+			return validationErrors;
+		} else {
+			throw new Error(error.message);
+		}
 	}
 };
 
-//////////////////////////// modelo de usario para probar ruta /////////////////////////////
+//------------------modelo de usario para probar ruta --------------------//
 // {
 //     "firstName": "John",
 //     "lastName": "Doe",

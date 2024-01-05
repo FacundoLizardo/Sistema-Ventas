@@ -1,5 +1,6 @@
 const getUserByIdController = require("../Controllers/user/getUserController");
 const postUserController = require("../Controllers/user/postUserController");
+const putUserController = require("../Controllers/user/putUserController");
 const getUser = async (req, res) => {
 	const id = req.params;
 	try {
@@ -56,7 +57,31 @@ const postUser = async (req, res) => {
 
 const putUser = async (req, res) => {
 	try {
-		res.status(200).json("ruta put user");
+		const cuit = req.params.id;
+		const {
+			firstName,
+			lastName,
+			email,
+			address,
+			phoneNumber,
+
+			branch,
+			enabled,
+			role,
+		} = req.body;
+
+		const updateUser = await putUserController(
+			firstName,
+			lastName,
+			email,
+			address,
+			phoneNumber,
+			cuit,
+			branch,
+			enabled,
+			role
+		);
+		res.status(200).json(updateUser);
 	} catch (error) {
 		res.status(400).json({ error: error.message });
 	}
