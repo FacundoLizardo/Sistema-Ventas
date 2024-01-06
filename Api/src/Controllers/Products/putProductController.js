@@ -27,4 +27,28 @@ const putProductController = async (productId, name, category, cost, finalPrice,
     }
 };
 
-module.exports = putProductController;
+const putProductQuantityController = async ({ productId, quantity }) => {
+    try {
+        const product = await Product.findByPk(productId)
+
+
+        if (product) {
+         
+            await product.update({
+                quantity: product.quantity - 1
+            }) 
+            return true
+        
+        } else {
+
+            throw new Error(`Product with ID ${productId} not found`)
+        
+        }
+
+    } catch (error) {
+        console.error("Error updating product quantity.")
+        throw new Error(error.message)
+    }
+}
+
+module.exports = { putProductController, putProductQuantityController };

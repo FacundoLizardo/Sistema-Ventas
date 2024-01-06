@@ -59,7 +59,6 @@ const FormAfip = () => {
     dataAfip.concepto,
     dataAfip.docTipo,
     dataAfip.docNro,
-    dataAfip.importeGravado,
     dataAfip.importeExentoIva,
     dataAfip.importeIva,
   ]);
