@@ -1,11 +1,11 @@
 const { Product } = require("../../db")
 
-const postProductController = async (name, category, cost, finalPrice, discount, profitPercentage, quantity, enabled, notesDescription, taxes, barcode) => {
+const postProductController = async (name, category, cost, finalPrice, discount, profitPercentage, stock, enabled, notesDescription, taxes, barcode) => {
     try {
         const [product, created] = await Product.findOrCreate({
             where: { name: name },
             defaults: {
-                name, category, cost, finalPrice, discount, profitPercentage, quantity, enabled, notesDescription, taxes, barcode
+                name, category, cost, finalPrice, discount, profitPercentage, stock, enabled, notesDescription, taxes, barcode
             }
         });
 

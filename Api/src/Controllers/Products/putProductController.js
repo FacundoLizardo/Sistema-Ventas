@@ -1,6 +1,6 @@
 const { Product } = require("../../db");
 
-const putProductController = async (productId, name, category, cost, finalPrice, discount, profitPercentage, quantity, enabled, notesDescription, taxes, barcode) => {
+const putProductController = async (productId, name, category, cost, finalPrice, discount, profitPercentage, stock, enabled, notesDescription, taxes, barcode) => {
     try {
         const updatedProduct = await Product.update(
             {
@@ -10,7 +10,7 @@ const putProductController = async (productId, name, category, cost, finalPrice,
                 finalPrice,
                 discount,
                 profitPercentage,
-                quantity,
+                stock,
                 enabled,
                 notesDescription,
                 taxes,
@@ -27,7 +27,7 @@ const putProductController = async (productId, name, category, cost, finalPrice,
     }
 };
 
-const putProductQuantityController = async ({ productId, quantity }) => {
+const putProductStockController = async ({ productId, stock }) => {
     try {
         const product = await Product.findByPk(productId)
 
@@ -35,7 +35,7 @@ const putProductQuantityController = async ({ productId, quantity }) => {
         if (product) {
          
             await product.update({
-                quantity: product.quantity - 1
+                stock: product.stock - 1
             }) 
             return true
         
@@ -46,9 +46,9 @@ const putProductQuantityController = async ({ productId, quantity }) => {
         }
 
     } catch (error) {
-        console.error("Error updating product quantity.")
+        console.error("Error updating product stock.")
         throw new Error(error.message)
     }
 }
 
-module.exports = { putProductController, putProductQuantityController };
+module.exports = { putProductController, putProductStockController };

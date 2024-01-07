@@ -30,10 +30,10 @@ const getProducts = async (req, res) => {
 }
 
 const postProducts = async (req, res) => {
-    const { name, category, cost, finalPrice, discount, profitPercentage, quantity, enabled, notesDescription, taxes, barcode } = req.body
-    if (!name || !category || !quantity) { return res.status(404).json("Missing information.") }
+    const { name, category, cost, finalPrice, discount, profitPercentage, stock, enabled, notesDescription, taxes, barcode } = req.body
+    if (!name || !category || !stock) { return res.status(404).json("Missing information.") }
     try {
-        const newProduct = await postProductController(name, category, cost, finalPrice, discount, profitPercentage, quantity, enabled, notesDescription, taxes, barcode)
+        const newProduct = await postProductController(name, category, cost, finalPrice, discount, profitPercentage, stock, enabled, notesDescription, taxes, barcode)
         return res.status(200).json(newProduct);
     } catch (error) {
         return res.status(400).json({ error: error.message });
@@ -43,7 +43,7 @@ const postProducts = async (req, res) => {
 const putProduct = async (req, res) => {
     try {
         const productId = req.params.id;
-        const { name, category, cost, finalPrice, discount, profitPercentage, quantity, enabled, notesDescription, taxes, barcode } = req.body;
+        const { name, category, cost, finalPrice, discount, profitPercentage, stock, enabled, notesDescription, taxes, barcode } = req.body;
 
         const updatedProduct = await putProductController(
             productId,
@@ -53,7 +53,7 @@ const putProduct = async (req, res) => {
             finalPrice,
             discount,
             profitPercentage,
-            quantity,
+            stock,
             enabled,
             notesDescription,
             taxes,

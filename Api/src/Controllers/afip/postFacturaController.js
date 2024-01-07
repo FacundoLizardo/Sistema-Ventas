@@ -7,7 +7,7 @@ const afip = new Afip({ CUIT: CUIT });
 const path = require('path');
 const fs = require('fs');
 
-const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva }) => {
+const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount }) => {
 
 	const redColor = '\x1b[31m';
 	const resetColor = '\x1b[0m';
@@ -35,7 +35,7 @@ const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, 
 		}
 
 		products.forEach(product => {
-			importe_gravado += parseFloat(product.finalPrice);
+			importe_gravado += parseFloat(product.finalPrice * discount);
 			const ivaRate = 21;
 			const ivaAmount = (parseFloat(product.finalPrice) * ivaRate) / 100;
 			importe_iva += ivaAmount;
@@ -247,9 +247,9 @@ const generatePDF = async (voucherData, data, numeroFactura, urlQr) => {
 };
 
 
-const postFacturaAController = async ({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva }) => {
+const postFacturaAController = async ({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount }) => {
 	try {
-		const { voucherData, data, urlQr } = await generateVoucher({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva });
+		const { voucherData, data, urlQr } = await generateVoucher({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount });
 
 		const generatedPDF = await generatePDF(voucherData, data, urlQr);
 

@@ -29,7 +29,7 @@ const Product = (sequelize) => {
 				allowNull: true,
 			},
 			discount: {
-				type: DataTypes.INTEGER,
+				type: DataTypes.DECIMAL(5, 2),
 				allowNull: true,
 				validate: {
 					isPositive(value) {
@@ -46,13 +46,13 @@ const Product = (sequelize) => {
 				allowNull: true,
 				validate: {
 					isPositive(value) {
-						if (value <= 0) {
+						if (value < 0) {
 							throw new Error('The profit percentage must be a positive number.');
 						}
 					}
 				}
 			},
-			quantity: {
+			stock: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
