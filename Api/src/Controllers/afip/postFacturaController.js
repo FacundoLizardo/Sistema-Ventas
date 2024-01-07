@@ -20,6 +20,8 @@ const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, 
 		const fecha = new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000)).toISOString().split('T')[0];
 
 		let importe_gravado = 0;
+		console.log(importe_gravado);
+		console.log(discount);
 		let importe_exento_iva = importeExentoIva;
 		let importe_iva = 0;
 		let ImpTrib = 0;
@@ -35,7 +37,7 @@ const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, 
 		}
 
 		products.forEach(product => {
-			importe_gravado += parseFloat(product.finalPrice * discount);
+			importe_gravado += discount > 0 ? parseFloat(product.finalPrice * discount) : parseFloat(product.finalPrice)
 			const ivaRate = 21;
 			const ivaAmount = (parseFloat(product.finalPrice) * ivaRate) / 100;
 			importe_iva += ivaAmount;
@@ -77,7 +79,7 @@ const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, 
 			"products": products,
 			"ImpTrib": ImpTrib
 		};
-
+		console.log(data);
 
 		const voucherData = await afip.ElectronicBilling.createVoucher(data);
 
@@ -126,7 +128,7 @@ const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, 
 }
 
 
-const generatePDF = async (voucherData, data, numeroFactura, urlQr) => {
+const generatePDF = async (voucherData, data, numeroFactura, urlQr, discount) => {
 	try {
 
 		const htmlPath =
@@ -251,7 +253,7 @@ const postFacturaAController = async ({ products, ptoVta, cbteTipo, concepto, do
 	try {
 		const { voucherData, data, urlQr } = await generateVoucher({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount });
 
-		const generatedPDF = await generatePDF(voucherData, data, urlQr);
+		const generatedPDF = await generatePDF(voucherData, data, urlQr, discount);
 
 		return {
 			success: true,

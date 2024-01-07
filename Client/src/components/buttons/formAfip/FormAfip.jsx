@@ -94,10 +94,18 @@ const FormAfip = () => {
         throw new Error("El carrito está vacío o no es un array válido");
       }
 
-      const response = await axios.post(`${baseURL}/afip`, dataAfip);
+      const discountPercentage = parseFloat(dataAfip.discount) / 100;
+
+      const updateDataAfip = {
+        ...dataAfip,
+        discount: discountPercentage,
+      };
+
+      const response = await axios.post(`${baseURL}/afip`, updateDataAfip);
+      console.log("Back End response:", response.data);
       return response;
     } catch (error) {
-      console.error("Error al procesar la compra:", error);
+      console.error("Error processing the purchase:", error);
     }
   };
 
@@ -111,122 +119,127 @@ const FormAfip = () => {
 
   return (
     <form onSubmit={handleSubmit} className={style.formContainer}>
-      <div className={style.item}>
-        <p htmlFor="totalAmount" name="totalAmount">
-          Monto sin descuento
-        </p>
-        <p>$ {showTotalAmount()}</p>
+      {/* Amount */}
+
+      <div className={style.itemContainer}>
+        <div className={style.item}>
+          <p htmlFor="totalAmount" name="totalAmount">
+            Monto sin descuento
+          </p>
+          <p>$ {showTotalAmount()}</p>
+        </div>
+
+        <div className={style.item}>
+          <label>Descuento por compra (%)</label>
+          <input
+            type="number"
+            name="discount"
+            placeholder="Ingrese el descuento"
+            onChange={handleFormValue}
+            min="0"
+            max="100"
+          />
+        </div>
       </div>
 
-      <div className={style.item}>
-        <label>Descuento por compra (%)</label>
-        <input
-          type="number"
-          name="discount"
-          placeholder="Ingrese el descuento"
-          onChange={handleFormValue}
-          min="0"
-          max="100"
-        />
+      {/* Document Details */}
+
+      <div className={style.itemContainer}>
+        <div className={style.item}>
+          <label>Tipo de documento</label>
+          <select
+            name="docTipo"
+            onChange={handleFormValue}
+            defaultValue={dataAfip.docTipo}
+          >
+            <option value="80">CUIT</option>
+            <option value="86">CUIL</option>
+            <option value="96">DNI</option>
+            <option value="99">Consumidor Final</option>
+          </select>
+        </div>
+
+        <div className={style.item}>
+          <label>Número de documento</label>
+          <input type="text" name="docNro" onChange={handleFormValue} />
+        </div>
       </div>
 
-      {/* <div className={style.item           <label "debtAmount">Monto pendiente:</label>
-            <input
-              type="numer"
-              name="debtAmount"
-              value={modalData.debtAmount}
-            />
-          </div> */}
+      {/* Payment Details */}
 
-      {/*  <div className={style.item             <label "local" name="local">
-                Sucursal:
-              </label>
-            </div> */}
+      <div className={style.itemContainer}>
+        <div className={style.item}>
+          <label>Forma de pago</label>
+          <select
+            name="paymentType"
+            onChange={handleFormValue}
+            value={dataAfip.paymentType}
+          >
+            <option value="cash">Efectivo</option>
+            <option value="credit">Tarjeta de crédito</option>
+            <option value="debit">Tarjeta de débito</option>
+            <option value="mercadoPago">Mercado Pago</option>
+          </select>
+        </div>
 
-      <div className={style.item}>
-        <label>Forma de pago</label>
-        <select
-          name="paymentType"
-          onChange={handleFormValue}
-          value={dataAfip.paymentType}
-        >
-          <option value="cash">Efectivo</option>
-          <option value="credit">Tarjeta de crédito</option>
-          <option value="debit">Tarjeta de débito</option>
-          <option value="mercadoPago">Mercado Pago</option>
-        </select>
+        <div className={style.item}>
+          <label>Cupón de cobro</label>
+          <input type="text" name="invoiceNumber" />
+        </div>
       </div>
 
-      <div className={style.item}>
-        <label>Cupón de cobro</label>
-        <input type="text" name="invoiceNumber" />
+      {/* Invoice Type and Details */}
+
+      <div className={style.itemContainer}>
+        <div className={style.item}>
+          <label>Tipo de factura</label>
+          <select
+            name="cbteTipo"
+            onChange={handleFormValue}
+            value={dataAfip.cbteTipo}
+          >
+            <option value="1">Factura A</option>
+            <option value="6">Factura B</option>
+            <option value="11">Factura C</option>
+            <option value="201">Factura de Crédito electrónica A</option>
+            <option value="206">Factura de Crédito electrónica B</option>
+            <option value="211">Factura de Crédito electrónica C</option>
+            <option value="3">Nota de Crédito A</option>
+            <option value="8">Nota de Crédito B</option>
+            <option value="13">Nota de Crédito C</option>
+          </select>
+        </div>
+
+        <div className={style.item}>
+          <label>Concepto</label>
+          <select name="concepto" onChange={handleFormValue}>
+            <option value="1">Productos</option>
+            <option value="2">Servicios</option>
+            <option value="3">Productos y Servicios</option>
+          </select>
+        </div>
+
+        <div className={style.item}>
+          <label>Importe Exento IVA</label>
+          <input
+            type="number"
+            name="importeExentoIva"
+            onChange={handleFormValue}
+          />
+        </div>
+
+        <div className={style.item}>
+          <label>Importe IVA</label>
+          <input
+            type="number"
+            name="importeIva"
+            onChange={handleFormValue}
+            value={dataAfip.importeIva}
+          />
+        </div>
       </div>
 
-      <div className={style.item}>
-        <label>Tipo de factura</label>
-        <select
-          name="cbteTipo"
-          onChange={handleFormValue}
-          value={dataAfip.cbteTipo}
-        >
-          <option value="1">Factura A</option>
-          <option value="6">Factura B</option>
-          <option value="11">Factura C</option>
-          <option value="201">Factura de Crédito electrónica A</option>
-          <option value="206">Factura de Crédito electrónica B</option>
-          <option value="211">Factura de Crédito electrónica C</option>
-          <option value="3">Nota de Crédito A</option>
-          <option value="8">Nota de Crédito B</option>
-          <option value="13">Nota de Crédito C</option>
-        </select>
-      </div>
-
-      <div className={style.item}>
-        <label>Concepto</label>
-        <select name="concepto" onChange={handleFormValue}>
-          <option value="1">Productos</option>
-          <option value="2">Servicios</option>
-          <option value="3">Productos y Servicios</option>
-        </select>
-      </div>
-
-      <div className={style.item}>
-        <label>Tipo de documento</label>
-        <select
-          name="docTipo"
-          onChange={handleFormValue}
-          defaultValue={dataAfip.docTipo}
-        >
-          <option value="80">CUIT</option>
-          <option value="86">CUIL</option>
-          <option value="96">DNI</option>
-          <option value="99">Consumidor Final</option>
-        </select>
-      </div>
-
-      <div className={style.item}>
-        <label>Número de documento</label>
-        <input type="text" name="docNro" onChange={handleFormValue} />
-      </div>
-
-      <div className={style.item}>
-        <label>Importe Exento IVA</label>
-        <input
-          type="number"
-          name="importeExentoIva"
-          onChange={handleFormValue}
-        />
-      </div>
-
-      <div className={style.item}>
-        <label>Importe IVA</label>
-        <input
-          type="number"
-          name="importeIva"
-          onChange={handleFormValue}
-          value={dataAfip.importeIva}
-        />
-      </div>
+      {/* Total to Pay */}
 
       <div className={style.total}>
         <label>Total a pagar</label>
