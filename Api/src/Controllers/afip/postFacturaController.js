@@ -20,8 +20,6 @@ const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, 
 		const fecha = new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000)).toISOString().split('T')[0];
 
 		let importe_gravado = 0;
-		console.log(importe_gravado);
-		console.log(discount);
 		let importe_exento_iva = importeExentoIva;
 		let importe_iva = 0;
 		let ImpTrib = 0;
@@ -79,7 +77,6 @@ const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, 
 			"products": products,
 			"ImpTrib": ImpTrib
 		};
-		console.log(data);
 
 		const voucherData = await afip.ElectronicBilling.createVoucher(data);
 
@@ -99,25 +96,11 @@ const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, 
 			"codAut": 70417054367476
 		};
 
-		const opt = {
-			errorCorrectionLevel: 'H',
-			type: 'image/jpeg',
-			quality: 0.3,
-			width: 200
-		}
-
 		const jsonData = JSON.stringify(qrData);
 		const base64Data = btoa(jsonData);
 		const URL = `https://www.afip.gob.ar/fe/qr/?p=${base64Data}`
-		const urlQr = await new Promise((resolve, reject) => {
-			QRCode.toDataURL(URL, opt, function (err, url) {
-				if (err) {
-					reject(err)
-				} else (
-					resolve(url)
-				)
-			})
-		})
+
+		const urlQr = await QRCode.toDataURL(URL);
 
 		return { voucherData, data, urlQr }
 
@@ -128,7 +111,8 @@ const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, 
 }
 
 
-const generatePDF = async (voucherData, data, numeroFactura, urlQr, discount) => {
+const generatePDF = async ({ voucherData, data, numeroFactura, urlQr, discount }) => {
+
 	try {
 
 		const htmlPath =
@@ -201,8 +185,9 @@ const generatePDF = async (voucherData, data, numeroFactura, urlQr, discount) =>
 				return "Productos y Servicios"
 			}
 		}
-
+	
 		const replacedHTML = html
+			.replace("{{urlQr}}", urlQr || "QR no found")
 			.replace('{{CAE}}', voucherData.CAE || "")
 			.replace('{{Vencimiento}}', voucherData.CAEFchVto || "")
 			.replace("{{razonSocial}}", razonSocial || "")
@@ -221,7 +206,6 @@ const generatePDF = async (voucherData, data, numeroFactura, urlQr, discount) =>
 			.replace("{{fecha}}", fechaEmision)
 			.replace("{{ImpIVA}}", data.ImpIVA)
 			.replace("{{ImpNeto}}", data.ImpNeto)
-			.replace("{{urlQr}}", urlQr)
 
 
 
@@ -249,11 +233,11 @@ const generatePDF = async (voucherData, data, numeroFactura, urlQr, discount) =>
 };
 
 
-const postFacturaAController = async ({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount }) => {
+const postFacturaController = async ({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount }) => {
 	try {
 		const { voucherData, data, urlQr } = await generateVoucher({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount });
 
-		const generatedPDF = await generatePDF(voucherData, data, urlQr, discount);
+		const generatedPDF = await generatePDF({ voucherData, data, urlQr, discount });
 
 		return {
 			success: true,
@@ -272,4 +256,4 @@ const postFacturaAController = async ({ products, ptoVta, cbteTipo, concepto, do
 
 
 
-module.exports = postFacturaAController
+module.exports = postFacturaController
