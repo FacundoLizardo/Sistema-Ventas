@@ -32,7 +32,7 @@ const CardProduct = ({ product }) => {
         </div>
         <div className={style.infoBottom}>
           <p>{product.category}</p>
-          <p>Disponible: {product.quantity}</p>
+          <p>Disponible: {product.stock}</p>
         </div>
       </div>
       <div className={style.buttons}>

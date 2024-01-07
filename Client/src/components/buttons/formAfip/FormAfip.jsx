@@ -24,7 +24,7 @@ const FormAfip = () => {
     customersId: "",
     comments: "",
 
-    cbteTipo: 1,
+    cbteTipo: 0,
     concepto: 1,
     docTipo: "99",
     docNro: "",
@@ -119,29 +119,6 @@ const FormAfip = () => {
 
   return (
     <form onSubmit={handleSubmit} className={style.formContainer}>
-      {/* Amount */}
-
-      <div className={style.itemContainer}>
-        <div className={style.item}>
-          <p htmlFor="totalAmount" name="totalAmount">
-            Monto sin descuento
-          </p>
-          <p>$ {showTotalAmount()}</p>
-        </div>
-
-        <div className={style.item}>
-          <label>Descuento por compra (%)</label>
-          <input
-            type="number"
-            name="discount"
-            placeholder="Ingrese el descuento"
-            onChange={handleFormValue}
-            min="0"
-            max="100"
-          />
-        </div>
-      </div>
-
       {/* Document Details */}
 
       <div className={style.itemContainer}>
@@ -198,6 +175,7 @@ const FormAfip = () => {
             onChange={handleFormValue}
             value={dataAfip.cbteTipo}
           >
+            <option value="0">Sin factura</option>
             <option value="1">Factura A</option>
             <option value="6">Factura B</option>
             <option value="11">Factura C</option>
@@ -220,7 +198,7 @@ const FormAfip = () => {
         </div>
 
         <div className={style.item}>
-          <label>Importe Exento IVA</label>
+          <label>Imp. Exento IVA</label>
           <input
             type="number"
             name="importeExentoIva"
@@ -239,6 +217,29 @@ const FormAfip = () => {
         </div>
       </div>
 
+      {/* Amount */}
+
+      <div className={style.itemContainer}>
+        <div className={style.item}>
+          <p htmlFor="totalAmount" name="totalAmount">
+            Monto sin descuento
+          </p>
+          <p>$ {showTotalAmount()}</p>
+        </div>
+
+        <div className={style.item}>
+          <label>Descuento por compra (%)</label>
+          <input
+            type="number"
+            name="discount"
+            placeholder="Ingrese el descuento"
+            onChange={handleFormValue}
+            min="0"
+            max="100"
+          />
+        </div>
+      </div>
+      
       {/* Total to Pay */}
 
       <div className={style.total}>
