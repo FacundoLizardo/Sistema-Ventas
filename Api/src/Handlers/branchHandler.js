@@ -2,7 +2,7 @@ const postBranchController = require("../Controllers/branch/postBranchController
 // const deleteBranchController = require("../Controllers/branch/deleteBranchController");
 const getAllBranchesController = require("../Controllers/branch/getAllBranchesController");
 const getBranchByIdController = require("../Controllers/branch/getBranchByIdController");
-// const putBranchController = require("../Controllers/branch/putBranchController");
+const putBranchController = require("../Controllers/branch/putBranchController");
 
 const getBranch = async (req, res) => {
 	const { id } = req.params;
@@ -60,10 +60,29 @@ const postBranch = async (req, res) => {
 
 const putBranch = async (req, res) => {
 	try {
-		const BranchId = req.params.id;
-		const { name } = req.body;
+		const branchId = req.params.id;
+		const {
+			afipId,
+			name,
+			location,
+			isStorage,
+			enable,
+			manager,
+			hours,
+			phoneNumber,
+		} = req.body;
 
-		const updatedBranch = await putBranchController(BranchId, name);
+		const updatedBranch = await putBranchController(
+			branchId,
+			afipId,
+			name,
+			location,
+			isStorage,
+			enable,
+			manager,
+			hours,
+			phoneNumber
+		);
 		res.status(200).json(updatedBranch);
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
