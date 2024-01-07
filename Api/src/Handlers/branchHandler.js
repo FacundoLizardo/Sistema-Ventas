@@ -1,6 +1,6 @@
 const postBranchController = require("../Controllers/branch/postBranchController");
 // const deleteBranchController = require("../Controllers/branch/deleteBranchController");
-// const getAllBranchsController = require("../Controllers/branch/getAllBranchsController");
+const getAllBranchesController = require("../Controllers/branch/getAllBranchesController");
 const getBranchByIdController = require("../Controllers/branch/getBranchByIdController");
 // const putBranchController = require("../Controllers/branch/putBranchController");
 
@@ -18,9 +18,9 @@ const getBranch = async (req, res) => {
 
 const getBranchs = async (req, res) => {
 	try {
-		const branchs = await getAllBranchsController();
-		branchs
-			? res.status(200).json({ success: true, branchs })
+		const branches = await getAllBranchesController();
+		branches
+			? res.status(200).json({ success: true, branches })
 			: res.status(404).json({ success: false, message: "No branchs found." });
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
