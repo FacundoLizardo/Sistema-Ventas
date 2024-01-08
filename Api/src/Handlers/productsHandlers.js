@@ -3,6 +3,7 @@ const deleteProductController = require("../Controllers/products/deleteProductCo
 const getAllProductsController = require("../Controllers/products/getAllProductsController");
 const getProductByIdController = require("../Controllers/products/getProductByIdController");
 const putProductController = require("../Controllers/products/putProductController");
+const getPaginatedProductsController = require("../Controllers/products/getPaginatedProductsController");
 
 
 
@@ -24,6 +25,30 @@ const getProducts = async (req, res) => {
         products
             ? res.status(200).json({ success: true, products })
             : res.status(404).json({ success: false, message: "No products found." })
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
+const getPaginateProducts = async (req, res) => {
+    try {
+        const { page } = req.query
+        const pageNumber = parseInt(page) || 1;
+        const pageSize = 5
+
+        const paginatedProducts = await getPaginatedProductsController(pageNumber, pageSize)
+
+        if (paginatedProducts.products.length === 0) {
+            return res.status(404).json({ succes: false, masagge: "No products found for this page." })
+        }
+
+        return res.status(200).json({
+            success: true,
+            currentPage: pageNumber,
+            totalPages: paginatedProducts.totalPages,
+            products: paginatedProducts.products
+        });
+
     } catch (error) {
         return res.status(400).json({ error: error.message });
     }
@@ -82,5 +107,6 @@ module.exports = {
     getProducts,
     postProducts,
     putProduct,
-    deleteProduct
+    deleteProduct,
+    getPaginateProducts
 }
