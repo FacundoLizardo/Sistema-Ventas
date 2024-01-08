@@ -1,7 +1,7 @@
 .formContainer {
   display: grid;
   grid-template-columns: repeat(1, 100%);
-  gap: 10px;
+  gap: 8px;
   width: 100%;
 }
 
@@ -14,6 +14,19 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+}
+
+.total {
+  width: 100%;
+  font-weight: 900;
+  border: 1px solid var(--primary-color);
+  padding: 3px 0;
+  text-align: center;
+  color: var(--text-primary-color);
+
+  & .totalNumber {
+    font-size: 11px;
+  }
 }
 
 input[type="text"],

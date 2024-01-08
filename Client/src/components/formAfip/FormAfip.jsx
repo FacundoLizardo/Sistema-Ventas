@@ -124,8 +124,9 @@ const FormAfip = () => {
 
       <div className={style.itemContainer}>
         <div className={style.item}>
-          <label>Tipo de documento</label>
+          <label for="docTipo">Tipo de documento</label>
           <select
+            id="docTipo"
             name="docTipo"
             onChange={handleFormValue}
             defaultValue={dataAfip.docTipo}
@@ -138,8 +139,13 @@ const FormAfip = () => {
         </div>
 
         <div className={style.item}>
-          <label>Número de documento</label>
-          <input type="text" name="docNro" onChange={handleFormValue} />
+          <label for="docNro">Número de documento</label>
+          <input
+            type="text"
+            name="docNro"
+            id="docNro"
+            onChange={handleFormValue}
+          />
         </div>
       </div>
 
@@ -147,9 +153,10 @@ const FormAfip = () => {
 
       <div className={style.itemContainer}>
         <div className={style.item}>
-          <label>Forma de pago</label>
+          <label for="paymentType">Forma de pago</label>
           <select
             name="paymentType"
+            id="paymentType"
             onChange={handleFormValue}
             value={dataAfip.paymentType}
           >
@@ -161,9 +168,10 @@ const FormAfip = () => {
         </div>
 
         <div className={style.item}>
-          <label>Tipo de factura</label>
+          <label for="cbteTipo">Tipo de factura</label>
           <select
             name="cbteTipo"
+            id="cbteTipo"
             onChange={handleFormValue}
             value={dataAfip.cbteTipo}
           >
@@ -185,8 +193,8 @@ const FormAfip = () => {
 
       <div className={style.itemContainer}>
         <div className={style.item}>
-          <label>Concepto</label>
-          <select name="concepto" onChange={handleFormValue}>
+          <label for="concepto">Concepto</label>
+          <select name="concepto" id="concepto" onChange={handleFormValue}>
             <option value="1">Productos</option>
             <option value="2">Servicios</option>
             <option value="3">Productos y Servicios</option>
@@ -194,29 +202,32 @@ const FormAfip = () => {
         </div>
 
         <div className={style.item}>
-          <label>Imp. Exento IVA</label>
+          <label for="importeExentoIva">Imp. Exento IVA</label>
           <input
             type="number"
             name="importeExentoIva"
+            id="importeExentoIva"
             onChange={handleFormValue}
           />
         </div>
 
         <div className={style.item}>
-          <label>Importe IVA</label>
+          <label for="importeIva">Importe IVA</label>
           <input
             type="number"
             name="importeIva"
+            id="importeIva"
             onChange={handleFormValue}
             value={dataAfip.importeIva}
           />
         </div>
 
         <div className={style.item}>
-          <label>Desc. (%)</label>
+          <label for="discount">Desc. (%)</label>
           <input
             type="number"
             name="discount"
+            id="discount"
             placeholder="Ingrese el descuento"
             onChange={handleFormValue}
             min="0"
@@ -229,38 +240,39 @@ const FormAfip = () => {
 
       <div className={style.itemContainer}>
         <div className={style.item}>
-          <p htmlFor="totalAmount" name="totalAmount">
-            Sin descuento
-          </p>
-          <p>$ {showTotalAmount()}</p>
+          <span>Sin descuento</span>
+          <span>$ {showTotalAmount()}</span>
         </div>
 
         <div className={style.item}>
-          <p htmlFor="totalAmount" name="totalAmount">
-            Con descuento
-          </p>
-          <p>$ {showTotalAmount()}</p>
+          <span>Con descuento</span>
+          <span>$ {showTotalAmount()}</span>
         </div>
 
         <div className={style.item}>
-          <p htmlFor="totalAmount" name="totalAmount">
-            Monto IVA
-          </p>
-          <p>$ {showTotalAmount()}</p>
+          <span>Monto IVA</span>
+          <span>$ {showTotalAmount()}</span>
         </div>
       </div>
 
       {/* Total to Pay */}
 
       <div className={style.itemContainer}>
-        <div className={style.item}>
-          <div className={style.total}>
-            <label>Total a pagar</label>
-            <h2>$ {dataAfip.amount}</h2>
-          </div>
+        <div className={style.total}>
+          <p>Total a pagar</p>
+          <p className={style.totalNumber}>$ {dataAfip.amount}</p>
         </div>
         <div className={style.item}>
           <Buttons type="submit" text="Vender" onClick={handleSubmit} />
+        </div>
+      </div>
+
+      <div className={style.itemContainer}>
+        <div className={style.item}>
+          <Buttons type="" text="Cancelar" onClick={""} />
+        </div>
+        <div className={style.item}>
+          <Buttons type="" text="Pendiente" onClick={""} />
         </div>
       </div>
     </form>
