@@ -4,7 +4,6 @@ import { ProductContext } from "../../context/products/products";
 import CardProduct from "../../components/cardProduct/CardProduct";
 import FormAfip from "../../components/formAfip/FormAfip";
 
-
 const Sales = () => {
   const { products, currentPage, setCurrentPage, totalPages } =
     useContext(ProductContext);
@@ -33,7 +32,7 @@ const Sales = () => {
             ))}
           </ul>
         ) : (
-          <div>No hay productos</div>
+          <div className={style.null}>No hay productos disponibles</div>
         )}
       </article>
       <div className={style.paginationContainer}>

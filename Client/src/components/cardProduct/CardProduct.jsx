@@ -3,6 +3,7 @@ import { useCart } from "../../context/cart/cart";
 
 const CardProduct = ({ product }) => {
   const { state, dispatch } = useCart();
+  let stylesStock = product.stock <= 0 ? style.withoutStock : "";
 
   const handleAddToCart = async (product) => {
     dispatch({ type: "ADD_TO_CART", payload: product });
@@ -24,7 +25,7 @@ const CardProduct = ({ product }) => {
   };
 
   return (
-    <article className={style.cardProductContainer}>
+    <article className={`${style.cardProductContainer} ${stylesStock}`}>
       <div className={style.info}>
         <div className={style.infoTop}>
           <h3>{product.name}</h3>
