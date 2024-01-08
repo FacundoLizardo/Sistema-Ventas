@@ -1,6 +1,7 @@
 .cardProductContainer {
   display: flex;
   width: 100%;
+  min-height: 30px;
   justify-content: space-between;
   gap: 20px;
 

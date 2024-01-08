@@ -2,7 +2,8 @@ import style from "./Sales.module.css";
 import { useContext } from "react";
 import { ProductContext } from "../../context/products/products";
 import CardProduct from "../../components/cardProduct/CardProduct";
-import FormAfip from "../../components/buttons/formAfip/FormAfip";
+import FormAfip from "../../components/formAfip/FormAfip";
+
 
 const Sales = () => {
   const { products, currentPage, setCurrentPage, totalPages } =
@@ -35,7 +36,7 @@ const Sales = () => {
           <div>No hay productos</div>
         )}
       </article>
-      <div>
+      <div className={style.paginationContainer}>
         <button onClick={previousPage} disabled={currentPage === 1}>
           -
         </button>

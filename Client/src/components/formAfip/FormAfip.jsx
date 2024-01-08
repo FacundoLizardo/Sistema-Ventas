@@ -1,8 +1,9 @@
 /* eslint-disable react/no-unknown-property */
 import style from "./FormAfip.module.css";
 import { useEffect, useState } from "react";
-import { useCart } from "../../../context/cart/cart";
 import axios from "axios";
+import { useCart } from "../../context/cart/cart";
+import Buttons from "../buttons/buttons";
 
 const FormAfip = () => {
   const { state } = useCart();
@@ -160,15 +161,6 @@ const FormAfip = () => {
         </div>
 
         <div className={style.item}>
-          <label>Cupón de cobro</label>
-          <input type="text" name="invoiceNumber" />
-        </div>
-      </div>
-
-      {/* Invoice Type and Details */}
-
-      <div className={style.itemContainer}>
-        <div className={style.item}>
           <label>Tipo de factura</label>
           <select
             name="cbteTipo"
@@ -187,7 +179,11 @@ const FormAfip = () => {
             <option value="13">Nota de Crédito C</option>
           </select>
         </div>
+      </div>
 
+      {/* Invoice Type and Details */}
+
+      <div className={style.itemContainer}>
         <div className={style.item}>
           <label>Concepto</label>
           <select name="concepto" onChange={handleFormValue}>
@@ -215,20 +211,9 @@ const FormAfip = () => {
             value={dataAfip.importeIva}
           />
         </div>
-      </div>
-
-      {/* Amount */}
-
-      <div className={style.itemContainer}>
-        <div className={style.item}>
-          <p htmlFor="totalAmount" name="totalAmount">
-            Monto sin descuento
-          </p>
-          <p>$ {showTotalAmount()}</p>
-        </div>
 
         <div className={style.item}>
-          <label>Descuento por compra (%)</label>
+          <label>Desc. (%)</label>
           <input
             type="number"
             name="discount"
@@ -239,14 +224,45 @@ const FormAfip = () => {
           />
         </div>
       </div>
-      
+
+      {/* Amount */}
+
+      <div className={style.itemContainer}>
+        <div className={style.item}>
+          <p htmlFor="totalAmount" name="totalAmount">
+            Sin descuento
+          </p>
+          <p>$ {showTotalAmount()}</p>
+        </div>
+
+        <div className={style.item}>
+          <p htmlFor="totalAmount" name="totalAmount">
+            Con descuento
+          </p>
+          <p>$ {showTotalAmount()}</p>
+        </div>
+
+        <div className={style.item}>
+          <p htmlFor="totalAmount" name="totalAmount">
+            Monto IVA
+          </p>
+          <p>$ {showTotalAmount()}</p>
+        </div>
+      </div>
+
       {/* Total to Pay */}
 
-      <div className={style.total}>
-        <label>Total a pagar</label>
-        <h2>$ {dataAfip.amount}</h2>
+      <div className={style.itemContainer}>
+        <div className={style.item}>
+          <div className={style.total}>
+            <label>Total a pagar</label>
+            <h2>$ {dataAfip.amount}</h2>
+          </div>
+        </div>
+        <div className={style.item}>
+          <Buttons type="submit" text="Vender" onClick={handleSubmit} />
+        </div>
       </div>
-      <button type="submit">Vender</button>
     </form>
   );
 };

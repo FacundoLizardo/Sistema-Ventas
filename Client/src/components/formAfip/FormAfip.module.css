@@ -3,7 +3,6 @@
   grid-template-columns: repeat(1, 100%);
   gap: 10px;
   width: 100%;
-  margin: var(--m-1) 0;
 }
 
 .itemContainer {

@@ -1,0 +1,32 @@
+.buttonContainer {
+  width: 100%;
+  height: 100%;
+
+  & button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 900;
+  }
+
+  & .buyButtonColor {
+    background-color: var(--buy-button-color);
+    color: var(--text-primary-color);
+  }
+
+  & .pendingButtonColor {
+    background-color: var(--pending-button-color);
+    color: var(--text-primary-color);
+  }
+
+  & .cancelButtonColor {
+    background-color: var(--cancel-button-color);
+    color: var(--text-primary-color);
+  }
+
+  & .basicColor {
+    background-color: var(--basic-color);
+    color: var(--text-primary-color);
+  }
+}

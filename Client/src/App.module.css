@@ -19,6 +19,7 @@
   --primary-color: #450399;
 
   /* Colors buttons */
+  --basic-color: #450399;
   --buy-button-color: #00cc66;
   --pending-button-color: #ff8c00;
   --cancel-button-color: #d63031;
@@ -33,7 +34,7 @@
   --pd-1: 32px;
   --pd-2: 64px;
 
-  --m-1: 2rem;
+  --m-1: 1rem;
   --m-2: 6rem;
 
   /* Font sizes */

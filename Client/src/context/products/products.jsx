@@ -17,7 +17,6 @@ const ProductProvider = ({ children }) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setProducts(data.products);
         setTotalPages(data.totalPages);
       })
