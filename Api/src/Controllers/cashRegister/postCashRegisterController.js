@@ -1,8 +1,8 @@
-const { use } = require("../../Routes/cashRegistrers");
+const { use } = require("../../Routes/cashRegisters");
 const { Cash_Register } = require("../../db");
 const { User } = require("../../db");
 
-const postCashRegistrerController = async (
+const postCashRegisterController = async (
 	userId,
 	initialAmount,
 	finalAmount,
@@ -76,4 +76,4 @@ const postCashRegistrerController = async (
 
 // }
 
-module.exports = postCashRegistrerController;
+module.exports = postCashRegisterController;
