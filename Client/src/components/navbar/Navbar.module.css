@@ -1,9 +1,11 @@
+/* Navbar.module.css */
+
 .navbarContainer {
   width: 100%;
-  height: 80%;
+  height: 40px;
+  display: flex;
   justify-content: center;
   text-align: center;
-  display: flex;
 
   & nav {
     display: flex;
@@ -16,31 +18,29 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
 
       & li a {
-        background-color: var(--bg-color-off);
         display: flex;
-        width: 110px;
-        height: 110px;
         justify-content: center;
         align-items: center;
-        border-radius: var(--radius);
         cursor: pointer;
+        position: relative;
+        padding: 2px 10px;
+
+        &[aria-current="page"] {
+          padding: 2px 10px;
+          font-weight: bold;
+          border-radius: var(--radius);
+          background-color: var(--primary-color);
+          color: var(--text-primary-color);
+        }
       }
     }
   }
 }
 
 @media screen and (min-width: 768px) {
-  .navbarContainer {
-    & nav ul {
-      gap: 30px;
-
-      & li a {
-        width: 130px;
-        height: 130px;
-      }
-    }
+  .navbarContainer nav ul {
+    gap: 30px;
   }
 }

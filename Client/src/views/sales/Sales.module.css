@@ -2,9 +2,7 @@
   width: 90dvw;
   min-height: 100dvh;
   max-width: 1024px;
-  margin: auto;
-  align-items: center;
-  justify-content: center;
+  margin: auto; 
   display: flex;
   flex-direction: column;
   position: relative;
