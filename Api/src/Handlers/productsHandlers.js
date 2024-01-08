@@ -21,33 +21,36 @@ const getProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
     try {
-        const products = await getAllProductsController()
-        products
-            ? res.status(200).json({ success: true, products })
-            : res.status(404).json({ success: false, message: "No products found." })
-    } catch (error) {
-        return res.status(400).json({ error: error.message });
-    }
-}
-
-const getPaginateProducts = async (req, res) => {
-    try {
         const { page } = req.query
-        const pageNumber = parseInt(page) || 1;
-        const pageSize = 5
+        let products;
 
-        const paginatedProducts = await getPaginatedProductsController(pageNumber, pageSize)
+        if (page) {
 
-        if (paginatedProducts.products.length === 0) {
-            return res.status(404).json({ succes: false, masagge: "No products found for this page." })
+            const pageNumber = parseInt(page) || 1;
+            const pageSize = 5
+
+            const paginatedProducts = await getPaginatedProductsController(pageNumber, pageSize)
+
+            if (paginatedProducts.products.length === 0) {
+                return res.status(404).json({ succes: false, masagge: "No products found for this page." })
+            }
+
+            return res.status(200).json({
+                success: true,
+                currentPage: pageNumber,
+                totalPages: paginatedProducts.totalPages,
+                products: paginatedProducts.products
+            });
+        } else {
+            products = await getAllProductsController();
         }
 
-        return res.status(200).json({
-            success: true,
-            currentPage: pageNumber,
-            totalPages: paginatedProducts.totalPages,
-            products: paginatedProducts.products
-        });
+        if (products.length === 0) {
+            return res.status(404).json({ success: false, message: "No products found." });
+        }
+
+        return res.status(200).json({ success: true, products });
+
 
     } catch (error) {
         return res.status(400).json({ error: error.message });
@@ -108,5 +111,4 @@ module.exports = {
     postProducts,
     putProduct,
     deleteProduct,
-    getPaginateProducts
 }

@@ -17,7 +17,11 @@
 
   /* Primary colors */
   --primary-color: #450399;
-  --secondary-color: #ff8c00;
+
+  /* Colors buttons */
+  --buy-button-color: #00cc66;
+  --pending-button-color: #ff8c00;
+  --cancel-button-color: #d63031;
 
   /* Border colors */
   --border: #333;
@@ -44,8 +48,8 @@
 
   --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  --font-size-small: .6rem;
-  --font-size-large: .9rem;
+  --font-size-small: 0.6rem;
+  --font-size-large: 0.9rem;
 }
 
 /* General styles */
