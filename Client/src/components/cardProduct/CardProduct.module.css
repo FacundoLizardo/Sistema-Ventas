@@ -37,4 +37,8 @@
       border: none;
     }
   }
+
+  &.withoutStock {
+    color: red;
+  }
 }

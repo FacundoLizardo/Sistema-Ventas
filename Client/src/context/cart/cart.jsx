@@ -26,7 +26,7 @@ const CartReducer = (state = initialState, action) => {
     case ADD_TO_CART:
       const product = action.payload;
 
-      if (product.quantity > 0) {
+      if (product.stock > 0) {
         Toast.fire({
           icon: "success",
           title: "¡Producto agregado!",
