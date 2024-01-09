@@ -15,7 +15,6 @@ const putProductController = async (
 	barcode
 ) => {
 	try {
-		const updatedAt = new Date().toISOString();
 		const updatedProduct = await Product.update(
 			{
 				name,
@@ -29,7 +28,6 @@ const putProductController = async (
 				notesDescription,
 				taxes,
 				barcode,
-				updatedAt,
 			},
 			{
 				where: { productId: productId },
