@@ -11,17 +11,7 @@ const putBranchController = async (
 	hours,
 	phoneNumber
 ) => {
-	console.log(
-		branchId,
-		afipId,
-		name,
-		location,
-		isStorage,
-		enable,
-		manager,
-		hours,
-		phoneNumber
-	);
+	const updatedAt = new Date().toISOString();
 	try {
 		const updatedBranch = await Branch.update(
 			{
@@ -33,6 +23,7 @@ const putBranchController = async (
 				manager,
 				hours,
 				phoneNumber,
+				updatedAt,
 			},
 			{
 				where: { branchId: branchId },
