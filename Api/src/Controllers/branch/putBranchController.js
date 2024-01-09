@@ -11,17 +11,6 @@ const putBranchController = async (
 	hours,
 	phoneNumber
 ) => {
-	console.log(
-		branchId,
-		afipId,
-		name,
-		location,
-		isStorage,
-		enable,
-		manager,
-		hours,
-		phoneNumber
-	);
 	try {
 		const updatedBranch = await Branch.update(
 			{

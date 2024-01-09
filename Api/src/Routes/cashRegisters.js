@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const {
 	getCashRegister,
-	getCashRegisters,
+	getAllCashRegisters,
 	postCashRegister,
 	putCashRegister,
 	deleteCashRegister,
@@ -9,7 +9,7 @@ const {
 const router = Router();
 
 router.get("/:id", getCashRegister);
-router.get("/", getCashRegisters);
+router.get("/", getAllCashRegisters);
 router.post("/", postCashRegister);
 router.put("/:id", putCashRegister);
 router.delete("/:id", deleteCashRegister);

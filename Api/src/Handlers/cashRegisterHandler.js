@@ -1,8 +1,8 @@
 const postCashRegisterController = require("../Controllers/cashRegister/postCashRegisterController");
 // const deleteCashRegisterController = require("../Controllers/CashRegister/deleteCashRegisterController");
-// const getAllCashRegistersController = require("../Controllers/CashRegister/getAllCashRegistersController");
+const getAllCashRegistersController = require("../Controllers/cashRegister/getAllCashRegistersController");
 const getCashRegisterByIdController = require("../Controllers/cashRegister/getCashRegisterByIdController");
-// const putCashRegisterController = require("../Controllers/CashRegister/putCashRegisterController");
+const putCashRegisterController = require("../Controllers/CashRegister/putCashRegisterController");
 
 const getCashRegister = async (req, res) => {
 	const { id } = req.params;
@@ -18,10 +18,10 @@ const getCashRegister = async (req, res) => {
 	}
 };
 
-const getCashRegisters = async (req, res) => {
+const getAllCashRegisters = async (req, res) => {
 	try {
-		const cashRegisteres = await getAllCashRegistersController();
-		cashRegisteres
+		const cashRegisters = await getAllCashRegistersController();
+		cashRegisters
 			? res.status(200).json({ success: true, cashRegisters })
 			: res
 					.status(404)
@@ -63,28 +63,26 @@ const postCashRegister = async (req, res) => {
 
 const putCashRegister = async (req, res) => {
 	try {
-		const CashRegisterId = req.params.id;
+		const cashId = req.params.id;
 		const {
-			afipId,
-			name,
-			location,
-			isStorage,
-			enable,
-			manager,
-			hours,
-			phoneNumber,
+			userId,
+			initialAmount,
+			finalAmount,
+			income,
+			egress,
+			totalCashRegister,
+			comments,
 		} = req.body;
 
 		const updatedCashRegister = await putCashRegisterController(
-			CashRegisterId,
-			afipId,
-			name,
-			location,
-			isStorage,
-			enable,
-			manager,
-			hours,
-			phoneNumber
+			cashId,
+			userId,
+			initialAmount,
+			finalAmount,
+			income,
+			egress,
+			totalCashRegister,
+			comments
 		);
 		res.status(200).json(updatedCashRegister);
 	} catch (error) {
@@ -106,7 +104,7 @@ const deleteCashRegister = async (req, res) => {
 
 module.exports = {
 	getCashRegister,
-	getCashRegisters,
+	getAllCashRegisters,
 	postCashRegister,
 	putCashRegister,
 	deleteCashRegister,
