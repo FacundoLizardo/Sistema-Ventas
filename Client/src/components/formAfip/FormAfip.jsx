@@ -118,6 +118,56 @@ const FormAfip = () => {
     }));
   };
 
+  let additionalFields = null;
+  if (dataAfip.cbteTipo === "1" || dataAfip.cbteTipo === "6") {
+    additionalFields = (
+      <div className={style.itemContainer}>
+        <div className={style.item}>
+          <label for="concepto">Concepto</label>
+          <select name="concepto" id="concepto" onChange={handleFormValue}>
+            <option value="1">Productos</option>
+            <option value="2">Servicios</option>
+            <option value="3">Productos y Servicios</option>
+          </select>
+        </div>
+
+        <div className={style.item}>
+          <label for="importeExentoIva">Imp. Exento IVA</label>
+          <input
+            type="number"
+            name="importeExentoIva"
+            id="importeExentoIva"
+            onChange={handleFormValue}
+          />
+        </div>
+
+        <div className={style.item}>
+          <label for="importeIva">Importe IVA</label>
+          <input
+            type="number"
+            name="importeIva"
+            id="importeIva"
+            onChange={handleFormValue}
+            value={dataAfip.importeIva}
+          />
+        </div>
+
+        <div className={style.item}>
+          <label for="discount">Desc. (%)</label>
+          <input
+            type="number"
+            name="discount"
+            id="discount"
+            placeholder="Ingrese el descuento"
+            onChange={handleFormValue}
+            min="0"
+            max="100"
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className={style.formContainer}>
       {/* Document Details */}
@@ -191,50 +241,7 @@ const FormAfip = () => {
 
       {/* Invoice Type and Details */}
 
-      <div className={style.itemContainer}>
-        <div className={style.item}>
-          <label for="concepto">Concepto</label>
-          <select name="concepto" id="concepto" onChange={handleFormValue}>
-            <option value="1">Productos</option>
-            <option value="2">Servicios</option>
-            <option value="3">Productos y Servicios</option>
-          </select>
-        </div>
-
-        <div className={style.item}>
-          <label for="importeExentoIva">Imp. Exento IVA</label>
-          <input
-            type="number"
-            name="importeExentoIva"
-            id="importeExentoIva"
-            onChange={handleFormValue}
-          />
-        </div>
-
-        <div className={style.item}>
-          <label for="importeIva">Importe IVA</label>
-          <input
-            type="number"
-            name="importeIva"
-            id="importeIva"
-            onChange={handleFormValue}
-            value={dataAfip.importeIva}
-          />
-        </div>
-
-        <div className={style.item}>
-          <label for="discount">Desc. (%)</label>
-          <input
-            type="number"
-            name="discount"
-            id="discount"
-            placeholder="Ingrese el descuento"
-            onChange={handleFormValue}
-            min="0"
-            max="100"
-          />
-        </div>
-      </div>
+      {additionalFields}
 
       {/* Amount */}
 

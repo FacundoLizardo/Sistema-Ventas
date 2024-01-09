@@ -10,7 +10,7 @@ const putCashRegisterController = async (
 	totalCashRegister,
 	comments
 ) => {
-	const updatedAt = new Date().toISOString();
+
 	try {
 		const updatedCashRegister = await CashRegister.update(
 			{
@@ -20,8 +20,7 @@ const putCashRegisterController = async (
 				income,
 				egress,
 				totalCashRegister,
-				comments,
-				updatedAt,
+				comments
 			},
 			{
 				where: { cashId: cashId },
