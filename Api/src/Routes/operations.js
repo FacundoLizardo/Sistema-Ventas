@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getOperation, getOperations, postOperation, putOperation, deleteOperation } = require("../Handlers/operationsHandlres");
+const { getOperation, getOperations, postOperation, putOperation, deleteOperation } = require("../Handlers/operationsHandler");
 
 const router = Router();
 

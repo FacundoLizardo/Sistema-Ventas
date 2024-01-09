@@ -10,7 +10,7 @@ const OfferModel = require("./Models/Offers.js");
 const PurchaseModel = require("./Models/Purchases.js");
 const OperationModel = require("./Models/Operations.js");
 const SupplierModel = require("./Models/Suppliers.js");
-const Cash_RegisterModel = require("./Models/Cash_Register.js");
+const CashRegisterModel = require("./Models/CashRegister.js");
 
 /* ----- Database connection ----- */
 
@@ -35,7 +35,7 @@ OfferModel(sequelize);
 PurchaseModel(sequelize);
 OperationModel(sequelize);
 SupplierModel(sequelize);
-Cash_RegisterModel(sequelize);
+CashRegisterModel(sequelize);
 
 const {
 	Product,
@@ -46,7 +46,7 @@ const {
 	Purchases,
 	Operation,
 	Suppliers,
-	Cash_Register,
+	CashRegister,
 } = sequelize.models;
 
 Product.hasMany(Operation);
@@ -64,6 +64,6 @@ module.exports = {
 	Purchases,
 	Operation,
 	Suppliers,
-	Cash_Register,
+	CashRegister,
 	conn: sequelize,
 };

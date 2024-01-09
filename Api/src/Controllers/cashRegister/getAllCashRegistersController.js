@@ -1,4 +1,4 @@
-const { Cash_Register } = require("../../db");
+const { CashRegister } = require("../../db");
 
 const getAllCashRegistersController = async () => {
 	try {

@@ -1,5 +1,4 @@
-const { use } = require("../../Routes/cashRegisters");
-const { Cash_Register } = require("../../db");
+const { CashRegister } = require("../../db");
 const { User } = require("../../db");
 
 const postCashRegisterController = async (
