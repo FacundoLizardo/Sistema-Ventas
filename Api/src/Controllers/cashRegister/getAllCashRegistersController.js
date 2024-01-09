@@ -2,7 +2,7 @@ const { CashRegister } = require("../../db");
 
 const getAllCashRegistersController = async () => {
 	try {
-		const cashRegisters = await Cash_Register.findAll();
+		const cashRegisters = await CashRegister.findAll();
 		return cashRegisters || [];
 	} catch (error) {
 		throw new Error("Error while fetching Cash_Registers from the database");

@@ -11,8 +11,8 @@ const postCashRegisterController = async (
 	comments
 ) => {
 	try {
-		// Consultar la última instancia de Cash_Register
-		const lastCashRegister = await Cash_Register.findOne({
+		// Consultar la última instancia de CashRegister
+		const lastCashRegister = await CashRegister.findOne({
 			order: [["createdAt", "DESC"]], // Ordenar por createdAt en orden descendente para obtener la última instancia
 		});
 
@@ -28,7 +28,7 @@ const postCashRegisterController = async (
 			throw new Error("User with the provided userId does not exist");
 		}
 		//Crea una instancia del modelo sin guardarla en la base de datos para validar errores con .validate()
-		await Cash_Register.build({
+		await CashRegister.build({
 			userId,
 			initialAmount,
 			finalAmount,
@@ -38,7 +38,7 @@ const postCashRegisterController = async (
 			comments,
 		}).validate();
 
-		const newCashRegister = await Cash_Register.create({
+		const newCashRegister = await CashRegister.create({
 			userId: userId,
 			initialAmount: initialAmount,
 			finalAmount: finalAmount,
