@@ -53,6 +53,12 @@
   --font-size-large: 0.9rem;
 }
 
+
+:global .mySwal {
+  max-width: 90%;
+  font-family: var(--font-family);
+}
+
 /* General styles */
 
 html {

@@ -44,7 +44,7 @@ const CartReducer = (state = initialState, action) => {
       } else {
         Swal.fire({
           icon: "error",
-          title: "No hay suficiente stock",
+          title: "No hay stock",
           customClass: {
             popup: "mySwal",
           },
