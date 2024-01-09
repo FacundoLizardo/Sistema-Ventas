@@ -12,7 +12,7 @@ const putCashRegisterController = async (
 ) => {
 	const updatedAt = new Date().toISOString();
 	try {
-		const updatedCashRegister = await Cash_Register.update(
+		const updatedCashRegister = await CashRegister.update(
 			{
 				userId,
 				initialAmount,
