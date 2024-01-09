@@ -31,15 +31,6 @@ const FormAfip = () => {
     docNro: "",
     importeExentoIva: 0,
     importeIva: 21,
-
-    ptoVta: 1,
-
-    razonSocial: "Facudno Lizardo S.A.",
-    direccion: "Calle Henry 123",
-    cuit: "30123456789",
-    responsableInscripto: "RESPONSABLE INSCRIPTO",
-    iibb: "543210",
-    inicioActividad: "01/01/2023",
   });
 
   useEffect(() => {
@@ -119,7 +110,14 @@ const FormAfip = () => {
   };
 
   let additionalFields = null;
-  if (dataAfip.cbteTipo === "1" || dataAfip.cbteTipo === "6") {
+  if (
+    dataAfip.cbteTipo === "1" ||
+    dataAfip.cbteTipo === "6" ||
+    dataAfip.cbteTipo === "201" ||
+    dataAfip.cbteTipo === "206" ||
+    dataAfip.cbteTipo === "3" ||
+    dataAfip.cbteTipo === "8"
+  ) {
     additionalFields = (
       <div className={style.itemContainer}>
         <div className={style.item}>
