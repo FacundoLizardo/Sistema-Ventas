@@ -12,6 +12,7 @@ const putUserController = async (
 	role
 ) => {
 	try {
+		const updatedAt = new Date().toISOString();
 		const updatedUser = await User.update(
 			{
 				firstName,
@@ -23,6 +24,7 @@ const putUserController = async (
 				branch,
 				enabled,
 				role,
+				updatedAt,
 			},
 			{
 				where: { cuit: cuit },
