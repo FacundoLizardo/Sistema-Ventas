@@ -2,8 +2,8 @@ const postProductController = require("../Controllers/products/postProductContro
 const deleteProductController = require("../Controllers/products/deleteProductController");
 const getAllProductsController = require("../Controllers/products/getAllProductsController");
 const getProductByIdController = require("../Controllers/products/getProductByIdController");
-const putProductController = require("../Controllers/products/putProductController");
 const getPaginatedProductsController = require("../Controllers/products/getPaginatedProductsController");
+const putProductController = require("../Controllers/products/putProductController");
 
 
 

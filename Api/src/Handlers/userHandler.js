@@ -21,7 +21,7 @@ const getUsers = async (req, res) => {
 		const products = await getAllUsersController();
 		products
 			? res.status(200).json({ success: true, products })
-			: res.status(404).json({ success: false, message: "No products found." });
+			: res.status(404).json({ success: false, message: "No products found" });
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
 	}

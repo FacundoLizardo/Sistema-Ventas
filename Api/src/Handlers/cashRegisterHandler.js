@@ -1,8 +1,8 @@
 const postCashRegisterController = require("../Controllers/cashRegister/postCashRegisterController");
-// const deleteCashRegisterController = require("../Controllers/CashRegister/deleteCashRegisterController");
 const getAllCashRegistersController = require("../Controllers/cashRegister/getAllCashRegistersController");
 const getCashRegisterByIdController = require("../Controllers/cashRegister/getCashRegisterByIdController");
 const putCashRegisterController = require("../Controllers/CashRegister/putCashRegisterController");
+const deleteCashRegisterController = require("../Controllers/CashRegister/deleteCashRegisterController");
 
 const getCashRegister = async (req, res) => {
 	const { id } = req.params;
@@ -11,8 +11,8 @@ const getCashRegister = async (req, res) => {
 		cashRegister
 			? res.status(200).json({ success: true, cashRegister })
 			: res
-					.status(404)
-					.json({ success: false, message: "No cash registers found." });
+				.status(404)
+				.json({ success: false, message: "No cash registers found." });
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
 	}
@@ -24,8 +24,8 @@ const getAllCashRegisters = async (req, res) => {
 		cashRegisters
 			? res.status(200).json({ success: true, cashRegisters })
 			: res
-					.status(404)
-					.json({ success: false, message: "No cash registers found." });
+				.status(404)
+				.json({ success: false, message: "No cash registers found." });
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
 	}
@@ -93,9 +93,8 @@ const putCashRegister = async (req, res) => {
 const deleteCashRegister = async (req, res) => {
 	try {
 		const CashRegisterId = req.params.id;
-		const deletedCashRegister = await deleteCashRegisterController(
-			CashRegisterId
-		);
+		const deletedCashRegister = await deleteCashRegisterController(CashRegisterId)
+
 		res.status(200).json(deletedCashRegister);
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
