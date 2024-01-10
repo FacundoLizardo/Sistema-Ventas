@@ -4,9 +4,8 @@ module.exports = (sequelize) => {
 	sequelize.define(
 		"Branch",
 		{
-			branchId: {
-				type: DataTypes.UUID,
-				defaultValue: DataTypes.UUIDV4,
+			ptoVta: {
+				type: DataTypes.INTEGER,
 				primaryKey: true,
 				allowNull: false,
 			},

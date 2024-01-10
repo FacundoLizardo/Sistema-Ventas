@@ -1,6 +1,6 @@
 /* eslint-disable no-case-declarations */
 import { createContext, useContext, useEffect, useReducer } from "react";
-import { ADD_TO_CART, REMOVE_FROM_CART } from "./cartTypes";
+import { ADD_TO_CART, CLEAR, REMOVE_FROM_CART } from "./cartTypes";
 import Swal from "sweetalert2";
 
 const CartContext = createContext();
@@ -80,6 +80,11 @@ const CartReducer = (state = initialState, action) => {
       }
 
       return state;
+
+    case CLEAR:
+      return {
+        cart: [],
+      };
 
     default: {
       return state;

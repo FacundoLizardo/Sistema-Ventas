@@ -6,12 +6,15 @@ import { useCart } from "../../context/cart/cart";
 import Buttons from "../buttons/buttons";
 
 const FormAfip = () => {
-  const { state } = useCart();
-  const cart = state.cart;
+  const {
+    state: { cart },
+    dispatch,
+  } = useCart();
+  const [errors, setErrors] = useState({});
 
   const baseURL = import.meta.env.VITE_URL_BACKEND;
   const [dataAfip, setDataAfip] = useState({
-    products: cart,
+    products: [],
     amount: 0,
     discount: 0,
     extraCharge: 0,
@@ -31,9 +34,29 @@ const FormAfip = () => {
     docNro: "",
     importeExentoIva: 0,
     importeIva: 21,
+
+    ptoVta: 1,
   });
+  
+  console.log(dataAfip);
+
 
   useEffect(() => {
+    const totalAmount = () => {
+      const total = cart.reduce((total, product) => {
+        return total + (parseFloat(product.finalPrice) || 0);
+      }, 0);
+
+      const discountDecimal = dataAfip.discount / 100;
+      const totalWithDiscount = total * (1 - discountDecimal);
+
+      setDataAfip((prevData) => ({
+        ...prevData,
+        products: cart,
+        amount: parseFloat(totalWithDiscount).toFixed(2),
+      }));
+    };
+
     totalAmount();
   }, [
     cart,
@@ -94,7 +117,8 @@ const FormAfip = () => {
       };
 
       const response = await axios.post(`${baseURL}/afip`, updateDataAfip);
-      console.log("Back End response:", response.data);
+      dispatch({ type: "CLEAR" });
+
       return response;
     } catch (error) {
       console.error("Error processing the purchase:", error);
@@ -103,20 +127,21 @@ const FormAfip = () => {
 
   const handleFormValue = (event) => {
     const { name, value } = event.target;
+    const parsedValue = name === "cbteTipo" ? parseInt(value) : value;
     setDataAfip((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: parsedValue,
     }));
   };
 
   let additionalFields = null;
   if (
-    dataAfip.cbteTipo === "1" ||
-    dataAfip.cbteTipo === "6" ||
-    dataAfip.cbteTipo === "201" ||
-    dataAfip.cbteTipo === "206" ||
-    dataAfip.cbteTipo === "3" ||
-    dataAfip.cbteTipo === "8"
+    dataAfip.cbteTipo === 1 ||
+    dataAfip.cbteTipo === 6 ||
+    dataAfip.cbteTipo === 201 ||
+    dataAfip.cbteTipo === 206 ||
+    dataAfip.cbteTipo === 3 ||
+    dataAfip.cbteTipo === 8
   ) {
     additionalFields = (
       <div className={style.itemContainer}>
@@ -223,16 +248,16 @@ const FormAfip = () => {
             onChange={handleFormValue}
             value={dataAfip.cbteTipo}
           >
-            <option value="0">Sin factura</option>
-            <option value="1">Factura A</option>
-            <option value="6">Factura B</option>
-            <option value="11">Factura C</option>
-            <option value="201">Factura de Crédito electrónica A</option>
-            <option value="206">Factura de Crédito electrónica B</option>
-            <option value="211">Factura de Crédito electrónica C</option>
-            <option value="3">Nota de Crédito A</option>
-            <option value="8">Nota de Crédito B</option>
-            <option value="13">Nota de Crédito C</option>
+            <option value={0}>Sin factura</option>
+            <option value={1}>Factura A</option>
+            <option value={6}>Factura B</option>
+            <option value={11}>Factura C</option>
+            <option value={201}>Factura de Crédito electrónica A</option>
+            <option value={206}>Factura de Crédito electrónica B</option>
+            <option value={211}>Factura de Crédito electrónica C</option>
+            <option value={3}>Nota de Crédito A</option>
+            <option value={8}>Nota de Crédito B</option>
+            <option value={13}>Nota de Crédito C</option>
           </select>
         </div>
       </div>

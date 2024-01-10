@@ -9,6 +9,7 @@
     border: none;
     border-radius: var(--radius);
     font-weight: 900;
+    cursor: pointer;
   }
 
   & .buyButtonColor {
