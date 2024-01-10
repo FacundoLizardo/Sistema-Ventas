@@ -6,14 +6,7 @@ const CardProduct = ({ product }) => {
   let stylesStock = product.stock <= 0 ? style.withoutStock : "";
 
   const handleAddToCart = async (product) => {
-    const count = countProducts(product.productId);
-    if (count < product.stock) {
-      dispatch({ type: "ADD_TO_CART", payload: product });
-    } else {
-      console.log(
-        "No se pueden agregar más productos, alcanzado el límite de stock."
-      );
-    }
+    dispatch({ type: "ADD_TO_CART", payload: product });
   };
 
   const handleDeleteToCart = async (product) => {

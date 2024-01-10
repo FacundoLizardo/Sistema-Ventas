@@ -24,34 +24,20 @@ const Toast = Swal.mixin({
 const CartReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_TO_CART:
-      const product = action.payload;
+      Toast.fire({
+        icon: "success",
+        title: "¡Producto agregado!",
+        customClass: {
+          popup: "mySwal",
+        },
+      });
 
-      if (product.stock > 0) {
-        Toast.fire({
-          icon: "success",
-          title: "¡Producto agregado!",
-          customClass: {
-            popup: "mySwal",
-          },
-        });
+      const updatedCartAdd = [...state.cart, action.payload];
 
-        const updatedCartAdd = [...state.cart, action.payload];
-
-        return {
-          ...state,
-          cart: updatedCartAdd,
-        };
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "No hay stock",
-          customClass: {
-            popup: "mySwal",
-          },
-        });
-
-        return state;
-      }
+      return {
+        ...state,
+        cart: updatedCartAdd,
+      };
 
     case REMOVE_FROM_CART:
       const productToRemove = action.payload;
