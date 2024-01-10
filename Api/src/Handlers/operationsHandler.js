@@ -1,5 +1,5 @@
-const getOperationsController = require("../Controllers/operations/getOperationsController")
-const postOperationController = require("../Controllers/operations/postOperationController")
+const { getOperationsController } = require("../Controllers/operations/getOperationsController")
+const { postOperationController } = require("../Controllers/operations/postOperationController")
 
 
 const getOperation = async (req, res) => {
