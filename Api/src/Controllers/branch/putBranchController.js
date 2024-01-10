@@ -12,6 +12,13 @@ const putBranchController = async (
 	phoneNumber
 ) => {
 	try {
+		const existingBranch = await Branch.findOne({
+			where: { branchId: branchId },
+		});
+
+		if (!existingBranch) {
+			throw new Error(`The branch whit the id:${branchId} does not exist`);
+		}
 		const updatedBranch = await Branch.update(
 			{
 				afipId,

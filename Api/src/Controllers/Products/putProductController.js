@@ -15,6 +15,13 @@ const putProductController = async (
 	barcode
 ) => {
 	try {
+		const existingProduct = await Product.findOne({
+			where: { productId: productId },
+		});
+
+		if (!existingProduct) {
+			throw new Error(`The product whit the id:${productId} does not exist`);
+		}
 		const updatedProduct = await Product.update(
 			{
 				name,

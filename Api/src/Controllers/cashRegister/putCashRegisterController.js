@@ -10,8 +10,14 @@ const putCashRegisterController = async (
 	totalCashRegister,
 	comments
 ) => {
-
 	try {
+		const existingCashRegister = await CashRegister.findOne({
+			where: { cashId: cashId },
+		});
+
+		if (!existingCashRegister) {
+			throw new Error(`The cash register whit the id:${cashId} does not exist`);
+		}
 		const updatedCashRegister = await CashRegister.update(
 			{
 				userId,
@@ -20,7 +26,7 @@ const putCashRegisterController = async (
 				income,
 				egress,
 				totalCashRegister,
-				comments
+				comments,
 			},
 			{
 				where: { cashId: cashId },

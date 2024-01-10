@@ -12,6 +12,13 @@ const putUserController = async (
 	role
 ) => {
 	try {
+		const existingUser = await User.findOne({
+			where: { cuit: cuit },
+		});
+
+		if (!existingUser) {
+			throw new Error(`The user whit the cuit:${cuit} does not exist`);
+		}
 		const updatedUser = await User.update(
 			{
 				firstName,
