@@ -35,11 +35,11 @@ const postProductController = async (
 			? product
 			: "Product not created because it already exists or something is wrong, please try again";
 	} catch (error) {
-		throw new Error(error.message);
+		throw new Error(`Error when creating a new product: ${error.message}`);
 	}
 };
 
-module.exports = postProductController;
+module.exports = { postProductController };
 
 /*---------------modelo testeo ruta-------------------*/
 // {

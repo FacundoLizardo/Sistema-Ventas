@@ -35,8 +35,8 @@ const putCashRegisterController = async (
 
 		return updatedCashRegister;
 	} catch (error) {
-		throw new Error(error.message);
+		throw new Error(`Error while updating cash register: ${error.message}`);
 	}
 };
 
-module.exports = putCashRegisterController;
+module.exports = { putCashRegisterController };

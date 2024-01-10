@@ -7,8 +7,8 @@ const deleteProductController = async (productId) => {
         })
         return deleteProduct
     } catch (error) {
-        throw new Error(error.message)
+        throw new Error(`Error while processing product deletion: ${error.message}`);
     }
 }
 
-module.exports = deleteProductController
+module.exports = { deleteProductController }

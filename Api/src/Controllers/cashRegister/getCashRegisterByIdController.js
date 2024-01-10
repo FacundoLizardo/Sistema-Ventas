@@ -5,8 +5,8 @@ const getCashRegisterByIdController = async (id) => {
 		const cashRegister = await CashRegister.findByPk(id);
 		return cashRegister || [];
 	} catch (error) {
-		throw new Error("Error retrieving CashRegistrer from database.");
+		throw new Error(`Error retrieving Cash Register with ID ${id} from the database: ${error.message}`);
 	}
 };
 
-module.exports = getCashRegisterByIdController;
+module.exports = { getCashRegisterByIdController };

@@ -17,4 +17,4 @@ const deleteBranchController = async (branchId) => {
 	}
 };
 
-module.exports = deleteBranchController;
+module.exports = { deleteBranchController };

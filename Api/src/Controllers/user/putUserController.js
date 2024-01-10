@@ -17,7 +17,7 @@ const putUserController = async (
 		});
 
 		if (!existingUser) {
-			throw new Error(`The user whit the cuit:${cuit} does not exist`);
+			throw new Error(`The user whit the cuit: ${cuit} does not exist`);
 		}
 		const updatedUser = await User.update(
 			{
@@ -38,8 +38,8 @@ const putUserController = async (
 
 		return updatedUser;
 	} catch (error) {
-		throw new Error(error.message);
+		throw new Error(`Error updating user: ${error.message}`);
 	}
 };
 
-module.exports = putUserController;
+module.exports = { putUserController };

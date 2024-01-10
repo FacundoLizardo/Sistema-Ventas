@@ -10,4 +10,4 @@ const getAllBranchesController = async () => {
 	}
 };
 
-module.exports = getAllBranchesController;
+module.exports = { getAllBranchesController };

@@ -36,9 +36,10 @@ const putBranchController = async (
 		);
 
 		return updatedBranch;
+
 	} catch (error) {
-		throw new Error(error.message);
+		throw new Error(`Error while updating branch: ${error.message}`);
 	}
 };
 
-module.exports = putBranchController;
+module.exports = { putBranchController };

@@ -13,8 +13,8 @@ const postOperationController = async (products, amount, discount, extraCharge, 
 
         return updateOperation;
     } catch (error) {
-        throw new Error(error.message);
+        throw new Error(`Error while processing operation creation: ${error.message}`);
     }
 };
 
-module.exports = postOperationController;
+module.exports = { postOperationController };

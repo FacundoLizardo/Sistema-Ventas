@@ -105,8 +105,7 @@ const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, 
 		return { voucherData, data, urlQr }
 
 	} catch (error) {
-		console.error('Error: generateVoucher', error);
-		throw error;
+		throw new Error(`Error when generating voucher: ${error.message}`);
 	}
 }
 
@@ -185,7 +184,7 @@ const generatePDF = async ({ voucherData, data, numeroFactura, urlQr, discount }
 				return "Productos y Servicios"
 			}
 		}
-	
+
 		const replacedHTML = html
 			.replace("{{urlQr}}", urlQr || "QR no found")
 			.replace('{{CAE}}', voucherData.CAE || "")
@@ -227,8 +226,7 @@ const generatePDF = async ({ voucherData, data, numeroFactura, urlQr, discount }
 
 
 	} catch (error) {
-		console.error('An error occurred while generating the PDF:', error);
-		throw new Error(error);
+		throw new Error(`An error occurred while generating the PDF: ${error.message}`);
 	}
 };
 
@@ -247,7 +245,7 @@ const postFacturaController = async ({ products, ptoVta, cbteTipo, concepto, doc
 			data: data
 		};
 	} catch (error) {
-		console.error('Error: postFacturaAController:', error);
+		throw new Error(`Error processing the invoice: ${error.message}`);
 	}
 };
 
@@ -256,4 +254,4 @@ const postFacturaController = async ({ products, ptoVta, cbteTipo, concepto, doc
 
 
 
-module.exports = postFacturaController
+module.exports = { postFacturaController }

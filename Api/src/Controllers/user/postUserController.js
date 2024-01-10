@@ -55,7 +55,7 @@ const postUserController = async (
 			}));
 			return validationErrors;
 		} else {
-			throw new Error(error.message);
+			throw new Error(`Error creating user: ${error.message}`);
 		}
 	}
 };
@@ -73,4 +73,4 @@ const postUserController = async (
 //     "role": "admin"
 //   }
 
-module.exports = postUserController;
+module.exports = { postUserController };

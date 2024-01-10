@@ -9,4 +9,4 @@ const getBranchByIdController = async (id) => {
 	}
 };
 
-module.exports = getBranchByIdController;
+module.exports = { getBranchByIdController };

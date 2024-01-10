@@ -16,8 +16,8 @@ const getPaginatedProductsController = async (pageNumber, pageSize) => {
             totalPages: Math.ceil(count / pageSize)
         };
     } catch (error) {
-        throw new Error("Error while fetching paginated products");
+        throw new Error(`Error while fetching paginated products: ${error.message}`);
     }
 };
 
-module.exports = getPaginatedProductsController;
+module.exports = { getPaginatedProductsController };

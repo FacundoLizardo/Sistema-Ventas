@@ -5,8 +5,8 @@ const getProductByIdController = async (id) => {
         const product = await Product.findByPk(id)
         return product || []
     } catch (error) {
-        throw new Error("Error retrieving product from database.")
+        throw new Error(`Error retrieving product from database: ${error.message}`);
     }
 }
 
-module.exports = getProductByIdController
+module.exports = { getProductByIdController }

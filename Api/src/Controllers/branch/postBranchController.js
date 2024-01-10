@@ -28,7 +28,7 @@ const postBranchController = async (
 			? branch
 			: "Branch not created because it already exists or something is wrong, please try again";
 	} catch (error) {
-		throw new Error(error.message);
+		throw new Error(`Error while processing branch creation: ${error.message}`);
 	}
 };
 
@@ -45,4 +45,4 @@ const postBranchController = async (
 //     "phoneNumber": "+1234567890"
 //   }
 
-module.exports = postBranchController;
+module.exports = { postBranchController };

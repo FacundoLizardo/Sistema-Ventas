@@ -60,10 +60,10 @@ const postCashRegisterController = async (
 				field: err.path,
 				message: err.message,
 			}));
-			console.log(validationErrors);
-			throw new Error(validationErrors);
+			
+			throw new Error(`Validation error(s) occurred: ${JSON.stringify(validationErrors)}`);
 		} else {
-			throw new Error(error.message);
+			throw new Error(`Error while processing Cash Register creation: ${error.message}`);
 		}
 	}
 };
@@ -75,4 +75,4 @@ const postCashRegisterController = async (
 
 // }
 
-module.exports = postCashRegisterController;
+module.exports = { postCashRegisterController };

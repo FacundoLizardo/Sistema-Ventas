@@ -5,8 +5,8 @@ const getAllUsersController = async () => {
 		const Users = await User.findAll();
 		return Users || [];
 	} catch (error) {
-		throw new Error("Error while fetching Users from the database");
+		throw new Error(`Error while fetching users: ${error.message}`);
 	}
 };
 
-module.exports = getAllUsersController;
+module.exports = { getAllUsersController };

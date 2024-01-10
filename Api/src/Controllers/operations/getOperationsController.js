@@ -5,8 +5,8 @@ const getOperationsController = async () => {
         const operations = await Operation.findAll()
         return operations
     } catch (error) {
-        throw new Error(error.message)
+        throw new Error(`Error while fetching operations: ${error.message}`);
     }
 }
 
-module.exports = getOperationsController
+module.exports = { getOperationsController }

@@ -43,7 +43,7 @@ const putProductController = async (
 
 		return updatedProduct;
 	} catch (error) {
-		throw new Error(error.message);
+		throw new Error(`Error when updating product: ${error.message}`);
 	}
 };
 
@@ -60,8 +60,7 @@ const putProductStockController = async ({ productId, stock }) => {
 			throw new Error(`Product with ID ${productId} not found`);
 		}
 	} catch (error) {
-		console.error("Error updating product stock.");
-		throw new Error(error.message);
+		throw new Error(`Error when updating product stock: ${error.message}`);
 	}
 };
 
