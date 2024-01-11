@@ -10,9 +10,9 @@ const {
 const {
 	getCostumerByIdController,
 } = require("../Controllers/Costumer/getCostumerByIdController");
-// const {
-// 	putCostumerController,
-// } = require("../Controllers/Costumer/putCostumerController");
+const {
+	putCostumerController,
+} = require("../Controllers/Costumer/putCostumerController");
 
 const getCostumer = async (req, res) => {
 	const dni = req.params.id;
@@ -75,28 +75,26 @@ const postCostumer = async (req, res) => {
 
 const putCostumer = async (req, res) => {
 	try {
-		const CostumerId = req.params.id;
+		const dni = req.params.id;
 		const {
-			afipId,
-			name,
-			location,
-			isStorage,
-			enable,
-			manager,
-			hours,
+			firstName,
+			lastName,
+			email,
+			address,
 			phoneNumber,
+			dateOfBirth,
+			enableDebt,
 		} = req.body;
 
 		const updatedCostumer = await putCostumerController(
-			CostumerId,
-			afipId,
-			name,
-			location,
-			isStorage,
-			enable,
-			manager,
-			hours,
-			phoneNumber
+			dni,
+			firstName,
+			lastName,
+			email,
+			address,
+			phoneNumber,
+			dateOfBirth,
+			enableDebt
 		);
 		res.status(200).json(updatedCostumer);
 	} catch (error) {
