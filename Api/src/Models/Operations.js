@@ -10,10 +10,32 @@ module.exports = (sequelize) => {
 				autoIncrement: true,
 				allowNull: false,
 			},
+
 			products: {
 				type: DataTypes.JSONB,
 				allowNull: true,
 				defaultValue: [],
+				validate: {
+					isValidProductsArray(value) {
+						if (!Array.isArray(value)) {
+							throw new Error("Products must be an array.");
+						}
+
+						if (value.length > 0) {
+							const { Product } = require("../db");
+
+							const isValidProducts = value.every((product) => {
+								return Product.findByPk(product.productId);
+							});
+
+							if (!isValidProducts) {
+								throw new Error(
+									"Each product in the array must be a valid instance of Product."
+								);
+							}
+						}
+					},
+				},
 			},
 			amount: {
 				type: DataTypes.DECIMAL(10, 2),
@@ -82,7 +104,7 @@ module.exports = (sequelize) => {
 			comments: {
 				type: DataTypes.STRING,
 				allowNull: true,
-			}
+			},
 		},
 		{
 			timestamps: true,
