@@ -1,8 +1,10 @@
+// Sales.jsx
 import style from "./Sales.module.css";
 import { useContext } from "react";
-import { ProductContext } from "../../context/products/products";
+import { ProductContext } from "../../context/products/productsContext";
 import CardProduct from "../../components/cardProduct/CardProduct";
 import FormAfip from "../../components/formAfip/FormAfip";
+import Filters from "../../components/filters/Filters";
 
 const Sales = () => {
   const { products, currentPage, setCurrentPage, totalPages } =
@@ -22,6 +24,9 @@ const Sales = () => {
 
   return (
     <section className={style.salesContainer}>
+      <div>
+        <Filters />
+      </div>
       <article className={style.tableContainer}>
         {products && products.length > 0 ? (
           <ul>
