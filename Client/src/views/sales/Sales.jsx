@@ -4,6 +4,19 @@ import FormAfip from "../../components/formAfip/FormAfip";
 import { useCart } from "../../context/cart/cart";
 import { ProductContext } from "../../context/products/productsContext";
 import { useContext } from "react";
+import Swal from "sweetalert2";
+
+const Toast = Swal.mixin({
+  toast: true,
+  showConfirmButton: false,
+  position: "bottom-end",
+  timer: 1000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener("mouseenter", Swal.stopTimer);
+    toast.addEventListener("mouseleave", Swal.resumeTimer);
+  },
+});
 
 const Sales = () => {
   const { state, dispatch } = useCart();
@@ -38,7 +51,13 @@ const Sales = () => {
         dispatch({ type: "ADD_TO_CART", payload: selectedProduct });
         e.target.value = "";
       } else {
-        alert("Producto no encontrado");
+        Toast.fire({
+          icon: "warning",
+          title: "Producto no encontrado",
+          customClass: {
+            popup: "mySwal",
+          },
+        });
       }
     }
   };

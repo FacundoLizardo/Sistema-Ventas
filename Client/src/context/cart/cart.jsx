@@ -11,8 +11,8 @@ const initialState = {
 
 const Toast = Swal.mixin({
   toast: true,
-  position: "top-end",
   showConfirmButton: false,
+  position: "bottom-end",
   timer: 1000,
   timerProgressBar: true,
   didOpen: (toast) => {
