@@ -1,18 +1,18 @@
 const {
 	postCostumersController,
 } = require("../Controllers/costumer/postCostumerController");
-// const {
-// 	deleteCostumerController,
-// } = require("../Controllers/Costumer/deleteCostumerController");
+const {
+	deleteCostumerController,
+} = require("../Controllers/costumer/deleteCostumerController");
 const {
 	getAllCostumeresController,
-} = require("../Controllers/Costumer/getAllCostumeresController");
+} = require("../Controllers/costumer/getAllCostumeresController");
 const {
 	getCostumerByIdController,
-} = require("../Controllers/Costumer/getCostumerByIdController");
+} = require("../Controllers/costumer/getCostumerByIdController");
 const {
 	putCostumerController,
-} = require("../Controllers/Costumer/putCostumerController");
+} = require("../Controllers/costumer/putCostumerController");
 
 const getCostumer = async (req, res) => {
 	const dni = req.params.id;
@@ -104,9 +104,9 @@ const putCostumer = async (req, res) => {
 
 const deleteCostumer = async (req, res) => {
 	try {
-		const CostumerId = req.params.id;
-		const deletedCostumer = await deleteCostumerController(CostumerId);
-		res.status(200).json(deletedCostumer);
+		const dni = req.params.id;
+		const deletedCostumer = await deleteCostumerController(dni);
+		res.status(200).json("Costumer deleted successfully");
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
 	}
