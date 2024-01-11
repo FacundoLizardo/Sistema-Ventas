@@ -7,19 +7,20 @@ const {
 // const {
 // 	getAllCostumeresController,
 // } = require("../Controllers/Costumer/getAllCostumeresController");
-// const {
-// 	getCostumerByIdController,
-// } = require("../Controllers/Costumer/getCostumerByIdController");
+const {
+	getCostumerByIdController,
+} = require("../Controllers/Costumer/getCostumerByIdController");
 // const {
 // 	putCostumerController,
 // } = require("../Controllers/Costumer/putCostumerController");
 
 const getCostumer = async (req, res) => {
-	const { id } = req.params;
+	const dni = req.params.id;
+
 	try {
-		const Costumer = await getCostumerByIdController(id);
-		Costumer
-			? res.status(200).json({ success: true, Costumer })
+		const costumer = await getCostumerByIdController(dni);
+		costumer
+			? res.status(200).json({ success: true, costumer })
 			: res
 					.status(404)
 					.json({ success: false, message: "No Costumers found." });
