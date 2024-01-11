@@ -4,9 +4,9 @@ const {
 // const {
 // 	deleteCostumerController,
 // } = require("../Controllers/Costumer/deleteCostumerController");
-// const {
-// 	getAllCostumeresController,
-// } = require("../Controllers/Costumer/getAllCostumeresController");
+const {
+	getAllCostumeresController,
+} = require("../Controllers/Costumer/getAllCostumeresController");
 const {
 	getCostumerByIdController,
 } = require("../Controllers/Costumer/getCostumerByIdController");
