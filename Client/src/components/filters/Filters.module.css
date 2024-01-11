@@ -1,0 +1,5 @@
+.filtersContainer {
+  display: grid;
+  grid-template-columns: 1fr 40%;
+  gap: 10px;
+}
