@@ -10,7 +10,7 @@ export const FilterProvider = ({ children }) => {
   const [filters, setFilters] = useState({
     query: "",
     category: "",
-    page: 1,
+    page: "",
   });
   
   const updateFilters = (newFilters) => {

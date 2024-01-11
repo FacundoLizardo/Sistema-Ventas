@@ -35,7 +35,7 @@ const Filters = () => {
     };
 
     if (!filters.query && !filters.category) {
-      fetchData(filters.page);
+      fetchData();
     } else {
       fetchFilter();
     }
