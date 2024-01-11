@@ -6,7 +6,7 @@ import { ProductContext } from "../../context/products/productsContext";
 
 const Filters = () => {
   const { filters, updateFilters } = useFilterContext();
-  const { setProducts, setTotalPages, setCurrentPage, fetchData } =
+  const { setProducts, setTotalPages, setCurrentPage } =
     useContext(ProductContext);
   const URL = import.meta.env.VITE_URL_BACKEND;
 
@@ -35,7 +35,7 @@ const Filters = () => {
     };
 
     if (!filters.query && !filters.category) {
-      fetchData();
+      ""
     } else {
       fetchFilter();
     }

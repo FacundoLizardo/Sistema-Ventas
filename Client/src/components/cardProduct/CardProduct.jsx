@@ -3,6 +3,7 @@ import { useCart } from "../../context/cart/cart";
 
 const CardProduct = ({ product }) => {
   const { state, dispatch } = useCart();
+  
   let stylesStock = product.stock <= 0 ? style.withoutStock : "";
 
   const handleAddToCart = async (product) => {

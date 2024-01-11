@@ -1,56 +1,89 @@
-// Sales.jsx
 import style from "./Sales.module.css";
-import { useContext } from "react";
-import { ProductContext } from "../../context/products/productsContext";
 import CardProduct from "../../components/cardProduct/CardProduct";
 import FormAfip from "../../components/formAfip/FormAfip";
-import Filters from "../../components/filters/Filters";
+import { useCart } from "../../context/cart/cart";
+import { ProductContext } from "../../context/products/productsContext";
+import { useContext } from "react";
 
 const Sales = () => {
-  const { products, currentPage, setCurrentPage, totalPages } =
-    useContext(ProductContext);
+  const { state, dispatch } = useCart();
+  const products = useContext(ProductContext);
 
-  const previousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
+  const groupedProducts = state.cart.reduce((grouped, item) => {
+    const existingProduct = grouped.find(
+      (group) => group.productId === item.productId
+    );
+
+    if (existingProduct) {
+      existingProduct.quantity += item.quantity;
+    } else {
+      grouped.push({
+        ...item,
+        quantity: item.quantity,
+      });
     }
-  };
 
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prevPage) => prevPage + 1);
+    return grouped;
+  }, []);
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+
+    if (e.key === "Enter") {
+      const selectedProduct = products.find(
+        (product) => product.name === value || product.barcode === value
+      );
+
+      if (selectedProduct) {
+        dispatch({ type: "ADD_TO_CART", payload: selectedProduct });
+        e.target.value = "";
+      } else {
+        alert("Producto no encontrado");
+      }
     }
   };
 
   return (
     <section className={style.salesContainer}>
-      <div>
-        <Filters />
-      </div>
+      <label htmlFor="search">
+        <input
+          id="search"
+          type="text"
+          placeholder="Ingresa el producto o su código:"
+          onKeyDown={handleInputChange}
+          list="productsList"
+        />
+      </label>
+      <datalist id="productsList">
+        {products &&
+          products.map((product) => (
+            <option
+              key={product.productId}
+              value={product.name}
+              onClick={() => {
+                dispatch({ type: "ADD_TO_CART", payload: product });
+                document.getElementById("search").value = "";
+              }}
+            />
+          ))}
+      </datalist>
+
       <article className={style.tableContainer}>
-        {products && products.length > 0 ? (
+        {groupedProducts && groupedProducts.length > 0 ? (
           <ul>
-            {products.map((product, index) => (
-              <li key={index}>
+            {groupedProducts.map((product) => (
+              <li key={product.productId}>
                 <CardProduct product={product} />
               </li>
             ))}
           </ul>
         ) : (
-          <div className={style.null}>No hay productos disponibles</div>
+          <div className={style.null}>
+            Aún no se han seleccionado productos para la venta.
+          </div>
         )}
       </article>
-      <div className={style.paginationContainer}>
-        <button onClick={previousPage} disabled={currentPage === 1}>
-          -
-        </button>
-        <span>
-          Página {currentPage} de {totalPages}
-        </span>
-        <button onClick={nextPage} disabled={currentPage === totalPages}>
-          +
-        </button>
-      </div>
+
       <div className={style.formContainer}>
         <FormAfip />
       </div>

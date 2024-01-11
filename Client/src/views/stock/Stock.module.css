@@ -1,0 +1,39 @@
+.stockContainer {
+  width: 90dvw;
+  min-height: 100dvh;
+  max-width: 1024px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 10px;
+
+  & .paginationContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+
+    & button {
+      background-color: var(--basic-color);
+      border: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-weight: 900;
+      color: var(--text-primary-color);
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+  }
+
+  .null {
+    width: 100%;
+    min-height: 190px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

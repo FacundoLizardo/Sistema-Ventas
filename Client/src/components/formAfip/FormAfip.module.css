@@ -1,30 +1,58 @@
 .formContainer {
   display: grid;
   grid-template-columns: repeat(1, 100%);
-  gap: 8px;
+  gap: 10px;
   width: 100%;
-}
 
-.itemContainer {
-  display: flex;
-  gap: 5px;
-}
+  & .itemContainer {
+    display: flex;
+    gap: 10px;
+  }
 
-.item {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
+  & .item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
 
-.total {
-  width: 100%;
-  font-weight: 900;
-  border: 1px solid var(--primary-color);
-  padding: 3px 0;
-  text-align: center;
-  color: var(--text-primary-color);
+  & .totalProducts {
+    width: 50%;
+    align-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 
-  & .totalNumber {
-    font-size: 11px;
+    & button {
+      background: transparent;
+      border: none;
+      color: var(--text-primary-color);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+    }
+  }
+
+  & .totalPrice {
+    width: 50%;
+    font-weight: 700;
+    border: 1px solid var(--primary-color);
+    padding: 2px 0;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-primary-color);
+
+    & .totalNumber {
+      font-size: 11px;
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    gap: 15px;
   }
 }

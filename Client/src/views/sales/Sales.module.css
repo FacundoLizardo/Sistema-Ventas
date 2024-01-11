@@ -5,15 +5,16 @@
   margin: auto;
   display: flex;
   flex-direction: column;
-  position: relative;
-  gap: 8px;
+  gap: 10px;
 
   & .tableContainer {
     width: 100%;
     height: 100%;
-
     display: flex;
-    min-height: 190px;
+    min-height: 200px;
+    padding: 10px;
+    background-color: var(--bg-color-off);
+    border-radius: var(--radius);
 
     & ul {
       display: flex;
@@ -28,57 +29,13 @@
     width: 100%;
   }
 
-  & .paginationContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    gap: 10px;
-
-    & button {
-      background-color: var(--basic-color);
-      border: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      font-weight: 900;
-      color: var(--text-primary-color);
-      justify-content: center;
-      align-items: center;
-      display: flex;
+  @media screen and (min-width: 768px) {
+    .tableContainer {
+      min-height: 250px;
     }
-  }
 
-  .null {
-    width: 100%;
-    min-height: 190px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  input[type="text"],
-  input[type="number"],
-  select {
-    width: 100%;
-    height: 25px;
-    padding: 5px;
-    border-radius: var(--radius);
-    border: 1px solid black;
-    box-sizing: border-box;
-    font-size: var(--font-size-small);
-  }
-
-  input[type="text"]:focus,
-  input[type="number"]:focus,
-  select:focus {
-    outline: none;
-    border: 1px solid var(--secondary-color);
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    font-family: var(--font-family);
-  }
-
-  label {
-    padding-bottom: 3px;
+    .null {
+      min-height: 250px;
+    }
   }
 }

@@ -37,9 +37,8 @@ const FormAfip = () => {
 
     ptoVta: 1,
   });
-  
-  console.log(dataAfip);
 
+  console.log(dataAfip);
 
   useEffect(() => {
     const totalAmount = () => {
@@ -77,19 +76,6 @@ const FormAfip = () => {
     dataAfip.importeExentoIva,
     dataAfip.importeIva,
   ]);
-
-  const totalAmount = () => {
-    const total = cart.reduce((total, product) => {
-      return total + (parseFloat(product.finalPrice) || 0);
-    }, 0);
-
-    const discountDecimal = dataAfip.discount / 100;
-    const totalWithDescount = total * (1 - discountDecimal);
-    setDataAfip((prevData) => ({
-      ...prevData,
-      amount: parseFloat(totalWithDescount).toFixed(2),
-    }));
-  };
 
   const showTotalAmount = () => {
     const total = cart
@@ -288,21 +274,30 @@ const FormAfip = () => {
       {/* Total to Pay */}
 
       <div className={style.itemContainer}>
-        <div className={style.total}>
+        <div className={style.totalProducts}>
+          <p>
+            {cart.length === 0
+              ? "Actualmente no tienes productos seleccionados."
+              : `Actualmente tienes ${cart.length} artículo${
+                  cart.length !== 1 ? "s" : ""
+                } en tu selección.`}
+          </p>
+        </div>
+        <div className={style.totalPrice}>
           <p>Total a pagar</p>
           <p className={style.totalNumber}>$ {dataAfip.amount}</p>
-        </div>
-        <div className={style.item}>
-          <Buttons type="submit" text="Vender" onClick={handleSubmit} />
         </div>
       </div>
 
       <div className={style.itemContainer}>
-        <div className={style.item}>
+{/*         <div className={style.item}>
           <Buttons type="" text="Cancelar" onClick={""} />
         </div>
         <div className={style.item}>
           <Buttons type="" text="Pendiente" onClick={""} />
+        </div>
+ */}        <div className={style.item}>
+          <Buttons type="submit" text="Vender" onClick={handleSubmit} />
         </div>
       </div>
     </form>
