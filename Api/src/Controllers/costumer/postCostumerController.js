@@ -23,7 +23,7 @@ const postCostumersController = async (
 			enableDebt,
 		}).validate();
 
-		const newCostumers = await Costumer.findOrCreate({
+		const [costumer, created] = await Costumer.findOrCreate({
 			where: { dni: dni },
 			defaults: {
 				firstName,
@@ -36,7 +36,9 @@ const postCostumersController = async (
 			},
 		});
 
-		return newCostumers;
+		return created
+			? costumer
+			: "Costumer not created because it already exists or something is wrong, please try again";
 	} catch (error) {
 		// Captura las excepciones de validación y retorna los mensajes de error
 		if (

@@ -1,25 +1,26 @@
 const {
 	postCostumersController,
 } = require("../Controllers/costumer/postCostumerController");
-// const {
-// 	deleteCostumerController,
-// } = require("../Controllers/Costumer/deleteCostumerController");
-// const {
-// 	getAllCostumeresController,
-// } = require("../Controllers/Costumer/getAllCostumeresController");
-// const {
-// 	getCostumerByIdController,
-// } = require("../Controllers/Costumer/getCostumerByIdController");
-// const {
-// 	putCostumerController,
-// } = require("../Controllers/Costumer/putCostumerController");
+const {
+	deleteCostumerController,
+} = require("../Controllers/costumer/deleteCostumerController");
+const {
+	getAllCostumeresController,
+} = require("../Controllers/costumer/getAllCostumeresController");
+const {
+	getCostumerByIdController,
+} = require("../Controllers/costumer/getCostumerByIdController");
+const {
+	putCostumerController,
+} = require("../Controllers/costumer/putCostumerController");
 
 const getCostumer = async (req, res) => {
-	const { id } = req.params;
+	const dni = req.params.id;
+
 	try {
-		const Costumer = await getCostumerByIdController(id);
-		Costumer
-			? res.status(200).json({ success: true, Costumer })
+		const costumer = await getCostumerByIdController(dni);
+		costumer
+			? res.status(200).json({ success: true, costumer })
 			: res
 					.status(404)
 					.json({ success: false, message: "No Costumers found." });
@@ -74,28 +75,26 @@ const postCostumer = async (req, res) => {
 
 const putCostumer = async (req, res) => {
 	try {
-		const CostumerId = req.params.id;
+		const dni = req.params.id;
 		const {
-			afipId,
-			name,
-			location,
-			isStorage,
-			enable,
-			manager,
-			hours,
+			firstName,
+			lastName,
+			email,
+			address,
 			phoneNumber,
+			dateOfBirth,
+			enableDebt,
 		} = req.body;
 
 		const updatedCostumer = await putCostumerController(
-			CostumerId,
-			afipId,
-			name,
-			location,
-			isStorage,
-			enable,
-			manager,
-			hours,
-			phoneNumber
+			dni,
+			firstName,
+			lastName,
+			email,
+			address,
+			phoneNumber,
+			dateOfBirth,
+			enableDebt
 		);
 		res.status(200).json(updatedCostumer);
 	} catch (error) {
@@ -105,9 +104,9 @@ const putCostumer = async (req, res) => {
 
 const deleteCostumer = async (req, res) => {
 	try {
-		const CostumerId = req.params.id;
-		const deletedCostumer = await deleteCostumerController(CostumerId);
-		res.status(200).json(deletedCostumer);
+		const dni = req.params.id;
+		const deletedCostumer = await deleteCostumerController(dni);
+		res.status(200).json("Costumer deleted successfully");
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
 	}
