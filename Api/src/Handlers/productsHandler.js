@@ -1,16 +1,15 @@
 const { postProductController } = require("../Controllers/products/postProductController");
 const { deleteProductController } = require("../Controllers/products/deleteProductController");
-const { getAllProductsController } = require("../Controllers/products/getAllProductsController");
-const { getProductByIdController } = require("../Controllers/products/getProductByIdController");
-const { getPaginatedProductsController } = require("../Controllers/products/getPaginatedProductsController");
 const { putProductController } = require("../Controllers/products/putProductController");
+const { getProductController } = require("../Controllers/products/getProductController");
+const { getProductsController } = require("../Controllers/products/getProductsController");
 
 
 
 const getProduct = async (req, res) => {
     const { id } = req.params
     try {
-        const product = await getProductByIdController(id)
+        const product = await getProductController(id)
         product
             ? res.status(200).json({ success: true, product })
             : res.status(404).json({ success: false, message: "No products found." })
@@ -21,7 +20,7 @@ const getProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
     try {
-        const products = await getAllProductsController();
+        const products = await getProductsController();
         return res.status(200).json(products);
     } catch (error) {
         return res.status(400).json({ error: error.message });

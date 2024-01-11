@@ -1,6 +1,6 @@
 const { Product } = require("../../db")
 
-const getProductByIdController = async (id) => {
+const getProductController = async (id) => {
     try {
         const product = await Product.findByPk(id)
         return product || []
@@ -9,4 +9,4 @@ const getProductByIdController = async (id) => {
     }
 }
 
-module.exports = { getProductByIdController }
+module.exports = { getProductController }
