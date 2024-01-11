@@ -1,7 +1,8 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-	sequelize.define("Costumer",
+	sequelize.define(
+		"Costumer",
 		{
 			dni: {
 				type: DataTypes.STRING,
@@ -13,7 +14,7 @@ module.exports = (sequelize) => {
 						const pasaporteRegex = /^[a-zA-Z0-9]+$/;
 
 						if (!dniRegex.test(value) && !pasaporteRegex.test(value)) {
-							throw new Error('The format of the DNI or passport is invalid.');
+							throw new Error("The format of the DNI or passport is invalid.");
 						}
 					},
 				},
@@ -60,7 +61,7 @@ module.exports = (sequelize) => {
 				validate: {
 					isValidDate(value) {
 						if (value && isNaN(Date.parse(value))) {
-							throw new Error('Date of birth is not valid.');
+							throw new Error("Date of birth is not valid.");
 						}
 					},
 				},
@@ -71,7 +72,7 @@ module.exports = (sequelize) => {
 			},
 		},
 		{
-			timestamps: false
+			timestamps: true,
 		}
 	);
 };
