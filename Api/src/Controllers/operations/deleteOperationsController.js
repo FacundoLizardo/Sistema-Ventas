@@ -6,7 +6,7 @@ const deleteOperationController = async (operationId) => {
 			where: { operationId: operationId },
 		});
 		if (deletedOperation === 0) {
-			return `Operation whit the ID: ${operationId} does not exist `;
+			return `Operation whit the ID: ${operationId} does not exist`;
 		}
 		return deletedOperation;
 	} catch (error) {

@@ -53,7 +53,7 @@ const postOperationController = async (
 			{ state: "completed" },
 			{ where: { operationId: operationId } }
 		);
-		console.log(updateOperation);
+
 		return updateOperation;
 	} catch (error) {
 		throw new Error(

@@ -23,9 +23,15 @@ module.exports = (sequelize) => {
 
 						if (value.length > 0) {
 							const { Product } = require("../db");
-
-							const isValidProducts = value.every((product) => {
-								return Product.findByPk(product.productId);
+							const isValidProducts = value.every((productWithQuantityObj) => {
+								if (!productWithQuantityObj.quantity) {
+									throw new Error(
+										"Every product must have the property quantity."
+									);
+								}
+								return Product.findByPk(
+									productWithQuantityObj.product.productId
+								);
 							});
 
 							if (!isValidProducts) {
