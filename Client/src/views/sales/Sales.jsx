@@ -21,7 +21,8 @@ const Toast = Swal.mixin({
 const Sales = () => {
 	const { state, dispatch } = useCart();
 	const [isOpen, setIsOpen] = useState(false);
-	const products = useContext(ProductContext);
+	const { products } = useContext(ProductContext);
+	const [searchTerm, setSearchTerm] = useState("");
 
 	const groupedProducts = state.cart.reduce((grouped, item) => {
 		const existingProduct = grouped.find(
@@ -42,24 +43,12 @@ const Sales = () => {
 
 	const handleInputChange = (e) => {
 		const value = e.target.value;
+		setSearchTerm(value);
 
-		if (e.key === "Enter") {
-			const selectedProduct = products.find(
-				(product) => product.name === value || product.barcode === value
-			);
-
-			if (selectedProduct) {
-				dispatch({ type: "ADD_TO_CART", payload: selectedProduct });
-				e.target.value = "";
-			} else {
-				Toast.fire({
-					icon: "warning",
-					title: "Producto no encontrado",
-					customClass: {
-						popup: "mySwal",
-					},
-				});
-			}
+		if (value.trim() !== "") {
+			setIsOpen(true);
+		} else {
+			setIsOpen(false);
 		}
 	};
 
@@ -73,6 +62,12 @@ const Sales = () => {
 		}
 	};
 
+	const filteredProducts = products.filter(
+		(product) =>
+			product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			product.barcode.toLowerCase().includes(searchTerm.toLowerCase())
+	);
+
 	return (
 		<section
 			className={style.salesContainer}
@@ -81,39 +76,44 @@ const Sales = () => {
 			{!isOpen ? (
 				<div className={style.inputContainer} onClick={handleClick}>
 					<input
+						className={style.searchInput}
 						id="search"
 						type="text"
 						placeholder="Ingresa el producto o su código:"
-						onKeyDown={handleInputChange}
+						onChange={handleInputChange}
 						list="productsList"
+						value={searchTerm}
 					/>
 				</div>
 			) : (
 				<div className={style.inputAndSugestionsContainer}>
 					<input
+						className={style.searchInput}
 						id="search"
 						type="text"
 						placeholder="Ingresa el producto o su código:"
-						onKeyDown={handleInputChange}
 						list="productsList"
 						onClick={handleClick}
+						onChange={handleInputChange}
+						value={searchTerm}
 					/>{" "}
 					<datalist className={style.suggestions}>
-						{products &&
-							products.map((product) => (
-								<option
+						<ul>
+							{filteredProducts.map((product) => (
+								<li
 									className={style.option}
 									key={product.productId}
 									value={product.name}
 									onClick={() => {
 										dispatch({ type: "ADD_TO_CART", payload: product });
-										document.getElementById("search").value = "";
 										setIsOpen(!isOpen);
+										setSearchTerm("");
 									}}
 								>
 									{product.name}
-								</option>
+								</li>
 							))}
+						</ul>
 					</datalist>
 				</div>
 			)}
