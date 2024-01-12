@@ -10,6 +10,8 @@
 
 	& .inputAndSugestionsContainer {
 		background-color: rgb(255, 252, 247);
+		border-top-right-radius: var(--radius);
+		border-top-left-radius: var(--radius);
 
 		& .suggestions {
 			display: flex;
@@ -20,8 +22,10 @@
 			width: 100%;
 			z-index: 999;
 			align-items: center;
-			overflow-x: scroll;
+			overflow-y: scroll;
 
+			border-bottom-right-radius: var(--radius);
+			border-bottom-left-radius: var(--radius);
 			& .option {
 				display: flex;
 				align-items: center;
@@ -43,7 +47,7 @@
 		padding: 10px;
 		background-color: var(--bg-color-off);
 		border-radius: var(--radius);
-		overflow-x: scroll;
+		overflow-y: scroll;
 
 		& ul {
 			display: flex;
@@ -67,4 +71,21 @@
 			min-height: 250px;
 		}
 	}
+}
+
+.salesContainer
+	.inputAndSugestionsContainer
+	.suggestions::-webkit-scrollbar-thumb {
+	background-color: var(--border);
+}
+
+.salesContainer
+	.inputAndSugestionsContainer
+	.suggestions::-webkit-scrollbar-track {
+	border-radius: var(--radius);
+	background-color: transparent;
+}
+.salesContainer .tableContainer::-webkit-scrollbar-track {
+	border-radius: var(--radius);
+	background-color: transparent;
 }
