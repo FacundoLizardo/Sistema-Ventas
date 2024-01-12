@@ -39,9 +39,11 @@
 		height: 100%;
 		display: flex;
 		min-height: 200px;
+		max-height: 400px;
 		padding: 10px;
 		background-color: var(--bg-color-off);
 		border-radius: var(--radius);
+		overflow-x: scroll;
 
 		& ul {
 			display: flex;
