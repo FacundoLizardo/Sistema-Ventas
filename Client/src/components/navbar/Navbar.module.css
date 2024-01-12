@@ -32,7 +32,7 @@
           font-weight: bold;
           border-radius: var(--radius);
           background-color: var(--primary-color);
-          color: var(--text-primary-color);
+          color: var(--text-third-color);
         }
       }
     }

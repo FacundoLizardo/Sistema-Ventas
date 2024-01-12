@@ -14,21 +14,21 @@
 
   & .buyButtonColor {
     background-color: var(--buy-button-color);
-    color: var(--text-primary-color);
+    color: var(--text-third-color);
   }
 
   & .pendingButtonColor {
     background-color: var(--pending-button-color);
-    color: var(--text-primary-color);
+    color: var(--text-third-color);
   }
 
   & .cancelButtonColor {
     background-color: var(--cancel-button-color);
-    color: var(--text-primary-color);
+    color: var(--text-third-color);
   }
 
   & .basicColor {
     background-color: var(--basic-color);
-    color: var(--text-primary-color);
+    color: var(--text-third-color);
   }
 }
