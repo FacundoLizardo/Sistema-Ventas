@@ -72,3 +72,20 @@
     }
   }
 }
+
+.salesContainer
+	.inputAndSugestionsContainer
+	.suggestions::-webkit-scrollbar-thumb {
+	background-color: var(--border);
+}
+
+.salesContainer
+	.inputAndSugestionsContainer
+	.suggestions::-webkit-scrollbar-track {
+	border-radius: var(--radius);
+	background-color: transparent;
+}
+.salesContainer .tableContainer::-webkit-scrollbar-track {
+	border-radius: var(--radius);
+	background-color: transparent;
+}
