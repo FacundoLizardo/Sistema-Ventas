@@ -14,14 +14,14 @@
       flex-direction: column;
       position: absolute;
       background-color: var(--bg-color-offset);
-      height: 250px;
+      height: 260px;
       width: 100%;
       z-index: 99;
       align-items: center;
       overflow-y: scroll;
       padding: 10px;
       cursor: pointer;
-	  margin-top: 10px;
+	  border-radius: var(--radius);
 
       & .option {
         color: var(--text-primary-color);
@@ -30,7 +30,7 @@
         position: relative;
         min-height: 40px;
         width: 100%;
-        border-bottom: solid 1px var(--border);
+        border-bottom: solid 1px var(--border-off);
 		transition: color .2s ease;
       }
 

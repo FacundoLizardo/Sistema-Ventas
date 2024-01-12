@@ -10,10 +10,10 @@
   /* Background colors */
   --bg-color: #0d0a12;
   --bg-color-off: #191424;
-  --bg-color-offset: #0c0a17;
+  --bg-color-offset: #ffffff;
 
   /* Text colors */
-  --text-primary-color: #ededed;
+  --text-primary-color: #0d0a12;
   --text-secondary-color: #a6adbb;
 
   /* Primary colors */
@@ -117,6 +117,7 @@ select {
   border: 1px solid black;
   box-sizing: border-box;
   font-size: var(--font-size-small);
+  background-color: var(--bg-color-offset);
 }
 
 input[type="text"]:focus,
@@ -124,8 +125,8 @@ input[type="number"]:focus,
 select:focus {
   outline: none;
   border: 1px solid var(--secondary-color);
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   font-family: var(--font-family);
+  background-color: var(--bg-color-offset);
 }
 
 label {
