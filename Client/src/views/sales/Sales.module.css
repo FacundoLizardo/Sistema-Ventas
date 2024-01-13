@@ -51,6 +51,7 @@
 			}
 		}
 	}
+	
 	& .tableContainer {
 		position: relative;
 		width: 100%;
@@ -76,11 +77,11 @@
 
 	@media screen and (min-width: 768px) {
 		.tableContainer {
-			min-height: 250px;
+			height: 275px;
 		}
 
 		.null {
-			min-height: 250px;
+			height: 275px;
 		}
 	}
 }
