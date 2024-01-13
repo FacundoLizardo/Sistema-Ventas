@@ -79,7 +79,7 @@ const Sales = () => {
 						className={style.searchInput}
 						id="search"
 						type="text"
-						placeholder="Ingresa el producto o su código:"
+						placeholder="Ingresa el producto o su código de barras:"
 						onChange={handleInputChange}
 						list="productsList"
 						value={searchTerm}
