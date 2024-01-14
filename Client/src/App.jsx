@@ -5,19 +5,21 @@ import Administration from "./views/administration/Administration";
 import Sales from "./views/sales/Sales";
 import Statistics from "./views/statistics/statistics";
 import Navbar from "./components/navbar/Navbar";
+import Login from "./views/login/Login";
 
 function App() {
-  return (
-    <>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Sales />} />
-        <Route path="/stock" element={<Stock />} />
-        <Route path="/statistics" element={<Statistics />} />
-        <Route path="/administration" element={<Administration />} />
-      </Routes>
-    </>
-  );
+	return (
+		<>
+			<Navbar />
+			<Routes>
+				<Route path="/" element={<Sales />} />
+				<Route path="/stock" element={<Stock />} />
+				<Route path="/statistics" element={<Statistics />} />
+				<Route path="/administration" element={<Administration />} />
+				<Route path="/login" element={<Login />} />
+			</Routes>
+		</>
+	);
 }
 
 export default App;
