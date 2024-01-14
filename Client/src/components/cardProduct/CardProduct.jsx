@@ -1,16 +1,15 @@
 import style from "./CardProduct.module.css";
 import { useCart } from "../../context/cart/cart";
 
-const CardProduct = ({ product }) => {
+const CardProduct = ({ product, onHandleAddToCart, onHandleDeleteToCart }) => {
   const { state, dispatch } = useCart();
-  
   let stylesStock = product.stock <= 0 ? style.withoutStock : "";
 
-  const handleAddToCart = async (product) => {
+  const handleAddToCart = () => {
     dispatch({ type: "ADD_TO_CART", payload: product });
   };
 
-  const handleDeleteToCart = async (product) => {
+  const handleDeleteToCart = () => {
     dispatch({ type: "REMOVE_FROM_CART", payload: product });
   };
 
@@ -37,15 +36,21 @@ const CardProduct = ({ product }) => {
           <p>Disponible: {product.stock}</p>
         </div>
       </div>
-      <div className={style.buttons}>
-        <div>
-          <button onClick={() => handleDeleteToCart(product)}>-</button>
+      {(onHandleAddToCart || onHandleDeleteToCart) && (
+        <div className={style.buttons}>
+          {onHandleDeleteToCart && (
+            <div>
+              <button onClick={handleDeleteToCart}>-</button>
+            </div>
+          )}
+          <div>{countProducts(product.productId)}</div>
+          {onHandleAddToCart && (
+            <div>
+              <button onClick={handleAddToCart}>+</button>
+            </div>
+          )}
         </div>
-        <div>{countProducts(product.productId)}</div>
-        <div>
-          <button onClick={() => handleAddToCart(product)}>+</button>
-        </div>
-      </div>
+      )}
     </article>
   );
 };
