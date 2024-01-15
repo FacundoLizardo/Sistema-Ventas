@@ -34,7 +34,6 @@ const Login = () => {
 					</div>
 					<div>
 						<LoginButton />
-						<LogOutButton />
 					</div>
 				</form>
 				<div className={styles.socialMessage}>
