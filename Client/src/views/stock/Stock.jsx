@@ -2,7 +2,7 @@ import style from "./Stock.module.css";
 import CardProduct from "../../components/cardProduct/CardProduct";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import FormProducts from "../../components/formProduct/FormProduct";
+import FormProducts from "../../components/forms/FormProduct";
 
 const Stock = () => {
   const [filters, setFilters] = useState({

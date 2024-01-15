@@ -1,6 +1,6 @@
 import style from "./Sales.module.css";
 import CardProduct from "../../components/cardProduct/CardProduct";
-import FormAfip from "../../components/formAfip/FormAfip";
+import FormAfip from "../../components/forms/FormAfip";
 import { useCart } from "../../context/cart/cart";
 import { ProductContext } from "../../context/products/productsContext";
 import { useContext, useState } from "react";

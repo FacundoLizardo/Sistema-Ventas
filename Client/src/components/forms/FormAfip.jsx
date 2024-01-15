@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unknown-property */
-import style from "./FormAfip.module.css";
+import style from "./Forms.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useCart } from "../../context/cart/cart";
