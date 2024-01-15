@@ -1,8 +1,16 @@
-const { getUserByIdController } = require("../Controllers/user/getUserByIdController");
-const { postUserController } = require("../Controllers/user/postUserController");
+const {
+	getUserByIdController,
+} = require("../Controllers/user/getUserByIdController");
+const {
+	postUserController,
+} = require("../Controllers/user/postUserController");
 const { putUserController } = require("../Controllers/user/putUserController");
-const { getAllUsersController } = require("../Controllers/user/getAllUsersController");
-const { deleteUserController } = require("../Controllers/user/deleteUserController");
+const {
+	getAllUsersController,
+} = require("../Controllers/user/getAllUsersController");
+const {
+	deleteUserController,
+} = require("../Controllers/user/deleteUserController");
 
 const getUser = async (req, res) => {
 	const id = req.params;
@@ -32,6 +40,7 @@ const postUser = async (req, res) => {
 		firstName,
 		lastName,
 		email,
+		password,
 		address,
 		phoneNumber,
 		cuit,
@@ -40,7 +49,7 @@ const postUser = async (req, res) => {
 		role,
 	} = req.body;
 
-	if (!firstName || !lastName || !email || !enabled || !role) {
+	if (!firstName || !lastName || !email || !password || !enabled || !role) {
 		return res.status(400).json({ message: "Missing information" });
 	}
 	try {
@@ -48,6 +57,7 @@ const postUser = async (req, res) => {
 			firstName,
 			lastName,
 			email,
+			password,
 			address,
 			phoneNumber,
 			cuit,

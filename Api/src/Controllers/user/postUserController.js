@@ -1,9 +1,11 @@
 const { User } = require("../../db");
+const hashPassword = require("../../Utils/hashPassword");
 
 const postUserController = async (
 	firstName,
 	lastName,
 	email,
+	password,
 	address,
 	phoneNumber,
 	cuit,
@@ -11,12 +13,13 @@ const postUserController = async (
 	enabled,
 	role
 ) => {
+	password = await hashPassword(password);
 	try {
-		// Crea una instancia del modelo sin guardarla en la base de datos para validar errores con .validate()
 		await User.build({
 			firstName,
 			lastName,
 			email,
+			password,
 			address,
 			phoneNumber,
 			cuit,
@@ -31,6 +34,7 @@ const postUserController = async (
 				firstName,
 				lastName,
 				email,
+				password,
 				address,
 				phoneNumber,
 				cuit,
@@ -44,7 +48,6 @@ const postUserController = async (
 			? newUser
 			: "User not created because it already exists or something is wrong, please try again";
 	} catch (error) {
-		// Captura las excepciones de validación y retorna los mensajes de error
 		if (
 			error.name === "SequelizeValidationError" ||
 			error.name === "SequelizeUniqueConstraintError"
@@ -64,7 +67,8 @@ const postUserController = async (
 // {
 //     "firstName": "John",
 //     "lastName": "Doe",
-//     "email": "john.doe@example.com",
+//     "email": "pepeelposho@example.com",
+//     "password": "habiaunavezunavaca",
 //     "address": "123 Main St",
 //     "phoneNumber": "555-1234",
 //     "cuit": "123456789",
