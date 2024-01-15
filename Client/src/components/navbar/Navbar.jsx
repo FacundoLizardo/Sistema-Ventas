@@ -1,10 +1,8 @@
 import { NavLink } from "react-router-dom";
 import style from "./Navbar.module.css";
-import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from "../buttons/LoginButton/LoginButton";
 import LogOutButton from "../buttons/LogOutButton/LogOutButton";
 const Navbar = () => {
-	const { user, isAuthenticated } = useAuth0();
 	return (
 		<div className={style.navbarContainer}>
 			<nav>
@@ -29,7 +27,7 @@ const Navbar = () => {
 							Administration
 						</NavLink>
 					</li>
-					{isAuthenticated ? (
+					{/* {isAuthenticated ? (
 						<li>
 							<LogOutButton />
 						</li>
@@ -37,7 +35,7 @@ const Navbar = () => {
 						<li>
 							<LoginButton />
 						</li>
-					)}
+					)} */}
 				</ul>
 			</nav>
 		</div>

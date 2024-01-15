@@ -2,6 +2,7 @@ import style from "./Stock.module.css";
 import CardProduct from "../../components/cardProduct/CardProduct";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import FormProducts from "../../components/formProduct/FormProduct";
 
 const Stock = () => {
   const [filters, setFilters] = useState({
@@ -131,6 +132,9 @@ const Stock = () => {
         <button onClick={nextPage} disabled={currentPage === totalPages}>
           +
         </button>
+      </div>
+      <div>
+        <FormProducts />
       </div>
     </section>
   );
