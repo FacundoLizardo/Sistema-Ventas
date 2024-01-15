@@ -1,5 +1,7 @@
 import React from "react";
 import styles from "./Login.module.css";
+import LoginButton from "../../components/buttons/LoginButton/LoginButton";
+import LogOutButton from "../../components/buttons/LogOutButton/LogOutButton";
 
 const Login = () => {
 	return (
@@ -30,7 +32,10 @@ const Login = () => {
 							</a>
 						</div>
 					</div>
-					<button className={styles.sign}>Iniciar sesión</button>
+					<div>
+						<LoginButton />
+						<LogOutButton />
+					</div>
 				</form>
 				<div className={styles.socialMessage}>
 					<div className={styles.line}></div>
