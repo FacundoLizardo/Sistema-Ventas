@@ -1,7 +1,8 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-	sequelize.define("Product",
+	sequelize.define(
+		"Product",
 		{
 			productId: {
 				type: DataTypes.UUID,
@@ -13,8 +14,8 @@ module.exports = (sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 				validate: {
-					len: [0, 50]
-				}
+					len: [0, 50],
+				},
 			},
 			category: {
 				type: DataTypes.STRING,
@@ -34,12 +35,12 @@ module.exports = (sequelize) => {
 				validate: {
 					isPositive(value) {
 						if (value < 0) {
-							throw new Error('The discount must be a positive number.');
+							throw new Error("The discount must be a positive number.");
 						} else if (value > 100) {
-							throw new Error('The discount must be less than 100.')
+							throw new Error("The discount must be less than 100.");
 						}
-					}
-				}
+					},
+				},
 			},
 			profitPercentage: {
 				type: DataTypes.INTEGER,
@@ -47,14 +48,31 @@ module.exports = (sequelize) => {
 				validate: {
 					isPositive(value) {
 						if (value < 0) {
-							throw new Error('The profit percentage must be a positive number.');
+							throw new Error(
+								"The profit percentage must be a positive number."
+							);
 						}
-					}
-				}
+					},
+				},
 			},
 			stock: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
+			},
+			allowNegativeStock: {
+				type: DataTypes.BOOLEAN,
+				allowNull: false,
+				defaultValue: true,
+			},
+			trackStock: {
+				type: DataTypes.BOOLEAN,
+				allowNull: false,
+				defaultValue: true,
+			},
+			minimumStock: {
+				type: DataTypes.INTEGER,
+				allowNull: false,
+				defaultValue: 0,
 			},
 			enabled: {
 				type: DataTypes.BOOLEAN,
@@ -64,8 +82,8 @@ module.exports = (sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: true,
 				validate: {
-					len: [0, 255]
-				}
+					len: [0, 255],
+				},
 			},
 			taxes: {
 				type: DataTypes.DECIMAL(10, 2),
@@ -74,7 +92,7 @@ module.exports = (sequelize) => {
 			barcode: {
 				type: DataTypes.STRING,
 				allowNull: true,
-			}
+			},
 		},
 		{
 			timestamps: false,
