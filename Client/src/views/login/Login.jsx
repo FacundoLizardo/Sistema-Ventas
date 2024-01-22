@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Login.module.css";
 import LoginButton from "../../components/buttons/LoginButton/LoginButton";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const Login = () => {
 	const [user, setUser] = useState({
@@ -9,8 +9,11 @@ const Login = () => {
 		password: "",
 	});
 	const handleChange = (e) => {
-		const value = e.target.value;
-		console.log(value);
+		const { name, value } = e.target;
+		setUser((prevUser) => ({
+			...prevUser,
+			[name]: value,
+		}));
 	};
 
 	return (
@@ -32,6 +35,7 @@ const Login = () => {
 					<div className={styles.inputGroup}>
 						<label htmlFor="password">Contraseña</label>
 						<input
+							onChange={handleChange}
 							value={user.password}
 							type="password"
 							name="password"

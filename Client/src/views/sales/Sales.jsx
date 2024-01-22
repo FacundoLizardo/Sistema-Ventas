@@ -3,14 +3,17 @@ import CardProduct from "../../components/cardProduct/CardProduct";
 import FormAfip from "../../components/forms/FormAfip";
 import { useCart } from "../../context/cart/cart";
 import { ProductContext } from "../../context/products/productsContext";
+import { UserContext } from "../../context/user/userContext";
 import { useContext, useState } from "react";
 
 const Sales = () => {
 	const { state, dispatch } = useCart();
 	const [isOpen, setIsOpen] = useState(false);
 	const { products } = useContext(ProductContext);
+	const { validUser } = useContext(UserContext);
 	const [searchTerm, setSearchTerm] = useState("");
 
+	console.log(validUser);
 	const groupedProducts = state.cart.reduce((grouped, item) => {
 		const existingProduct = grouped.find(
 			(group) => group.productId === item.productId

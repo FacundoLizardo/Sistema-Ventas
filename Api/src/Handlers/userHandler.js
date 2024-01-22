@@ -12,6 +12,10 @@ const {
 	deleteUserController,
 } = require("../Controllers/user/deleteUserController");
 
+const {
+	getUserByEmailAndPasswordController,
+} = require("../Controllers/user/getUserByEmailAndPassword");
+
 const getUser = async (req, res) => {
 	const id = req.params;
 	try {
@@ -24,6 +28,20 @@ const getUser = async (req, res) => {
 	}
 };
 
+const getUserByEmailAndPassword = async (req, res) => {
+	const { email, password } = req.body;
+	try {
+		const user = await getUserByEmailAndPasswordController({
+			email,
+			password,
+		});
+		user
+			? res.status(200).json({ success: true, user })
+			: res.status(400).json({ success: false, message: "User not found" });
+	} catch (error) {
+		res.status(400).json({ error: error.message });
+	}
+};
 const getUsers = async (req, res) => {
 	try {
 		const products = await getAllUsersController();
@@ -112,4 +130,11 @@ const deleteUser = async (req, res) => {
 	}
 };
 
-module.exports = { getUser, getUsers, postUser, putUser, deleteUser };
+module.exports = {
+	getUser,
+	getUsers,
+	getUserByEmailAndPassword,
+	postUser,
+	putUser,
+	deleteUser,
+};
