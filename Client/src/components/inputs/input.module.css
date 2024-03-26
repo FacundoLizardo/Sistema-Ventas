@@ -1,0 +1,76 @@
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    & label {
+        margin-bottom: 5px;
+        margin-top: 5px;
+        font-size: 10px;
+        color: #a6adbb;
+    }
+
+    & .input {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        border: 2px solid var(--primary-color);
+        border-radius: var(--radius);
+        padding-left: 10px;
+        overflow: hidden;
+        overflow: clip;
+        max-width: 400px;
+
+        & input {
+            width: 100%;
+            padding-top: 14px;
+            padding-bottom: 14px;
+            padding-left: 14px;
+            font-size: 12px;
+            background-color: #20192d;
+            border: none;
+            color: #a6adbb;
+            appearance: none;
+        }
+
+        & input:focus {
+            border: none;
+            outline: none;
+            color: #a6adbb;
+        }
+
+        & input:focus::placeholder {
+            color: #20192d;
+        }
+
+        & input[type="number"]::-webkit-inner-spin-button,
+        & input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        & input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+            margin-top: 7px;
+            margin-bottom: 7px;
+        }
+
+        & input[type="checkbox"] {
+            -moz-appearance: checkbox;
+            appearance: textfield;
+            margin-top: 7px;
+            margin-bottom: 7px;
+
+        }
+
+    }
+
+    & .input:focus-within {
+        border: 2px solid var(--border);
+    }
+
+}

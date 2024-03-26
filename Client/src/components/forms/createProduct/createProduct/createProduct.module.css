@@ -1,0 +1,38 @@
+.createProductContainer {
+    display: flex;
+    flex-direction: column;
+    max-height: 600px;
+    width: 600px;
+
+
+    & .title {
+        font-weight: bold;
+        font-size: 25px;
+        color: white;
+
+    }
+
+    & form {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 2rem;
+        padding-bottom: 2rem;
+        padding-top: 2rem;
+        width: 100%;
+
+        & .inputContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+
+
+        }
+
+    }
+}
+
+label {
+    font-size: 10px;
+}

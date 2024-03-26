@@ -1,0 +1,148 @@
+/*TODO ver bug en animacion */
+
+.container{
+    height: fit-content;
+    width: fit-content;
+}
+
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 98;
+    backdrop-filter: blur(10px);
+}
+
+.modalContentClose{
+    position: relative;
+    min-height: 200px;
+    min-width: 200px;
+    max-width: 800px;
+    max-height: 800px;
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    background-color: #20192d;
+    border-radius: var(--radius);
+    animation: closeModalAnimation 230ms ease-in-out;
+    transition: opacity 230ms, width 230ms;
+}
+
+@keyframes closeModalAnimation {
+    0% {
+        opacity: 1;
+        width: 100%;
+    }
+    50%{
+        opacity: 0.5;
+        width: 50%;
+    }
+    100% {
+        opacity: 0;
+        width: 0px; /* Puedes ajustar la dirección de la animación según tus necesidades */
+    }
+}
+
+.modalContent{
+    position: relative;
+    min-height: 200px;
+    min-width: 500px;
+    max-width: 800px;
+    max-height: 800px;
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #20192d;
+    border-radius: var(--radius);
+    overflow: hidden;
+    animation: animateModal 200ms ease-in-out;
+    transition: opacity 200ms, width 200ms;
+}
+
+@keyframes animateModal {
+    0% {
+        width: 0px;
+        opacity: 0;
+    }
+    50% {
+        width: 50%;
+        opacity: 0.5;
+    }
+    100% {
+        width: 100%;
+        opacity: 1;
+    }
+}
+
+.children{
+    overflow-y: scroll;
+    padding-inline: 20px;
+}
+
+.buttonContainer{
+    display: flex;
+    width: 100%;
+}
+
+.closeButton {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    background-color: #d63031;
+    z-index: 99;
+    font-size: 25px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 100%;
+}
+
+.closeButton:hover{
+    scale: 90%;
+    background-color: #d97474;
+}
+
+
+.openModal{
+    color: var(--text-third-color);
+    height: 30px;
+    width: fit-content;
+    max-width: 120px;
+    padding-inline: 10px;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: bold;
+    background-color: var(--buy-button-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: scale 100ms;
+}
+
+.openModal:hover{
+    scale: 110%;
+}
+
+@media screen and (max-width: 768px) {
+    .modalContent {
+        max-width: 90%;
+        min-width: 300px;
+    }
+}

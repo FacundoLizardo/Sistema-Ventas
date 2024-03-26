@@ -1,0 +1,74 @@
+.container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    & .inputContainer {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border: 2px solid var(--primary-color);
+        border-radius: var(--radius);
+        padding: 10px 0 10px 15px;
+        width: 100%;
+        overflow: clip;
+        max-width: 400px;
+        gap: 10px;
+
+        & input[type="checkbox"] {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc;
+            border-radius: 3px;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, content 0.3s, border 0.3s;
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        input[type="checkbox"]:not(:checked) {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        input[type="checkbox"]:focus {
+            outline: none;
+        }
+
+        input[type="checkbox"]::before,
+        input[type="checkbox"]::after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        input[type="checkbox"]:not(:checked)::before {
+            display: block;
+            content: "×";
+            color: black;
+            font-size: 30px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        input[type="checkbox"]:checked::after {
+            display: block;
+            content: "✔"; /* Tilde negra */
+            color: black;
+            font-size: 16px;
+            line-height: 20px;
+            text-align: center;
+        }
+    }
+}
