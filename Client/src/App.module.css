@@ -18,7 +18,7 @@
   --text-third-color: #ffffff;
 
   /* Primary colors */
-  --primary-color: #450399;
+  --primary-color: #6432a5;
 
   /* Colors buttons */
   --basic-color: #450399;
@@ -125,7 +125,7 @@ input[type="text"]:focus,
 input[type="number"]:focus,
 select:focus {
   outline: none;
-  border: 1px solid var(--secondary-color);
+  border: 1px solid var(--primary-color);
   font-family: var(--font-family);
   background-color: var(--bg-color-offset);
 }

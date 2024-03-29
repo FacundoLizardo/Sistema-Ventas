@@ -70,7 +70,7 @@ module.exports = (sequelize) => {
 					},
 				},
 			},
-			local: {
+			branchId: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},

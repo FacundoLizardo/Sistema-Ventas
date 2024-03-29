@@ -84,7 +84,7 @@ const putCashRegister = async (req, res) => {
 			totalCashRegister,
 			comments
 		);
-		if (updatedCashRegister.cashId) {
+		if (updatedCashRegister) {
 			res.status(200).json(updatedCashRegister);
 		}
 	} catch (error) {

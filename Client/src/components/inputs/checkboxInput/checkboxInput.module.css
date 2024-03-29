@@ -3,18 +3,41 @@
     width: 100%;
     align-items: center;
     justify-content: center;
+
     & .inputContainer {
         position: relative;
         display: flex;
         flex-direction: row;
         align-items: center;
-        border: 2px solid var(--primary-color);
+        /*border: 2px solid var(--primary-color);*/
         border-radius: var(--radius);
-        padding: 10px 0 10px 15px;
+        padding: 10px 0 10px 0;
         width: 100%;
         overflow: clip;
         max-width: 400px;
         gap: 10px;
+        font-size: 25px;
+
+        & .labelAndChildren{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: start;
+            background-color: white;
+            width: 100%;
+            color: #20192d;
+            padding: 3px 10px 3px 10px;
+            border-radius: var(--radius);
+            gap: 5px;
+            border: 3px solid #20192d;
+
+            & label{
+                font-size: 15px;
+                font-weight: initial;
+                color: #0d0a12;
+            }
+        }
+
 
         & input[type="checkbox"] {
             display: flex;
@@ -64,7 +87,7 @@
 
         input[type="checkbox"]:checked::after {
             display: block;
-            content: "✔"; /* Tilde negra */
+            content: "✔";
             color: black;
             font-size: 16px;
             line-height: 20px;

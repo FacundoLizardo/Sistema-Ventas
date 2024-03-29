@@ -17,23 +17,24 @@
     justify-content: center;
     z-index: 98;
     backdrop-filter: blur(10px);
+    margin-right: 10px;
 }
 
 .modalContentClose{
     position: relative;
     min-height: 200px;
-    min-width: 200px;
-    max-width: 800px;
+    min-width: 500px;
+    max-width: 700px;
     max-height: 800px;
     height: fit-content;
-    width: fit-content;
+    width: 80%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     align-items: center;
     justify-content: center;
     background-color: #20192d;
     border-radius: var(--radius);
+    overflow: hidden;
     animation: closeModalAnimation 230ms ease-in-out;
     transition: opacity 230ms, width 230ms;
 }
@@ -41,15 +42,15 @@
 @keyframes closeModalAnimation {
     0% {
         opacity: 1;
-        width: 100%;
+        width: 80%;
     }
     50%{
         opacity: 0.5;
-        width: 50%;
+        width: 40%;
     }
     100% {
         opacity: 0;
-        width: 0px; /* Puedes ajustar la dirección de la animación según tus necesidades */
+        width: 0;
     }
 }
 
@@ -57,10 +58,10 @@
     position: relative;
     min-height: 200px;
     min-width: 500px;
-    max-width: 800px;
+    max-width: 700px;
     max-height: 800px;
     height: fit-content;
-    width: fit-content;
+    width: 80%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -74,22 +75,23 @@
 
 @keyframes animateModal {
     0% {
-        width: 0px;
+        width: 0;
         opacity: 0;
     }
     50% {
-        width: 50%;
+        width: 40%;
         opacity: 0.5;
     }
     100% {
-        width: 100%;
+        width: 80%;
         opacity: 1;
     }
 }
 
 .children{
     overflow-y: scroll;
-    padding-inline: 20px;
+    padding-inline: 8px;
+    width: 100%;
 }
 
 .buttonContainer{
@@ -99,13 +101,13 @@
 
 .closeButton {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 30px;
-    height: 30px;
+    top: 15px;
+    right: 15px;
+    width: 20px;
+    height: 20px;
     background-color: #d63031;
     z-index: 99;
-    font-size: 25px;
+    font-size: 15px;
     font-weight: bold;
     display: flex;
     flex-direction: column;

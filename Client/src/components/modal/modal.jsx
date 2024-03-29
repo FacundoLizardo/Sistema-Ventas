@@ -1,7 +1,8 @@
 import styles from "./modal.module.css";
 import { CgClose } from "react-icons/cg";
-import {useState} from "react";
-//TODO bug en el css al abrir el modal, es por la diferencia de tamano en las pantallas
+import React, {useState} from "react";
+
+export  const ModalContext = React.createContext(<function/>)
 const Modal = ({ children, buttonText }) => {
     const [isOpen, setIsOpen] = useState(false)
 
@@ -21,7 +22,9 @@ const Modal = ({ children, buttonText }) => {
         }, 200);
     };
 
+
     return (
+        <ModalContext.Provider  value={closeModal} >
         <div className={ styles.container}>
         <button className={styles.openModal}
         onClick={openModal}>
@@ -41,7 +44,10 @@ const Modal = ({ children, buttonText }) => {
                             </button>
                         </div>
                         <div className={styles.children}>
-                            {children}
+
+                                {children}
+
+
                         </div>
 
                     </div>
@@ -49,6 +55,7 @@ const Modal = ({ children, buttonText }) => {
             )}
 
         </div>
+        </ModalContext.Provider>
     );
 };
 

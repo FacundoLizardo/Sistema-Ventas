@@ -15,56 +15,30 @@ module.exports = (sequelize) => {
 				allowNull: false,
 			},
 			initialAmount: {
-				type: DataTypes.DECIMAL(10, 2),
+				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
 			finalAmount: {
-				type: DataTypes.DECIMAL(10, 2),
+				type: DataTypes.INTEGER,
 				allowNull: true,
 			},
 			income: {
 				type: DataTypes.JSONB,
 				allowNull: true,
 				defaultValue: {
-					amount: 0.0,
+					amount: 0,
 					details: "",
 				},
 
-				validate: {
-					validateAmount(value) {
-						if (value.amount !== null) {
-							const stringValue = value.amount.toString();
-							const decimalCount = stringValue.split(".")[1]
-								? stringValue.split(".")[1].length
-								: 0;
-							if (decimalCount > 2 || stringValue.length > 12) {
-								throw new ValidationError("Invalid amount for income");
-							}
-						}
-					},
-				},
 			},
 			egress: {
 				type: DataTypes.JSONB,
 				allowNull: true,
 				defaultValue: {
-					amount: 0.0,
+					amount: 0,
 					details: "",
 				},
 
-				validate: {
-					validateAmount(value) {
-						if (value.amount !== null) {
-							const stringValue = value.amount.toString();
-							const decimalCount = stringValue.split(".")[1]
-								? stringValue.split(".")[1].length
-								: 0;
-							if (decimalCount > 2 || stringValue.length > 12) {
-								throw new ValidationError("Invalid amount for egress");
-							}
-						}
-					},
-				},
 			},
 
 			totalCashRegister: {

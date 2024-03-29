@@ -8,7 +8,7 @@
         margin-bottom: 5px;
         margin-top: 5px;
         font-size: 10px;
-        color: #a6adbb;
+        color: black;
     }
 
     & .input {
@@ -17,33 +17,35 @@
         flex-direction: row;
         align-items: center;
         width: 100%;
-        border: 2px solid var(--primary-color);
+        border: 3px solid #20192d;
         border-radius: var(--radius);
         padding-left: 10px;
         overflow: hidden;
         overflow: clip;
         max-width: 400px;
+        background-color: white;
+        color: #20192d;
 
         & input {
             width: 100%;
-            padding-top: 14px;
-            padding-bottom: 14px;
+            padding-top: 8px;
+            padding-bottom: 7px;
             padding-left: 14px;
             font-size: 12px;
-            background-color: #20192d;
+            background-color: white;
             border: none;
-            color: #a6adbb;
+            color: black;
             appearance: none;
         }
 
         & input:focus {
             border: none;
             outline: none;
-            color: #a6adbb;
+            color: black;
         }
 
         & input:focus::placeholder {
-            color: #20192d;
+            color: white;
         }
 
         & input[type="number"]::-webkit-inner-spin-button,
@@ -55,8 +57,9 @@
         & input[type="number"] {
             -moz-appearance: textfield;
             appearance: textfield;
-            margin-top: 7px;
-            margin-bottom: 7px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+
         }
 
         & input[type="checkbox"] {
@@ -70,7 +73,7 @@
     }
 
     & .input:focus-within {
-        border: 2px solid var(--border);
+        border: 3px solid var(--primary-color);
     }
 
 }

@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 
+//todo revisar validaciones
 module.exports = (sequelize) => {
 	sequelize.define(
 		"Purchase",
@@ -27,13 +28,13 @@ module.exports = (sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: true,
 				validate: {
-					len: [0, 255]
-				}
+					len: [0, 255],
+				},
 			},
 			barcode: {
 				type: DataTypes.STRING,
 				allowNull: true,
-			}
+			},
 		},
 		{
 			timestamps: true,
