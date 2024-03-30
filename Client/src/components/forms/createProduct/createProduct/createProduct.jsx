@@ -14,6 +14,7 @@ import axios from "axios";
 import {useContext} from "react";
 import {ModalContext} from "../../../modal/modal.jsx";
 
+// TODO cuando en el formulario no se llena stock y stock minimo el default sea 0
 const CreateProductForm = () => {
     const InitialState = {
         name: '',
@@ -35,12 +36,45 @@ const CreateProductForm = () => {
 
     const closeModal = useContext(ModalContext)
 
+    const calculateProfitPercentage = (cost, finalPrice, profitPercentage) =>{
+        console.log(cost)
+        console.log(finalPrice)
+        console.log(profitPercentage)
+        if(profitPercentage === null){
+            console.log((finalPrice * 100) / cost - 100)
+            return (finalPrice * 100) / cost - 100
+        }
+
+        if(finalPrice === null){
+            console.log(cost * profitPercentage)
+            return (cost * profitPercentage)
+        }
+        return 1
+    }
     const handleChange = (e) => {
         const {name, value, type, checked} = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: type === 'checkbox' ? checked : value,
-        }));
+
+        if(name === "finalPrice"){
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: type === 'checkbox' ? checked : value,
+                profitPercentage: calculateProfitPercentage(formData.cost, value, null)
+            }));
+        if(name === "profitPercentage"){
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: type === 'checkbox' ? checked : value,
+                finalPrice: calculateProfitPercentage(formData.cost, null, value)
+            }));
+            console.log(formData)
+        }
+
+        }else {
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: type === 'checkbox' ? checked : value,
+            }));
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -65,7 +99,7 @@ const CreateProductForm = () => {
             id: "productCategoryInput",
             name: "category",
             placeholder: "Categoría",
-            required: true,
+            required: false,
             icon: <PiPencilSimpleLineFill className={styles.icon}/>
         },
         {
@@ -79,35 +113,35 @@ const CreateProductForm = () => {
             id: "productCostInput",
             name: "cost",
             placeholder: "Costo",
-            required: true,
+            required: false,
             icon: <IoMdPricetag className={styles.icon}/>
         },
         {
             id: "productFinalPriceInput",
             name: "finalPrice",
             placeholder: "Precio final",
-            required: true,
+            required: false,
             icon: <IoMdPricetags className={styles.icon}/>
         },
         {
             id: "productDiscountInput",
             name: "discount",
             placeholder: "Descuento fijo",
-            required: true,
+            required: false,
             icon: <BiSolidOffer className={styles.icon}/>
         },
         {
             id: "productProfitInput",
             name: "profitPercentage",
             placeholder: "Porcentaje de ganancia",
-            required: true,
+            required: false,
             icon: <FaPercentage className={styles.icon}/>
         },
         {
             id: "productStockInput",
             name: "stock",
             placeholder: "Cantidad de unidades (stock en unidades)",
-            required: true,
+            required: false,
             icon: <FaBoxesStacked className={styles.icon}/>
         },
         {
