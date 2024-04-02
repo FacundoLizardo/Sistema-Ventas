@@ -1,8 +1,8 @@
-const { postCashRegisterController } = require("../controllers/cashRegister/postCashRegisterController");
-const { getAllCashRegistersController } = require("../controllers/cashRegister/getAllCashRegistersController");
-const { getCashRegisterByIdController } = require("../controllers/cashRegister/getCashRegisterByIdController");
-const { deleteCashRegisterController } = require("../controllers/CashRegister/deleteCashRegisterController");
-const { putCashRegisterController } = require("../controllers/cashRegister/putCashRegisterController");
+const { postCashRegisterController } = require("../Controllers/cashRegister/postCashRegisterController");
+const { getAllCashRegistersController } = require("../Controllers/cashRegister/getAllCashRegistersController");
+const { getCashRegisterByIdController } = require("../Controllers/cashRegister/getCashRegisterByIdController");
+const { deleteCashRegisterController } = require("../Controllers/CashRegister/deleteCashRegisterController");
+const { putCashRegisterController } = require("../Controllers/cashRegister/putCashRegisterController");
 
 const getCashRegister = async (req, res) => {
 	const { id } = req.params;

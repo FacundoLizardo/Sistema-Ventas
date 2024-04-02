@@ -1,20 +1,20 @@
 const {
 	getUserByIdController,
-} = require("../controllers/user/getUserByIdController");
+} = require("../Controllers/user/getUserByIdController");
 const {
 	postUserController,
-} = require("../controllers/user/postUserController");
-const { putUserController } = require("../controllers/user/putUserController");
+} = require("../Controllers/user/postUserController");
+const { putUserController } = require("../Controllers/user/putUserController");
 const {
 	getAllUsersController,
-} = require("../controllers/user/getAllUsersController");
+} = require("../Controllers/user/getAllUsersController");
 const {
 	deleteUserController,
-} = require("../controllers/user/deleteUserController");
+} = require("../Controllers/user/deleteUserController");
 
 const {
 	getUserByEmailAndPasswordController,
-} = require("../controllers/user/getUserByEmailAndPassword");
+} = require("../Controllers/user/getUserByEmailAndPassword");
 
 const getUser = async (req, res) => {
 	const id = req.params;

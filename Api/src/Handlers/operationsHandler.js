@@ -1,19 +1,19 @@
 const {
 	getOperationsController,
-} = require("../controllers/operations/getOperationsController");
+} = require("../Controllers/operations/getOperationsController");
 const {
 	postOperationController,
-} = require("../controllers/operations/postOperationController");
+} = require("../Controllers/operations/postOperationController");
 const {
 	getOperationByIdController,
-} = require("../controllers/operations/getOperationByIdController");
+} = require("../Controllers/operations/getOperationByIdController");
 const {
 	putOperationController,
-} = require("../controllers/operations/putOperationController");
+} = require("../Controllers/operations/putOperationController");
 
 const {
 	deleteOperationController,
-} = require("../controllers/operations/deleteOperationsController");
+} = require("../Controllers/operations/deleteOperationsController");
 
 const getOperation = async (req, res) => {
 	const operationId = req.params.id;

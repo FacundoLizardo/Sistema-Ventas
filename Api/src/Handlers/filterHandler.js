@@ -1,4 +1,4 @@
-const { getFilterController } = require("../controllers/filter/getFilterController");
+const { getFilterController } = require("../Controllers/filter/getFilterController");
 
 const getFilter = async (req, res) => {
     const { query, category, page } = req.query;

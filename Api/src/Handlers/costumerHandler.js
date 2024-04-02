@@ -1,18 +1,18 @@
 const {
 	postCostumersController,
-} = require("../controllers/costumer/postCostumerController");
+} = require("../Controllers/costumer/postCostumerController");
 const {
 	deleteCostumerController,
-} = require("../controllers/costumer/deleteCostumerController");
+} = require("../Controllers/costumer/deleteCostumerController");
 const {
 	getAllCostumeresController,
-} = require("../controllers/costumer/getAllCostumeresController");
+} = require("../Controllers/costumer/getAllCostumeresController");
 const {
 	getCostumerByIdController,
-} = require("../controllers/costumer/getCostumerByIdController");
+} = require("../Controllers/costumer/getCostumerByIdController");
 const {
 	putCostumerController,
-} = require("../controllers/costumer/putCostumerController");
+} = require("../Controllers/costumer/putCostumerController");
 
 const getCostumer = async (req, res) => {
 	const dni = req.params.id;

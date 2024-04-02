@@ -1,11 +1,11 @@
-const {postProductController} = require("../controllers/products/postProductController");
-const {deleteProductController} = require("../controllers/products/deleteProductController");
-const {editProductController} = require("../controllers/products/putProductControllers")
-const {getProductController} = require("../controllers/products/getProductController");
+const {postProductController} = require("../Controllers/products/postProductController");
+const {deleteProductController} = require("../Controllers/products/deleteProductController");
+const {editProductController} = require("../Controllers/products/putProductControllers")
+const {getProductController} = require("../Controllers/products/getProductController");
 const {
     getProductsController,
     getProductCategoriesController
-} = require("../controllers/products/getProductsController");
+} = require("../Controllers/products/getProductsController");
 
 
 const getProduct = async (req, res) => {
