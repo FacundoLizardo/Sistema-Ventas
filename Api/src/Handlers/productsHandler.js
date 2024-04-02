@@ -1,6 +1,6 @@
 const {postProductController} = require("../Controllers/products/postProductController");
 const {deleteProductController} = require("../Controllers/products/deleteProductController");
-const {putProductController} = require("../Controllers/products/putProductController")
+const {editProductController} = require("../Controllers/products/putProductController")
 const {getProductController} = require("../Controllers/products/getProductController");
 const {
     getProductsController,
@@ -102,7 +102,7 @@ const putProduct = async (req, res) => {
             barcode,
         } = req.body;
 
-        const updatedProduct = await putProductController(
+        const updatedProduct = await editProductController(
             productId,
             name,
             category,
