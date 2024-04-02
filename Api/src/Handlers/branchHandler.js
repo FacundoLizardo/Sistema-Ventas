@@ -1,8 +1,8 @@
-const { postBranchController } = require("../Controllers/branch/postBranchController");
-const { deleteBranchController } = require("../Controllers/branch/deleteBranchController");
-const { getAllBranchesController } = require("../Controllers/branch/getAllBranchesController");
-const { getBranchByIdController } = require("../Controllers/branch/getBranchByIdController");
-const { putBranchController } = require("../Controllers/branch/putBranchController");
+const { postBranchController } = require("../controllers/branch/postBranchController");
+const { deleteBranchController } = require("../controllers/branch/deleteBranchController");
+const { getAllBranchesController } = require("../controllers/branch/getAllBranchesController");
+const { getBranchByIdController } = require("../controllers/branch/getBranchByIdController");
+const { putBranchController } = require("../controllers/branch/putBranchController");
 
 const getBranch = async (req, res) => {
 	const { id } = req.params;
