@@ -14,10 +14,9 @@ const CashRegisterModel = require("./Models/CashRegister.js");
 
 /* ----- Database connection ----- */
 
-const {DB_USER, DB_PASSWORD, DB_HOST} = process.env;
+const {DB_URL} = process.env;
 const sequelize = new Sequelize(
-    `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/sistema_ventas`,
-    //DBURL,
+    DB_URL,
     {
         logging: false,
         native: false,
