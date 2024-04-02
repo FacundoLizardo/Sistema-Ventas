@@ -1,11 +1,15 @@
 /* eslint-disable react/no-unknown-property */
 import {useEffect, useState} from "react";
 import style from "./Forms.module.css";
+import styles from "../modal/modal.module.css"
 import axios from "axios";
 import CheckboxInput from "../inputs/checkboxInput/checkboxInput.jsx";
 
 
-const FormProducts = ({productToEdit = {}, setProductToEdit = () => {}}) => {
+const FormProducts = ({
+                          productToEdit = {}, setProductToEdit = () => {
+    }
+                      }) => {
     // name, category, stock, allowNegativeStock, trackStock, enabled, barcode are required
     const defaultFormValues = {
         name: undefined,
@@ -33,9 +37,9 @@ const FormProducts = ({productToEdit = {}, setProductToEdit = () => {}}) => {
                 ...prevState,
                 name: productToEdit.name,
                 category: productToEdit.category,
-                cost: productToEdit.cost ,
-                finalPrice: productToEdit.finalPrice ,
-                discount: productToEdit.discount ,
+                cost: productToEdit.cost,
+                finalPrice: productToEdit.finalPrice,
+                discount: productToEdit.discount,
                 profitPercentage: productToEdit.profitPercentage,
                 stock: productToEdit.stock,
                 allowNegativeStock: productToEdit.allowNegativeStock || undefined,
@@ -75,15 +79,15 @@ const FormProducts = ({productToEdit = {}, setProductToEdit = () => {}}) => {
         }
     }
 
-    async  function createProduct () {
+    async function createProduct() {
         event.preventDefault()
         const response = await axios.post(`/products`, dataProduct)
-        if(response.status === 200){
+        if (response.status === 200) {
             window.alert(`Se creo el producto ${dataProduct.name} con exito.`)
             setProductToEdit({})
             setDataProduct(defaultFormValues)
             resetDataForm()
-        }else{
+        } else {
             window.alert(`Se produjo un error,.`)
         }
     }
@@ -265,6 +269,7 @@ const FormProducts = ({productToEdit = {}, setProductToEdit = () => {}}) => {
             {Object.keys(productToEdit).length === 0 ?
                 <div className={style.buttonsSection}>
                     <button
+                        className={styles.openModal}
                         type="button"
                         onClick={() => {
                             event.preventDefault()
@@ -273,6 +278,7 @@ const FormProducts = ({productToEdit = {}, setProductToEdit = () => {}}) => {
                         Cancelar
                     </button>
                     <button
+                        className={styles.openModal}
                         onClick={() => createProduct()}>
                         Crear producto
                     </button>
@@ -280,6 +286,7 @@ const FormProducts = ({productToEdit = {}, setProductToEdit = () => {}}) => {
                 :
                 <div className={style.buttonsSection}>
                     <button
+                        className={styles.openModal}
                         onClick={() => {
                             event.preventDefault()
                             setProductToEdit({})
@@ -289,11 +296,17 @@ const FormProducts = ({productToEdit = {}, setProductToEdit = () => {}}) => {
                     </button>
 
                     <button
+                        className={styles.openModal}
                         onClick={() => createProduct()}>
                         Crear producto
                     </button>
 
-                    {Object.keys(productToEdit).length >=1 && <button type={"submit"}>Enviar cambios</button>}
+                    {Object.keys(productToEdit).length >= 1 &&
+                        <button
+                            className={styles.openModal}
+                            type={"submit"}>
+                            Enviar cambios
+                        </button>}
                 </div>}
         </form>
     );

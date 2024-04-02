@@ -122,7 +122,7 @@
     background-color: #d97474;
 }
 
-
+/*Todo reformatear para darle estilos de boton o usar un componente button idk se usa tambien en Stock para los 5 del formulario botones*/
 .openModal{
     color: var(--text-third-color);
     height: 30px;
@@ -139,7 +139,7 @@
 }
 
 .openModal:hover{
-    scale: 110%;
+    scale: 96%;
 }
 
 @media screen and (max-width: 768px) {

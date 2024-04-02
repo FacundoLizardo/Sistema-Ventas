@@ -49,6 +49,7 @@ const Stock = () => {
         setCategories(data)
     }
 
+
     useEffect(() => {
          fetchCategoriesFromProducts()
         const fetchFilter = async () => {
@@ -70,6 +71,8 @@ const Stock = () => {
                         currentPage: filters.page,
                         totalPages: Math.ceil(data.totalCount / 5),
                     });
+
+
                 } catch (error) {
                     console.error("Error fetching data:", error.message);
                 }
@@ -82,6 +85,7 @@ const Stock = () => {
                 });
             }
         };
+
 
         //TODO Evita solicitudes innecesarias mientras se escribe, podemos cambiarlo a más de 300 de última, hay que probar.
         const debounce = setTimeout(() => {
