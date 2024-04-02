@@ -17,6 +17,7 @@ const Stock = () => {
         totalPages: 0,
     });
     const [productToEdit, setProductToEdit] = useState({})
+    const [categories, setCategories] = useState([])
     const {products, currentPage, totalPages} = filteredProducts;
     const URL = import.meta.env.VITE_URL_BACKEND;
 
@@ -43,9 +44,17 @@ const Stock = () => {
         }
     };
 
+    const fetchCategoriesFromProducts = async () => {
+        const {data} = await axios.get("/products/categories")
+        setCategories(data)
+    }
 
     useEffect(() => {
+        fetchCategoriesFromProducts();
+
         const fetchFilter = async () => {
+
+
             let url = `${URL}/filter`;
 
             if (filters.query.trim() !== "" || filters.category !== "") {
@@ -83,9 +92,6 @@ const Stock = () => {
         return () => clearTimeout(debounce);
     }, [URL, filters]);
 
-    useEffect(()=>{
-        console.log("este es el producto seleccionado", productToEdit)
-    },[productToEdit])
 
     // const handleSetProduct = (product)=>{
     //     setProductToEdit(product)
@@ -111,8 +117,17 @@ const Stock = () => {
                         onChange={handleInputChange}
                     >
                         <option value="">Categoría</option>
-                        <option value="tinto">Tinto</option>
-                        <option value="espumante">Espumante</option>
+
+                        {categories.map((category, key) => {
+                                return (
+                                    <option
+                                        key={key}
+                                        value={category}>
+                                        {category}
+                                    </option>
+                                )
+                            }
+                        )}
                     </select>
                 </label>
             </div>
@@ -121,13 +136,13 @@ const Stock = () => {
                     <ul>
                         {products.map((product, index) => (
                             <li
-                                className={productToEdit.name === product.name? style.selected : ""}
+                                className={productToEdit.name === product.name ? style.selected : ""}
                                 key={index}
                                 onClick={() => {
                                     document.getElementById("productForm").reset();
                                     setProductToEdit(product)
                                 }
-                            }>
+                                }>
                                 <CardProduct product={product}/>
                             </li>
                         ))}

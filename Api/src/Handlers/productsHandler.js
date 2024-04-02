@@ -11,8 +11,10 @@ const {
 	getProductController,
 } = require("../Controllers/products/getProductController");
 const {
-	getProductsController,
+	getProductsController, getProductCategoriesController
 } = require("../Controllers/products/getProductsController");
+
+
 
 const getProduct = async (req, res) => {
 	const { id } = req.params;
@@ -34,6 +36,15 @@ const getProducts = async (req, res) => {
 		return res.status(400).json({ error: error.message });
 	}
 };
+
+const getCategories = async (req,res) =>{
+	try {
+		const categories = await getProductCategoriesController()
+		return res.status(200).json(categories);
+	}catch (error){
+		return res.status(400).json({ error: error.message });
+	}
+}
 
 
 const postProducts = async (req, res) => {
@@ -135,6 +146,7 @@ const deleteProduct = async (req, res) => {
 module.exports = {
 	getProduct,
 	getProducts,
+	getCategories,
 	postProducts,
 	putProduct,
 	deleteProduct,
