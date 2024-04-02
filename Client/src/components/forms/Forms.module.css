@@ -44,6 +44,14 @@
     padding-bottom: 3px;
   }
 
+  & .buttonsSection{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: end;
+    gap: 5px;
+  }
+
   @media screen and (min-width: 768px) {
     gap: 15px;
   }

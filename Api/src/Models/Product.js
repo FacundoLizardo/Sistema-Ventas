@@ -18,10 +18,9 @@ module.exports = (sequelize) => {
                 },
             },
 
-            //TODO crear categorias?
             category: {
                 type: DataTypes.STRING,
-                allowNull: true,
+                allowNull: false,
             },
             cost: {
                 type: DataTypes.INTEGER,
@@ -89,8 +88,7 @@ module.exports = (sequelize) => {
             },
             minimumStock: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
-                defaultValue: 0,
+                allowNull: true,
             },
             enabled: {
                 type: DataTypes.BOOLEAN,

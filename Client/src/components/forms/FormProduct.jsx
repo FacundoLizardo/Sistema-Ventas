@@ -1,120 +1,303 @@
 /* eslint-disable react/no-unknown-property */
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import style from "./Forms.module.css";
+import axios from "axios";
+import CheckboxInput from "../inputs/checkboxInput/checkboxInput.jsx";
 
-const FormProducts = () => {
-  const [dataProduct, setDataProduct] = useState({
-    name: "",
-    category: "",
-    cost: 0,
-    finalPrice: 0,
-    discount: 0,
-    profitPercentage: 30,
-    stock: 70,
-    enabled: true,
-    notesDescription: "",
-    taxes: 0,
-    barcode: "",
-  });
-  console.log(dataProduct);
 
-  const handleData = (e) => {
-    const { name, value } = e.target;
-    setDataProduct((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+const FormProducts = ({productToEdit, setProductToEdit}) => {
+    // name, category, stock, allowNegativeStock, trackStock, enabled, barcode are required
+    const defaultFormValues = {
+        name: undefined,
+        category: undefined,
+        cost: undefined,
+        finalPrice: undefined,
+        discount: undefined,
+        profitPercentage: undefined,
+        stock: undefined,
+        allowNegativeStock: undefined,
+        trackStock: undefined,
+        minimumStock: undefined,
+        enabled: undefined,
+        notesDescription: undefined,
+        taxes: undefined,
+        barcode: undefined,
+    }
 
-  return (
-    <form className={style.formContainer}>
-      {/* Sección 1: Nombre y Categoría */}
-      <div className={style.itemContainer}>
-        <div className={style.item}>
-          <label htmlFor="name">Nombre</label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            autoComplete="name"
-            onChange={handleData}
-          />
-        </div>
-        <div className={style.item}>
-          <label htmlFor="category">Categoría</label>
-          <input
-            type="text"
-            name="category"
-            id="category"
-            autoComplete="category"
-          />
-        </div>
-      </div>
+    const [dataProduct, setDataProduct] = useState(defaultFormValues);
 
-      {/* Sección 2: Costo, Impuestos, Descuento, Precio Final */}
-      <div className={style.itemContainer}>
-        <div className={style.item}>
-          <label htmlFor="cost">Costo</label>
-          <input type="number" name="cost" id="cost" autoComplete="cost" />
-        </div>
-        <div className={style.item}>
-          <label htmlFor="taxes">Impuestos</label>
-          <input type="number" name="taxes" id="taxes" autoComplete="taxes" />
-        </div>
-        <div className={style.item}>
-          <label htmlFor="discount">Descuento</label>
-          <input
-            type="number"
-            name="discount"
-            id="discount"
-            autoComplete="discount"
-          />
-        </div>
-        <div className={style.item}>
-          <p>Precio Final</p>
-          <p>{dataProduct.finalPrice}</p>
-        </div>
-      </div>
+    useEffect(() => {
+        //if in the stock view is a product selected
+        if (Object.keys(productToEdit).length >= 1) {
+            setDataProduct((prevState) => ({
+                ...prevState,
+                name: productToEdit.name,
+                category: productToEdit.category,
+                cost: productToEdit.cost ,
+                finalPrice: productToEdit.finalPrice ,
+                discount: productToEdit.discount ,
+                profitPercentage: productToEdit.profitPercentage,
+                stock: productToEdit.stock,
+                allowNegativeStock: productToEdit.allowNegativeStock || undefined,
+                trackStock: productToEdit.trackStock || undefined,
+                minimumStock: productToEdit.minimumStock || undefined,
+                enabled: productToEdit.enabled || undefined,
+                notesDescription: productToEdit.notesDescription,
+                taxes: productToEdit.taxes,
+                barcode: productToEdit.barcode,
+            }))
+        }
 
-      {/* Sección 3: Código de Barras y Disponibilidad */}
-      <div className={style.itemContainer}>
-        <div className={style.item}>
-          <label htmlFor="barcode">Código de barras</label>
-          <input
-            type="text"
-            name="barcode"
-            id="barcode"
-            autoComplete="barcode"
-          />
-        </div>
-        <div className={style.item}>
-          <label htmlFor="enabled">Disponible</label>
-          <select
-            type="text"
-            name="enabled"
-            id="enabled"
-            autoComplete="enabled"
-          >
-            <option value="true">Habilitado</option>
-            <option value="false">Deshabilitado</option>
-          </select>
-        </div>
-      </div>
+    }, [productToEdit]);
 
-      {/* Sección 4: Descripción */}
-      <div className={style.itemContainer}>
-        <div className={style.item}>
-          <label htmlFor="notesDescription">Descripción</label>
-          <textarea
-            type="text"
-            name="notesDescription"
-            id="notesDescription"
-            autoComplete="notesDescription"
-          />
-        </div>
-      </div>
-    </form>
-  );
+    const handleChangeDataForm = (e) => {
+        const {name, value, type, checked} = e.target;
+        setDataProduct((prevData) => ({
+            ...prevData,
+            [name]: type === 'checkbox' ? checked : type === "number" ? value : value
+        }));
+    };
+
+    function resetDataForm() {
+        document.getElementById("productForm").reset();
+        setProductToEdit({})
+        setDataProduct(defaultFormValues)
+    }
+
+    const handleSubmit = async () => {
+        event.preventDefault()
+        const response = await axios.put(`/products/${productToEdit.productId}`, dataProduct)
+        if (response.status === 200) {
+            setProductToEdit({})
+            setDataProduct(defaultFormValues)
+            resetDataForm()
+            window.alert(`Se modifico el producto ${dataProduct.name} con exito.`)
+        }
+    }
+
+    async  function createProduct () {
+        event.preventDefault()
+        const response = await axios.post(`/products`, dataProduct)
+        if(response.status === 200){
+            window.alert(`Se creo el producto ${dataProduct.name} con exito.`)
+            setProductToEdit({})
+            setDataProduct(defaultFormValues)
+            resetDataForm()
+        }else{
+            window.alert(`Se produjo un error,.`)
+        }
+    }
+
+    return (
+        <form className={style.formContainer} onSubmit={handleSubmit} id="productForm">
+
+            {Object.keys(productToEdit).length > 1 ?
+                <p>Modificar producto</p>
+                :
+                <p>Crear producto</p>}
+
+
+            {/* Sección 1: Nombre y Categoría */}
+            <div className={style.itemContainer}>
+                <div className={style.item}>
+                    <label htmlFor="name">* Nombre</label>
+                    <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        autoComplete="name"
+                        onChange={handleChangeDataForm}
+                        value={dataProduct.name}
+                    />
+                </div>
+                <div className={style.item}>
+                    <label htmlFor="category">* Categoría</label>
+                    <input
+                        type="text"
+                        name="category"
+                        id="category"
+                        autoComplete="category"
+                        onChange={handleChangeDataForm}
+                        value={dataProduct.category}
+                    />
+                </div>
+            </div>
+
+            {/* Sección 2: Costo, Impuestos, Descuento, Precio Final */}
+            <div className={style.itemContainer}>
+                <div className={style.item}>
+                    <label htmlFor="cost">Costo</label>
+                    <input type="number"
+                           name="cost"
+                           id="cost"
+                           autoComplete="cost"
+                           onChange={handleChangeDataForm}
+                           value={dataProduct.cost}
+                    />
+                </div>
+                <div className={style.item}>
+                    <label htmlFor="taxes">Impuestos</label>
+                    <input type="number"
+                           name="taxes"
+                           id="taxes"
+                           autoComplete="taxes"
+                           onChange={handleChangeDataForm}
+                           value={dataProduct.taxes}
+                    />
+                </div>
+                <div className={style.item}>
+                    <label htmlFor="discount">Descuento</label>
+                    <input
+                        type="number"
+                        name="discount"
+                        id="discount"
+                        autoComplete="discount"
+                        onChange={handleChangeDataForm}
+                        value={dataProduct.discount}
+                    />
+                </div>
+                <div className={style.item}>
+                    <label htmlFor="discount">Precio final</label>
+                    <input
+                        type="number"
+                        name="finalPrice"
+                        id="finalPrice"
+                        onChange={handleChangeDataForm}
+                        autoComplete="finalPrice"
+                        value={dataProduct.finalPrice}
+                    />
+                </div>
+            </div>
+
+            {/* Sección 3: Código de Barras y Disponibilidad */}
+            <div className={style.itemContainer}>
+                <div className={style.item}>
+                    <label htmlFor="barcode">* Código de barras</label>
+                    <input
+                        type="text"
+                        name="barcode"
+                        id="barcode"
+                        autoComplete="barcode"
+                        onChange={handleChangeDataForm}
+                        value={dataProduct.barcode}
+                    />
+                </div>
+            </div>
+
+            {/* Sección 4: Descripción */}
+            <div className={style.itemContainer}>
+                <div className={style.item}>
+                    <label htmlFor="notesDescription">Descripción</label>
+                    <input
+                        type="text"
+                        name="notesDescription"
+                        id="notesDescription"
+                        autoComplete="notesDescription"
+                        onChange={handleChangeDataForm}
+                        value={dataProduct.notesDescription}
+                    />
+                </div>
+            </div>
+            <div className={style.itemContainer}>
+                <div className={style.item}>
+                    <label htmlFor="cost">Stock minimo</label>
+                    <input type="number"
+                           name="minimumStock"
+                           id="minimumStock"
+                           autoComplete="minimumStock"
+                           onChange={handleChangeDataForm}
+                           value={dataProduct.minimumStock}
+                    />
+                </div>
+                <div className={style.item}>
+                    <label htmlFor="taxes">Porcentaje de ganancia sobre el costo</label>
+                    <input type="number"
+                           name="profitPercentage"
+                           id="profitPercentage"
+                           autoComplete="profitPercentage"
+                           onChange={handleChangeDataForm}
+                           value={dataProduct.taxes}
+                    />
+                </div>
+                <div className={style.item}>
+                    <label htmlFor="discount">Stock</label>
+                    <input
+                        type="number"
+                        name="stock"
+                        id="stock"
+                        autoComplete="stock"
+                        onChange={handleChangeDataForm}
+                        value={dataProduct.discount}
+                    />
+                </div>
+            </div>
+            {/* Sección 4: checkInputs */}
+            <div className={style.itemContainer}>
+
+                <CheckboxInput
+                    id="allowNegativeStockInput"
+                    name="allowNegativeStock"
+                    label="* Permitir stock negativo"
+                    value={dataProduct.allowNegativeStock}
+                    handleChange={handleChangeDataForm}
+                >
+                </CheckboxInput>
+
+                <CheckboxInput
+                    id="allowTrackStockInput"
+                    name="trackStock"
+                    label="* Llevar registro del stock"
+                    value={dataProduct.trackStock}
+                    handleChange={handleChangeDataForm}
+                >
+                </CheckboxInput>
+
+                <CheckboxInput
+                    id="enableProductInput"
+                    name="enabled"
+                    label="* Producto disponible para la venta"
+                    value={dataProduct.enabled === true}
+                    handleChange={handleChangeDataForm}
+                >
+                </CheckboxInput>
+
+            </div>
+
+            {Object.keys(productToEdit).length === 0 ?
+                <div className={style.buttonsSection}>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            event.preventDefault()
+                            resetDataForm()
+                        }}>
+                        Cancelar
+                    </button>
+                    <button
+                        onClick={() => createProduct()}>
+                        Crear producto
+                    </button>
+                </div>
+                :
+                <div className={style.buttonsSection}>
+                    <button
+                        onClick={() => {
+                            event.preventDefault()
+                            setProductToEdit({})
+                            resetDataForm()
+                        }}>
+                        Limpiar formulario
+                    </button>
+
+                    <button
+                        onClick={() => createProduct()}>
+                        Crear producto
+                    </button>
+
+                    {Object.keys(productToEdit).length >=1 && <button type={"submit"}>Enviar cambios</button>}
+                </div>}
+        </form>
+    );
 };
 
 export default FormProducts;

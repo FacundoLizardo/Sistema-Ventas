@@ -15,29 +15,23 @@
         width: 100%;
         overflow: clip;
         max-width: 400px;
-        gap: 10px;
-        font-size: 25px;
+        font-size: 20px;
 
         & .labelAndChildren{
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: start;
-            background-color: white;
             width: 100%;
-            color: #20192d;
+            color: var(--text-secondary-color);
             padding: 3px 10px 3px 10px;
             border-radius: var(--radius);
             gap: 5px;
-            border: 3px solid #20192d;
-
             & label{
-                font-size: 15px;
+                font-size: 12px;
                 font-weight: initial;
-                color: #0d0a12;
             }
         }
-
 
         & input[type="checkbox"] {
             display: flex;

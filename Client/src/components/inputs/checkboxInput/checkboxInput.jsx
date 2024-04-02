@@ -11,7 +11,7 @@ const CheckboxInput = ({ children, id, name, required, label, value, handleChang
                     required={required}
                     value={value}
                     onChange={handleChange}
-                   checked={value}
+                    checked={value}
                 />
                 <div className={styles.labelAndChildren}>
                     {children && children}
