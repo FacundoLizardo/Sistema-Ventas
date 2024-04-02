@@ -50,8 +50,7 @@ const Stock = () => {
     }
 
     useEffect(() => {
-        fetchCategoriesFromProducts();
-
+         fetchCategoriesFromProducts()
         const fetchFilter = async () => {
 
 

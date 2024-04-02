@@ -9,4 +9,14 @@ const getProductsController = async () => {
     }
 }
 
-module.exports = { getProductsController }
+const getProductCategoriesController = async () =>{
+    try{
+        const categories = await Product.findAll({ attributes: ['category'], raw: true, group: ['category'] });
+        return categories.map(categoryObj => categoryObj.category);
+    }
+    catch (error){
+    throw new Error(`Error while fetching categories: ${error.message}`)
+    }
+}
+
+module.exports = { getProductsController,getProductCategoriesController }

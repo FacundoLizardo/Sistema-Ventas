@@ -5,7 +5,7 @@ import axios from "axios";
 import CheckboxInput from "../inputs/checkboxInput/checkboxInput.jsx";
 
 
-const FormProducts = ({productToEdit, setProductToEdit}) => {
+const FormProducts = ({productToEdit = {}, setProductToEdit = () => {}}) => {
     // name, category, stock, allowNegativeStock, trackStock, enabled, barcode are required
     const defaultFormValues = {
         name: undefined,
@@ -95,7 +95,6 @@ const FormProducts = ({productToEdit, setProductToEdit}) => {
                 <p>Modificar producto</p>
                 :
                 <p>Crear producto</p>}
-
 
             {/* Sección 1: Nombre y Categoría */}
             <div className={style.itemContainer}>

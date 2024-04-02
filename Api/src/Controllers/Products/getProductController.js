@@ -9,4 +9,5 @@ const getProductController = async (id) => {
     }
 }
 
+
 module.exports = { getProductController }

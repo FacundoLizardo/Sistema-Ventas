@@ -1,7 +1,7 @@
 import {NavLink} from "react-router-dom";
 import style from "./Navbar.module.css";
 import Modal from "../modal/modal.jsx";
-import CreateProduct from "../forms/createProduct/createProduct.jsx";
+import FormProducts from "../forms/FormProduct.jsx";
 const Navbar = () => {
 
     return (
@@ -10,7 +10,7 @@ const Navbar = () => {
                 <ul>
                     <li>
                         <Modal buttonText={"Crear producto"}>
-                            <CreateProduct/>
+                            <FormProducts />
                         </Modal>
                     </li>
                     <li>
