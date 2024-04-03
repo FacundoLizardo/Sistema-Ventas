@@ -1,5 +1,5 @@
 const { User } = require("../../db");
-const hashPassword = require("../../utils/HashPassword");
+const hashPassword = require("../../utils/hashPassword");
 
 const postUserController = async (
 	firstName,
