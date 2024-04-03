@@ -9,7 +9,7 @@ const {
 } = require("../controllers/cashRegister/getCashRegisterByIdController");
 const {
   deleteCashRegisterController,
-} = require("../controllers/CashRegister/deleteCashRegisterController");
+} = require("../controllers/cashRegister/deleteCashRegisterController");
 const {
   putCashRegisterController,
 } = require("../controllers/cashRegister/putCashRegisterController");
