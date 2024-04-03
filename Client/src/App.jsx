@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Stock from "./views/stock/Stock";
 import Administration from "./views/administration/Administration";
 import Sales from "./views/sales/Sales";
-import Statistics from "./views/statistics/statistics";
+import Statistics from "./views/statistics/Statistics.jsx";
 import Navbar from "./components/navbar/Navbar";
 import Login from "./views/login/Login";
 
