@@ -1,5 +1,6 @@
+const { editProductStockController } = require("../Controllers/products/putProductsControllers");
 const { postFacturaController } = require("../Controllers/afip/postFacturaController");
-const { putProductStockController } = require("../Controllers/products/putProductsControllers");
+
 
 const postAfip = async (req, res) => {
     const { products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount } = req.body
@@ -11,7 +12,7 @@ const postAfip = async (req, res) => {
             for (const product of products) {
 
                 const { productId } = product
-                await putProductStockController({ productId })
+                await editProductStockController({ productId })
 
             }
         }
