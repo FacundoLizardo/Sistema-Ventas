@@ -239,6 +239,7 @@ const FormProducts = ({
                 </div>
             </div>
             {/* Sección 4: checkInputs */}
+            {/*todo mejorar responsive*/}
             <div className={style.itemContainer}>
 
                 <CheckboxInput

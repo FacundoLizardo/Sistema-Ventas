@@ -3,7 +3,7 @@ import style from "./Navbar.module.css";
 import Modal from "../modal/modal.jsx";
 import FormProducts from "../forms/FormProduct.jsx";
 const Navbar = () => {
-
+//todo hacer menu para telefonos (no entra la navbar)
     return (
         <div className={style.navbarContainer}>
             <nav>
