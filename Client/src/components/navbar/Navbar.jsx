@@ -9,6 +9,7 @@ const Navbar = () => {
             <nav>
                 <ul>
                     <li>
+                        {/*todo poner el modal en la parte ventas para la creacion rapida de un producto */}
                         <Modal buttonText={"Crear producto"}>
                             <FormProducts />
                         </Modal>

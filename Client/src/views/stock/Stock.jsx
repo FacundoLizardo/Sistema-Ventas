@@ -96,10 +96,6 @@ const Stock = () => {
     }, [URL, filters]);
 
 
-    // const handleSetProduct = (product)=>{
-    //     setProductToEdit(product)
-    // }
-
     return (
         <section className={style.stockContainer}>
             <div className={style.filtersContainer}>

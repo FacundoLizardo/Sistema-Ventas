@@ -6,6 +6,8 @@ import { ProductContext } from "../../context/products/productsContext";
 import { UserContext } from "../../context/user/userContext";
 import { useContext, useState } from "react";
 
+//todo terminar logica de emision de la factura
+//todo hacer que la searchbar se pueda manejar con el teclado flechas y enter para seleccionar el producto
 const Sales = () => {
 	const { state, dispatch } = useCart();
 	const [isOpen, setIsOpen] = useState(false);

@@ -17,8 +17,7 @@ module.exports = (sequelize) => {
                     len: [0, 50],
                 },
             },
-
-            //TODO crear categorias?
+            
             category: {
                 type: DataTypes.STRING,
                 allowNull: true,

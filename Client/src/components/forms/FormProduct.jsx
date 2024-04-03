@@ -5,7 +5,7 @@ import styles from "../modal/modal.module.css"
 import axios from "axios";
 import CheckboxInput from "../inputs/checkboxInput/checkboxInput.jsx";
 
-
+//todo refactorizar a menos de 300 lineas
 const FormProducts = ({
                           productToEdit = {}, setProductToEdit = () => {
     }
@@ -76,6 +76,8 @@ const FormProducts = ({
             setDataProduct(defaultFormValues)
             resetDataForm()
             window.alert(`Se modifico el producto ${dataProduct.name} con exito.`)
+            //todo hacer la busqueda de nuevo para que se actualize el producto modificado
+            //todo agregar boton de buscar/usar el enter?
         }
     }
 
@@ -113,6 +115,8 @@ const FormProducts = ({
                         value={dataProduct.name}
                     />
                 </div>
+
+                {/*todo renderizar un select y un input en caso de querer crear una categoria nueva*/}
                 <div className={style.item}>
                     <label htmlFor="category">* Categoría</label>
                     <input
@@ -278,6 +282,7 @@ const FormProducts = ({
                         Cancelar
                     </button>
                     <button
+                        // todo cambiar estilos a un boton global
                         className={styles.openModal}
                         onClick={() => createProduct()}>
                         Crear producto
