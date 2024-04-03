@@ -1,5 +1,5 @@
-const { editProductStockController } = require("../Controllers/products/putProductsControllers");
 const { postFacturaController } = require("../Controllers/afip/postFacturaController");
+const { editProductStockController } = require("../../../Api/src/Controllers/products/putProductsControllers");
 
 
 const postAfip = async (req, res) => {

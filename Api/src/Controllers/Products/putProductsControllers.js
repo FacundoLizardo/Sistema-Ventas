@@ -51,7 +51,7 @@ const editProductController = async (
     }
 };
 
-const putProductStockController = async ({productId}) => {
+const editProductStockController = async ({productId}) => {
     try {
         const product = await Product.findByPk(productId);
 
@@ -68,4 +68,4 @@ const putProductStockController = async ({productId}) => {
     }
 };
 
-module.exports = {editProductController, putProductStockController};
+module.exports = {editProductController, editProductStockController};
