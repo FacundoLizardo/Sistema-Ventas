@@ -1,6 +1,6 @@
 const {postProductController} = require("../Controllers/products/postProductController");
 const {deleteProductController} = require("../Controllers/products/deleteProductController");
-const {editProductController} = require("../Controllers/products/putProductControllers")
+const {editProductController} = require("../Controllers/products/putProductController")
 const {getProductController} = require("../Controllers/products/getProductController");
 const {
     getProductsController,
