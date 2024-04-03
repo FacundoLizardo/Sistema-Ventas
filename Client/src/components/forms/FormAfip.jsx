@@ -3,7 +3,7 @@ import style from "./Forms.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useCart } from "../../context/cart/cart";
-import Buttons from "../buttons/buttons";
+import Buttons from "../buttons/Buttons.jsx";
 
 const FormAfip = () => {
   const {
