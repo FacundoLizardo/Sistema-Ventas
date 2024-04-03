@@ -1,5 +1,5 @@
 const { User } = require("../../db");
-const hashPassword = require("../../Utils/HashPassword");
+const hashPassword = require("../../utils/HashPassword");
 
 const postUserController = async (
 	firstName,
@@ -52,11 +52,10 @@ const postUserController = async (
 			error.name === "SequelizeValidationError" ||
 			error.name === "SequelizeUniqueConstraintError"
 		) {
-			const validationErrors = error.errors.map((err) => ({
+			return error.errors.map((err) => ({
 				field: err.path,
 				message: err.message,
 			}));
-			return validationErrors;
 		} else {
 			throw new Error(`Error creating user: ${error.message}`);
 		}
