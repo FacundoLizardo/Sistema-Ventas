@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 
-//todo revisar validaciones
+//TODO revisar validaciones
 module.exports = (sequelize) => {
 	sequelize.define(
 		"Purchase",

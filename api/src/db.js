@@ -1,5 +1,5 @@
 require("dotenv").config();
-const {Sequelize} = require("sequelize");
+const { Sequelize } = require("sequelize");
 const pg = require("pg");
 
 const ProductModel = require("./models/product.js");
@@ -14,14 +14,17 @@ const CashRegisterModel = require("./models/cashRegister.js");
 
 /* ----- Database connection ----- */
 
-const {DB_URL} = process.env;
+ const {DB_URL} = process.env;
+//const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
+
 const sequelize = new Sequelize(
-    DB_URL,
-    {
-        logging: false,
-        native: false,
-        dialectModule: pg,
-    }
+  DB_URL,
+//  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/sistema_ventas`,
+  {
+    logging: false,
+    native: false,
+    dialectModule: pg,
+  }
 );
 
 /* ----- Models ----- */
@@ -37,17 +40,16 @@ SupplierModel(sequelize);
 CashRegisterModel(sequelize);
 
 const {
-    Product,
-    User,
-    Branch,
-    Costumer,
-    Offers,
-    Purchases,
-    Operation,
-    Suppliers,
-    CashRegister,
+  Product,
+  User,
+  Branch,
+  Costumer,
+  Offers,
+  Purchases,
+  Operation,
+  Suppliers,
+  CashRegister,
 } = sequelize.models;
-
 
 Operation.hasMany(Product);
 
@@ -55,14 +57,14 @@ User.hasMany(Operation);
 Operation.belongsTo(User);
 
 module.exports = {
-    Product,
-    User,
-    Branch,
-    Costumer,
-    Offers,
-    Purchases,
-    Operation,
-    Suppliers,
-    CashRegister,
-    conn: sequelize,
+  Product,
+  User,
+  Branch,
+  Costumer,
+  Offers,
+  Purchases,
+  Operation,
+  Suppliers,
+  CashRegister,
+  conn: sequelize,
 };
