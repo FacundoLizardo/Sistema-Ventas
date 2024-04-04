@@ -5,7 +5,7 @@ import styles from "../modal/modal.module.css"
 import axios from "axios";
 import CheckboxInput from "../inputs/checkboxInput/checkboxInput.jsx";
 
-//todo refactorizar a menos de 300 lineas
+//TODO refactorizar a menos de 300 lineas
 const FormProducts = ({
                           productToEdit = {}, setProductToEdit = () => {
     }
@@ -76,8 +76,8 @@ const FormProducts = ({
             setDataProduct(defaultFormValues)
             resetDataForm()
             window.alert(`Se modifico el producto ${dataProduct.name} con exito.`)
-            //todo hacer la busqueda de nuevo para que se actualize el producto modificado
-            //todo agregar boton de buscar/usar el enter?
+            //TODO hacer la busqueda de nuevo para que se actualize el producto modificado
+            //TODO agregar boton de buscar/usar el enter?
         }
     }
 
@@ -116,7 +116,7 @@ const FormProducts = ({
                     />
                 </div>
 
-                {/*todo renderizar un select y un input en caso de querer crear una categoria nueva*/}
+                {/*TODO renderizar un select y un input en caso de querer crear una categoria nueva*/}
                 <div className={style.item}>
                     <label htmlFor="category">* Categoría</label>
                     <input
@@ -239,7 +239,7 @@ const FormProducts = ({
                 </div>
             </div>
             {/* Sección 4: checkInputs */}
-            {/*todo mejorar responsive*/}
+            {/*TODO mejorar responsive*/}
             <div className={style.itemContainer}>
 
                 <CheckboxInput
@@ -283,7 +283,7 @@ const FormProducts = ({
                         Cancelar
                     </button>
                     <button
-                        // todo cambiar estilos a un boton global
+                        // TODO cambiar estilos a un boton global
                         className={styles.openModal}
                         onClick={() => createProduct()}>
                         Crear producto

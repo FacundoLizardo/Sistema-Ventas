@@ -3,13 +3,13 @@ import style from "./Navbar.module.css";
 import Modal from "../modal/modal.jsx";
 import FormProducts from "../forms/FormProduct.jsx";
 const Navbar = () => {
-//todo hacer menu para telefonos (no entra la navbar)
+//TODO hacer menu para telefonos (no entra la navbar)
     return (
         <div className={style.navbarContainer}>
             <nav>
                 <ul>
                     <li>
-                        {/*todo poner el modal en la parte ventas para la creacion rapida de un producto */}
+                        {/*TODO poner el modal en la parte ventas para la creacion rapida de un producto */}
                         <Modal buttonText={"Crear producto"}>
                             <FormProducts />
                         </Modal>

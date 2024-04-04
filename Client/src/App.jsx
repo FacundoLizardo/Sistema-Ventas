@@ -7,7 +7,7 @@ import Statistics from "./views/statistics/Statistics.jsx";
 import Navbar from "./components/navbar/Navbar";
 import Login from "./views/login/Login";
 
-// todo poner componentes a renderizar como lazy para carga mas rapidas
+// TODO poner componentes a renderizar como lazy para carga mas rapidas
 function App() {
 	return (
 		<>

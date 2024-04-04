@@ -1,150 +1,183 @@
-require("dotenv").config()
-const QRCode = require("qrcode")
-const moment = require('moment')
-const { RAZON_SOCIAL, CUIT, DOMICILIO_FISCAL, INICIO_ACTIVIDAD, REGIMEN_TRIBUTARIO, IIBB } = process.env
-const Afip = require('@afipsdk/afip.js');
+require("dotenv").config();
+const QRCode = require("qrcode");
+const moment = require("moment");
+const Afip = require("@afipsdk/afip.js");
+const path = require("path");
+const fs = require("fs");
+
+const {
+  RAZON_SOCIAL,
+  CUIT,
+  DOMICILIO_FISCAL,
+  INICIO_ACTIVIDAD,
+  REGIMEN_TRIBUTARIO,
+  IIBB,
+} = process.env;
 const afip = new Afip({ CUIT: CUIT });
-const path = require('path');
-const fs = require('fs');
 
-const generateVoucher = async ({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount }) => {
+const generateVoucher = async ({
+  products,
+  ptoVta,
+  cbteTipo,
+  concepto,
+  docTipo,
+  docNro,
+  importeExentoIva,
+  discount,
+}) => {
+  const redColor = "\x1b[31m";
+  const resetColor = "\x1b[0m";
+  console.log(redColor + "GENERANDO VOUCHER" + resetColor);
 
-	const redColor = '\x1b[31m';
-	const resetColor = '\x1b[0m';
-	console.log(redColor + "GENERANDO VOUCHER" + resetColor);
+  try {
+    const lastVoucher = await afip.ElectronicBilling.getLastVoucher(
+      ptoVta,
+      cbteTipo
+    );
+    let numeroFactura = lastVoucher + 1;
+    const fecha = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      .toISOString()
+      .split("T")[0];
 
-	try {
+    let importe_gravado = 0;
+    let importe_exento_iva = importeExentoIva;
+    let importe_iva = 0;
+    let ImpTrib = 0;
 
-		const lastVoucher = await afip.ElectronicBilling.getLastVoucher(ptoVta, cbteTipo);
-		const numeroFactura = lastVoucher + 1;
-		const fecha = new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+    let fecha_servicio_desde = null;
+    let fecha_servicio_hasta = null;
+    let fecha_vencimiento_pago = null;
 
-		let importe_gravado = 0;
-		let importe_exento_iva = importeExentoIva;
-		let importe_iva = 0;
-		let ImpTrib = 0;
+    if (concepto === 2 || concepto === 3) {
+      fecha_servicio_desde = 20191213;
+      fecha_servicio_hasta = 20191213;
+      fecha_vencimiento_pago = 20191213;
+    }
 
-		let fecha_servicio_desde = null;
-		let fecha_servicio_hasta = null;
-		let fecha_vencimiento_pago = null;
+    products.forEach((product) => {
+      importe_gravado +=
+        discount > 0
+          ? parseFloat(product.finalPrice * discount)
+          : parseFloat(product.finalPrice);
+      const ivaRate = 21;
+      const ivaAmount = (parseFloat(product.finalPrice) * ivaRate) / 100;
+      importe_iva += ivaAmount;
+    });
 
-		if (concepto === 2 || concepto === 3) {
-			fecha_servicio_desde = 20191213;
-			fecha_servicio_hasta = 20191213;
-			fecha_vencimiento_pago = 20191213;
-		}
+    let ImpTotal = parseFloat(
+      importe_gravado + importe_iva + importe_exento_iva
+    ).toFixed(2);
+    let ImpIVA = parseFloat(importe_iva.toFixed(2));
 
-		products.forEach(product => {
-			importe_gravado += discount > 0 ? parseFloat(product.finalPrice * discount) : parseFloat(product.finalPrice)
-			const ivaRate = 21;
-			const ivaAmount = (parseFloat(product.finalPrice) * ivaRate) / 100;
-			importe_iva += ivaAmount;
-		});
+    const data = {
+      CantReg: 1,
+      PtoVta: ptoVta,
+      CbteTipo: cbteTipo,
+      Concepto: concepto,
+      DocTipo: docTipo,
+      DocNro: docNro,
+      CbteDesde: numeroFactura,
+      CbteHasta: numeroFactura,
+      CbteFch: parseInt(fecha.replace(/-/g, "")),
+      FchServDesde: fecha_servicio_desde,
+      FchServHasta: fecha_servicio_hasta,
+      FchVtoPago: fecha_vencimiento_pago,
+      ImpTotal: cbteTipo === 11 ? importe_gravado + ImpTrib : Number(ImpTotal),
+      ImpTotConc: 0,
+      ImpNeto: importe_gravado,
+      ImpOpEx: importe_exento_iva,
+      ImpIVA: cbteTipo === 11 ? "0" : ImpIVA,
+      MonId: "PES",
+      MonCotiz: 1,
+      ...(cbteTipo !== 11
+        ? {
+            Iva: [
+              {
+                Id: 5, // Id del tipo de IVA (5 = 21%)
+                BaseImp: importe_gravado,
+                Importe: ImpIVA,
+              },
+            ],
+          }
+        : {}),
 
-		let ImpTotal = parseFloat(importe_gravado + importe_iva + importe_exento_iva).toFixed(2)
-		let ImpIVA = parseFloat(importe_iva.toFixed(2));
+      products: products,
+      ImpTrib: ImpTrib,
+    };
 
-		const data = {
-			'CantReg': 1,
-			'PtoVta': ptoVta,
-			'CbteTipo': cbteTipo,
-			'Concepto': concepto,
-			'DocTipo': docTipo,
-			'DocNro': docNro,
-			'CbteDesde': numeroFactura,
-			'CbteHasta': numeroFactura,
-			'CbteFch': parseInt(fecha.replace(/-/g, '')),
-			'FchServDesde': fecha_servicio_desde,
-			'FchServHasta': fecha_servicio_hasta,
-			'FchVtoPago': fecha_vencimiento_pago,
-			'ImpTotal': cbteTipo === 11 ? importe_gravado + ImpTrib : Number(ImpTotal),
-			'ImpTotConc': 0,
-			'ImpNeto': importe_gravado,
-			'ImpOpEx': importe_exento_iva,
-			'ImpIVA': cbteTipo === 11 ? "0" : ImpIVA,
-			'MonId': 'PES',
-			'MonCotiz': 1,
-			...(cbteTipo !== 11 ? {
-				'Iva': [
-					{
-						'Id': 5, // Id del tipo de IVA (5 = 21%)
-						'BaseImp': importe_gravado,
-						'Importe': ImpIVA
-					}
-				]
-			} : {}),
+    const voucherData = await afip.ElectronicBilling.createVoucher(data);
 
-			"products": products,
-			"ImpTrib": ImpTrib
-		};
+    const qrData = {
+      ver: 1,
+      fecha: fecha,
+      cuit: parseInt(CUIT),
+      ptoVta: data.PtoVta,
+      tipoCmp: data.CbteTipo,
+      nroCmp: numeroFactura,
+      importe: data.ImpTotal,
+      moneda: data.MonId,
+      ctz: data.MonCotiz,
+      tipoDocRec: data.DocTipo,
+      nroDocRec: data.DocNro,
+      tipoCodAut: "E",
+      codAut: 70417054367476,
+    };
 
-		const voucherData = await afip.ElectronicBilling.createVoucher(data);
+    const jsonData = JSON.stringify(qrData);
+    const base64Data = btoa(jsonData);
+    const URL = `https://www.afip.gob.ar/fe/qr/?p=${base64Data}`;
 
-		const qrData = {
-			"ver": 1,
-			"fecha": fecha,
-			"cuit": parseInt(CUIT),
-			"ptoVta": data.PtoVta,
-			"tipoCmp": data.CbteTipo,
-			"nroCmp": numeroFactura,
-			"importe": data.ImpTotal,
-			"moneda": data.MonId,
-			"ctz": data.MonCotiz,
-			"tipoDocRec": data.DocTipo,
-			"nroDocRec": data.DocNro,
-			"tipoCodAut": "E",
-			"codAut": 70417054367476
-		};
+    const urlQr = await QRCode.toDataURL(URL);
 
-		const jsonData = JSON.stringify(qrData);
-		const base64Data = btoa(jsonData);
-		const URL = `https://www.afip.gob.ar/fe/qr/?p=${base64Data}`
+    return { voucherData, data, urlQr };
+  } catch (error) {
+    throw new Error(`Error when generating voucher: ${error.message}`);
+  }
+};
 
-		const urlQr = await QRCode.toDataURL(URL);
+const generatePDF = async ({
+  voucherData,
+  data,
+  numeroFactura,
+  urlQr,
+  discount,
+}) => {
+  try {
+    const htmlPath =
+      data.CbteTipo === 1
+        ? path.join(__dirname, "facturaA.html")
+        : data.CbteTipo === 6
+        ? path.join(__dirname, "facturaB.html")
+        : data.CbteTipo === 11
+        ? path.join(__dirname, "facturaC.html")
+        : "";
 
-		return { voucherData, data, urlQr }
+    let html = fs.readFileSync(htmlPath, "utf8");
 
-	} catch (error) {
-		throw new Error(`Error when generating voucher: ${error.message}`);
-	}
-}
+    const generateProductRows = (products) => {
+      const productMap = new Map();
 
+      products.forEach((product) => {
+        const { productId, name, finalPrice } = product;
+        if (!productMap.has(productId)) {
+          productMap.set(productId, {
+            description: name,
+            quantity: 1,
+            unitPrice: parseFloat(finalPrice),
+            totalAmount: parseFloat(finalPrice),
+          });
+        } else {
+          const existingProduct = productMap.get(productId);
+          productMap.set(productId, {
+            description: existingProduct.description,
+            quantity: existingProduct.quantity + 1,
+            unitPrice: existingProduct.unitPrice,
+            totalAmount: existingProduct.totalAmount + parseFloat(finalPrice),
+          });
+        }
+      });
 
-const generatePDF = async ({ voucherData, data, numeroFactura, urlQr, discount }) => {
-
-	try {
-
-		const htmlPath =
-			data.CbteTipo === 1 ? path.join(__dirname, 'facturaA.html') :
-				data.CbteTipo === 6 ? path.join(__dirname, 'facturaB.html') :
-					data.CbteTipo === 11 ? path.join(__dirname, 'facturaC.html') : ""
-
-		let html = fs.readFileSync(htmlPath, 'utf8');
-
-		const generateProductRows = (products) => {
-			const productMap = new Map();
-
-			products.forEach((product) => {
-				const { productId, name, finalPrice } = product;
-				if (!productMap.has(productId)) {
-					productMap.set(productId, {
-						description: name,
-						quantity: 1,
-						unitPrice: parseFloat(finalPrice),
-						totalAmount: parseFloat(finalPrice),
-					});
-				} else {
-					const existingProduct = productMap.get(productId);
-					productMap.set(productId, {
-						description: existingProduct.description,
-						quantity: existingProduct.quantity + 1,
-						unitPrice: existingProduct.unitPrice,
-						totalAmount: existingProduct.totalAmount + parseFloat(finalPrice),
-					});
-				}
-			});
-
-			const tableHeader = `
+      const tableHeader = `
         <tr>
             <th>Cantidad</th>
             <th>Descripción</th>
@@ -153,105 +186,137 @@ const generatePDF = async ({ voucherData, data, numeroFactura, urlQr, discount }
         </tr>
     `;
 
-			const tableRows = Array.from(productMap.values()).map((product) => `
+      const tableRows = Array.from(productMap.values())
+        .map(
+          (product) => `
         <tr>
             <td>${product.quantity}</td>
             <td>${product.description}</td>
             <td>${product.unitPrice.toFixed(2)}</td>
             <td>${product.totalAmount.toFixed(2)}</td>
         </tr>
-    `).join('');
+    `
+        )
+        .join("");
 
-			return `${tableHeader}${tableRows}`;
-		};
+      return `${tableHeader}${tableRows}`;
+    };
 
-		let productRows = generateProductRows(data.products);
-		let razonSocial = RAZON_SOCIAL;
-		let domicilio = DOMICILIO_FISCAL;
-		let cuit = CUIT;
-		let regimenTributario = REGIMEN_TRIBUTARIO;
-		let iibb = IIBB;
-		let inicioActividad = INICIO_ACTIVIDAD;
-		let fechaEmision = moment().format('DD-MM-YYYY')
+    let productRows = generateProductRows(data.products);
+    let razonSocial = RAZON_SOCIAL;
+    let domicilio = DOMICILIO_FISCAL;
+    let cuit = CUIT;
+    let regimenTributario = REGIMEN_TRIBUTARIO;
+    let iibb = IIBB;
+    let inicioActividad = INICIO_ACTIVIDAD;
+    let fechaEmision = moment().format("DD-MM-YYYY");
 
+    const conceptoFinal = () => {
+      if (data.Concepto === 1) {
+        return "Productos";
+      } else if (data.Concepto === 2) {
+        return "Servicios";
+      } else if (data.Concepto === 3) {
+        return "Productos y Servicios";
+      }
+    };
 
-		const conceptoFinal = () => {
-			if (data.Concepto === 1) {
-				return "Productos"
-			} else if (data.Concepto === 2) {
-				return "Servicios"
-			} else if (data.Concepto === 3) {
-				return "Productos y Servicios"
-			}
-		}
+    let condicionIVA = "";
+    switch (data.DocTipo) {
+      case 80: // CUIT
+        condicionIVA = "Responsable Inscripto";
+        break;
+      case 96: // CUIL
+        condicionIVA = "Consumidor Final";
+        break;
+      // El resto
+      default:
+        condicionIVA = "";
+        break;
+    }
 
-		const replacedHTML = html
-			.replace("{{urlQr}}", urlQr || "QR no found")
-			.replace('{{CAE}}', voucherData.CAE || "")
-			.replace('{{Vencimiento}}', voucherData.CAEFchVto || "")
-			.replace("{{razonSocial}}", razonSocial || "")
-			.replace("{{domicilio}}", domicilio || "")
-			.replace("{{cuit}}", cuit || "")
-			.replace("{{regimenTributario}}", regimenTributario || "")
-			.replace("{{iibb}}", iibb || "")
-			.replace("{{inicioActividad}}", inicioActividad || "")
-			.replace('{{productRows}}', productRows || "")
-			.replace('{{ImpTotal}}', data.ImpTotal || "")
-			.replace("{{cbteTipo}}", data.CbteTipo || "")
-			.replace("{{ptoVta}}", data.ptoVta || "")
-			.replace("{{numeroFactura}}", numeroFactura || "")
-			.replace("{{concepto}}", conceptoFinal())
-			.replace("{{condicionIVA}}", "")
-			.replace("{{fecha}}", fechaEmision)
-			.replace("{{ImpIVA}}", data.ImpIVA)
-			.replace("{{ImpNeto}}", data.ImpNeto)
+    const replacedHTML = html
+      .replace("{{urlQr}}", urlQr || "QR no found")
+      .replace("{{CAE}}", voucherData.CAE || "")
+      .replace("{{Vencimiento}}", voucherData.CAEFchVto || "")
+      .replace("{{razonSocial}}", razonSocial || "")
+      .replace("{{domicilio}}", domicilio || "")
+      .replace("{{cuit}}", cuit || "")
+      .replace("{{regimenTributario}}", regimenTributario || "")
+      .replace("{{iibb}}", iibb || "")
+      .replace("{{inicioActividad}}", inicioActividad || "")
+      .replace("{{productRows}}", productRows || "")
+      .replace("{{ImpTotal}}", data.ImpTotal || "")
+      .replace("{{cbteTipo}}", data.CbteTipo || "")
+      .replace("{{ptoVta}}", data.PtoVta || "")
+      .replace("{{numeroFactura}}", numeroFactura || "")
+      .replace("{{concepto}}", conceptoFinal())
+      .replace("{{condicionIVA}}", condicionIVA)
+      .replace("{{fecha}}", fechaEmision)
+      .replace("{{ImpIVA}}", data.ImpIVA)
+      .replace("{{ImpNeto}}", data.ImpNeto);
 
+    const options = {
+      width: 8,
+      marginLeft: 0.4,
+      marginRight: 0.4,
+      marginTop: 0.4,
+      marginBottom: 0.4,
+    };
 
+    const pdfData = await afip.ElectronicBilling.createPDF({
+      html: replacedHTML,
+      file_name: "Voucher",
+      options: options,
+    });
 
-		const options = {
-			width: 8,
-			marginLeft: 0.4,
-			marginRight: 0.4,
-			marginTop: 0.4,
-			marginBottom: 0.4
-		};
-
-		const pdfData = await afip.ElectronicBilling.createPDF({
-			html: replacedHTML,
-			file_name: 'Voucher',
-			options: options
-		});
-
-		console.log("Generated PDF data:", pdfData);
-
-
-	} catch (error) {
-		throw new Error(`An error occurred while generating the PDF: ${error.message}`);
-	}
+    console.log("Generated PDF data:", pdfData);
+  } catch (error) {
+    throw new Error(
+      `An error occurred while generating the PDF: ${error.message}`
+    );
+  }
 };
 
+const postFacturaController = async ({
+  products,
+  ptoVta,
+  cbteTipo,
+  concepto,
+  docTipo,
+  docNro,
+  importeExentoIva,
+  discount,
+}) => {
+  try {
+    const { voucherData, data, urlQr } = await generateVoucher({
+      products,
+      ptoVta,
+      cbteTipo,
+      concepto,
+      docTipo,
+      docNro,
+      importeExentoIva,
+      discount,
+    });
 
-const postFacturaController = async ({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount }) => {
-	try {
-		const { voucherData, data, urlQr } = await generateVoucher({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount });
+    const generatedPDF = await generatePDF({
+      voucherData,
+      data,
+      urlQr,
+      discount,
+    });
 
-		const generatedPDF = await generatePDF({ voucherData, data, urlQr, discount });
-
-		return {
-			success: true,
-			message: 'Invoice generated successfully.',
-			generatedPDF: generatedPDF,
-			voucherData: voucherData,
-			data: data
-		};
-	} catch (error) {
-		throw new Error(`Error processing the invoice: ${error.message}`);
-	}
+    return {
+      success: true,
+      message: "Invoice generated successfully.",
+      generatedPDF: generatedPDF,
+      voucherData: voucherData,
+      data: data,
+    };
+  } catch (error) {
+    throw new Error(`Error processing the invoice: ${error.message}`);
+  }
 };
 
-
-
-
-
-
-module.exports = { postFacturaController }
+module.exports = { postFacturaController };
