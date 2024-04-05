@@ -5,8 +5,9 @@ import { useCart } from "../../context/cart/cart";
 import { ProductContext } from "../../context/products/productsContext";
 import { UserContext } from "../../context/user/userContext";
 import { useContext, useState } from "react";
+import Modal from "../../components/modal/modal";
+import FormProducts from "../../components/forms/FormProduct";
 
-//TODO Conectar emisión de factura entre el front end y el back end
 //TODO hacer que la searchbar se pueda manejar con el teclado flechas y enter para seleccionar el producto
 const Sales = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -88,7 +89,7 @@ const Sales = () => {
             onClick={handleClick}
             onChange={handleInputChange}
             value={searchTerm}
-          />{" "}
+          />
           <datalist className={style.suggestions}>
             <ul>
               {filteredProducts.map((product) => (
@@ -110,6 +111,8 @@ const Sales = () => {
         </div>
       )}
 
+
+
       <article className={style.tableContainer}>
         {groupedProducts && groupedProducts.length > 0 ? (
           <ul>
@@ -129,7 +132,9 @@ const Sales = () => {
           </div>
         )}
       </article>
-
+      <Modal buttonText={"Crear producto"}>
+        <FormProducts />
+      </Modal>
       <div className={style.formContainer}>
         <FormAfip />
       </div>

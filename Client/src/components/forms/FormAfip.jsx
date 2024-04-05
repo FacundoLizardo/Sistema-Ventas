@@ -3,7 +3,7 @@ import style from "./Forms.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useCart } from "../../context/cart/cart";
-import Buttons from "../buttons/Buttons.jsx";
+import ButtonOne from "../buttons/ButtonOne/ButtonOne.jsx";
 import Spinner from "../spinner/Spinner.jsx";
 
 // TODO emitir sin factura (emite un ticket común)
@@ -318,14 +318,14 @@ const FormAfip = () => {
       </div>
 
       <div className={style.buttonsSectionAfip}>
-        <Buttons type="" text="Cancelar" onClick={""} />
+        <ButtonOne type="" text="Cancelar" onClick={""} />
 
-        <Buttons type="" text="Pendiente" onClick={""} />
+        <ButtonOne type="" text="Pendiente" onClick={""} />
 
         {loading ? (
           <Spinner />
         ) : (
-          <Buttons type="submit" text="Vender" onClick={handleSubmit} />
+          <ButtonOne type="submit" text="Vender" onClick={handleSubmit} />
         )}
       </div>
     </form>
