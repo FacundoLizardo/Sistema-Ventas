@@ -2,7 +2,7 @@
   width: 90dvw;
   min-height: 90dvh;
   max-width: 1024px;
-  margin: auto;
+  margin: 0 auto 50px;
   display: flex;
   flex-direction: column;
   position: relative;
