@@ -2,7 +2,7 @@
 
 .container{
     height: fit-content;
-    width: fit-content;
+    width: fit-content;;
 }
 
 .modal {
@@ -89,8 +89,7 @@
 }
 
 .children{
-    overflow-y: scroll;
-    padding-inline: 8px;
+    padding: 20px;
     width: 100%;
 }
 

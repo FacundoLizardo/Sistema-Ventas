@@ -13,7 +13,7 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink to="/stock" activeclassname={style.activeLink}>
-              Stock
+              Inventario
             </NavLink>
           </li>
           <li>

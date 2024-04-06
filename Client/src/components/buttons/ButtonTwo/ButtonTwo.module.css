@@ -7,11 +7,10 @@
     min-height: 25px;
     border: none;
     border-radius: var(--radius);
-    font-weight: 600;
     cursor: pointer;
     background-color: var(--basic-color);
     color: var(--text-third-color);
-    padding: 5px;
-    font-size: var(--font-size-small);
+    padding: 2px 10px;
+    font-weight: bold;
   }
 }
