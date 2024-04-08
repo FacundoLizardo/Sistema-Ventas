@@ -101,10 +101,18 @@ const FormAfip = () => {
 
       const response = await axios.post(`${baseURL}/afip`, dataAfip);
       console.log("response", response);
-      const pdfUrl = response.data.afipInvoice.generatedPDF.file;
-      window.open(pdfUrl);
-      dispatch({ type: "CLEAR" });
 
+      if (dataAfip.cbteTipo !== 0) {
+        const pdfUrl = response.data.afipInvoice.generatedPDF.file;
+        window.open(pdfUrl);
+      } else {
+        const pdfData = response.data.afipInvoice.pdfFile.data;
+        const blob = new Blob([new Uint8Array(pdfData)], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(blob);
+        window.open(pdfUrl);
+      }
+
+      dispatch({ type: "CLEAR" });
       setLoading(false);
       return response;
     } catch (error) {
@@ -171,15 +179,19 @@ const FormAfip = () => {
             <option value="99">Consumidor Final</option>
           </select>
         </div>
-
         <div className={style.item}>
-          <label for="docNro">Número de documento</label>
+          <label for="docNro">Número</label>
           <input
             type="text"
             name="docNro"
             id="docNro"
             onChange={handleFormValue}
           />
+        </div>
+
+        <div className={style.item}>
+          <label for="docNro">Cliente</label>
+          <input type="text" name="" id="" disabled />
         </div>
       </div>
 
@@ -211,12 +223,12 @@ const FormAfip = () => {
             <option value={"1"}>Factura A</option>
             <option value={"6"}>Factura B</option>
             <option value={"11"}>Factura C</option>
-            <option value={"201"}>Factura de Crédito electrónica A</option>
+            {/*   <option value={"201"}>Factura de Crédito electrónica A</option>
             <option value={"206"}>Factura de Crédito electrónica B</option>
             <option value={"211"}>Factura de Crédito electrónica C</option>
             <option value={"3"}>Nota de Crédito A</option>
             <option value={"8"}>Nota de Crédito B</option>
-            <option value={"13"}>Nota de Crédito C</option>
+            <option value={"13"}>Nota de Crédito C</option> */}
           </select>
         </div>
       </div>

@@ -1,13 +1,16 @@
+const { generateTicket } = require("../controllers/afip/generateTicket.js");
 const { postFacturaController } = require("../controllers/afip/postFacturaController");
 const { editProductStockController } = require("../controllers/products/putProductsControllers.js");
 
 
 const postAfip = async (req, res) => {
     const { products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount } = req.body
-    console.log(req.body);
+
     try {
 
-        const afipInvoice = await postFacturaController({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount });
+        const afipInvoice = cbteTipo !== 0 
+        ? await postFacturaController({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount })
+        : await generateTicket({ products, cbteTipo, discount })
 
         if (afipInvoice) {
             for (const product of products) {
