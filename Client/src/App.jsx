@@ -6,7 +6,7 @@ import Sales from "./views/sales/Sales";
 import Statistics from "./views/statistics/Statistics.jsx";
 import Navbar from "./components/navbar/Navbar";
 import Login from "./views/login/Login";
-
+import Register from "./views/register/Register.jsx";
 // TODO poner componentes a renderizar como lazy para carga mas rapidas
 function App() {
 	return (
@@ -18,6 +18,7 @@ function App() {
 				<Route path="/statistics" element={<Statistics />} />
 				<Route path="/administration" element={<Administration />} />
 				<Route path="/login" element={<Login />} />
+				<Route path="/register" element={<Register />} />
 			</Routes>
 		</>
 	);

@@ -50,7 +50,6 @@ const Login = () => {
 					</div>
 					<div>
 						<LoginButton user={user}/>
-
 					</div>
 				</form>
 			</div>

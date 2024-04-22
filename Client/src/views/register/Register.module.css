@@ -1,0 +1,48 @@
+@import "../login/Login.module.css";
+
+.container {
+    height: fit-content;
+
+    & .formContainer {
+        height: fit-content;
+        margin: 40px 0 10px 0;
+
+        & .form {
+            & .inputGroup {
+                & input {
+                    height: 35px;
+                }
+            }
+
+            .passwordSection {
+                composes: inputGroup;
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                margin-top: 12px;
+                gap: 6px;
+                color: #a6adbb;
+                & label {
+                    display: block;
+                    color: rgba(156, 163, 175, 1);
+                    margin-bottom: 4px;
+                    font-size: var(--font-size-large);
+                }
+
+                & input {
+                    width: 100%;
+                    border-radius: var(--radius);
+                    border: 1px solid rgba(55, 65, 81, 1);
+                    outline: 0;
+                    background-color: white;
+                    padding: 0.75rem 1rem;
+                    color: var(--text-primary-color);
+                    height: 35px;
+                    font-size: var(--font-size-large);
+                }
+
+            }
+        }
+
+    }
+}

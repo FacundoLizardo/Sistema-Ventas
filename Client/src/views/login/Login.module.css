@@ -12,8 +12,6 @@
 		height: 400px;
 		display: flex;
 		flex-direction: column;
-		border-radius: var(--radius);
-		background-color: rgba(17, 24, 39, 1);
 		padding: 2rem;
 		color: rgba(243, 244, 246, 1);
 		justify-content: space-evenly;
@@ -41,6 +39,7 @@
 					display: block;
 					color: rgba(156, 163, 175, 1);
 					margin-bottom: 4px;
+					font-size: var(--font-size-large);
 				}
 
 				& input {
@@ -48,10 +47,10 @@
 					border-radius: var(--radius);
 					border: 1px solid rgba(55, 65, 81, 1);
 					outline: 0;
-					background-color: rgba(17, 24, 39, 1);
+					background-color: white;
 					padding: 0.75rem 1rem;
-					color: rgba(243, 244, 246, 1);
-					height: 38px;
+					color: var(--text-primary-color);
+					height: 40px;
 					font-size: var(--font-size-large);
 				}
 
