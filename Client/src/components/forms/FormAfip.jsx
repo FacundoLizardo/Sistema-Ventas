@@ -3,7 +3,21 @@ import style from "./Forms.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useCart } from "../../context/cart/cart";
-import Buttons from "../buttons/Buttons.jsx";
+import ButtonOne from "../buttons/ButtonOne/ButtonOne.jsx";
+import Spinner from "../spinner/Spinner.jsx";
+
+// TODO emitir sin factura (emite un ticket común)
+// TODO chequear emitir factura a + validación errores
+// TODO emitir factura b + validación errores
+// TODO emitir factura c + validación errores
+// TODO emitir factura de credito electronica a + validación errores
+// TODO emitir factura de credito electronica b + validación errores
+// TODO emitir factura de credito electronica c + validación errores
+// TODO emitir nota de crédito a + validación errores
+// TODO emitir nota de crédito b + validación errores
+// TODO emitir nota de crédito c + validación errores
+// TODO calcular descuento (iva+exento+desc) en productos
+
 
 const FormAfip = () => {
   const {
@@ -11,6 +25,7 @@ const FormAfip = () => {
     dispatch,
   } = useCart();
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const baseURL = import.meta.env.VITE_URL_BACKEND;
   const [dataAfip, setDataAfip] = useState({
@@ -30,8 +45,8 @@ const FormAfip = () => {
 
     cbteTipo: 0,
     concepto: 1,
-    docTipo: "99",
-    docNro: "",
+    docTipo: 80,
+    docNro: 0,
     importeExentoIva: 0,
     importeIva: 21,
 
@@ -89,6 +104,7 @@ const FormAfip = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     try {
       if (!Array.isArray(cart) || cart.length === 0) {
@@ -103,20 +119,32 @@ const FormAfip = () => {
       };
 
       const response = await axios.post(`${baseURL}/afip`, updateDataAfip);
+      console.log("response", response);
+      const pdfUrl = response.data.afipInvoice.generatedPDF.file;
+      window.open(pdfUrl);
       dispatch({ type: "CLEAR" });
 
+      setLoading(false);
       return response;
     } catch (error) {
       console.error("Error processing the purchase:", error);
+      setLoading(false);
     }
   };
 
   const handleFormValue = (event) => {
     const { name, value } = event.target;
-    const parsedValue = name === "cbteTipo" ? parseInt(value) : value;
+    const parseValue =
+      name === "cbteTipo" ||
+      name === "importeExentoIva" ||
+      name === "docTipo" ||
+      name === "docNro"
+        ? parseFloat(value)
+        : value;
+
     setDataAfip((prevData) => ({
       ...prevData,
-      [name]: parsedValue,
+      [name]: parseValue,
     }));
   };
 
@@ -289,16 +317,16 @@ const FormAfip = () => {
         </div>
       </div>
 
-      <div className={style.itemContainer}>
-{/*         <div className={style.item}>
-          <Buttons type="" text="Cancelar" onClick={""} />
-        </div>
-        <div className={style.item}>
-          <Buttons type="" text="Pendiente" onClick={""} />
-        </div>
- */}        <div className={style.item}>
-          <Buttons type="submit" text="Vender" onClick={handleSubmit} />
-        </div>
+      <div className={style.buttonsSectionAfip}>
+        <ButtonOne type="" text="Cancelar" onClick={""} />
+
+        <ButtonOne type="" text="Pendiente" onClick={""} />
+
+        {loading ? (
+          <Spinner />
+        ) : (
+          <ButtonOne type="submit" text="Vender" onClick={handleSubmit} />
+        )}
       </div>
     </form>
   );
