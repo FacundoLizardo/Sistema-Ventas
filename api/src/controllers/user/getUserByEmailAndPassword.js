@@ -5,8 +5,18 @@ const getUserByEmailAndPasswordController = async ({ email, password }) => {
 		const user = await User.findOne({
 			where: { email: email },
 		});
+		console.log(user)
+
+		if (!user) {
+			throw new Error(`User whit the email: ${email} does not exist.`);
+		}
+
+		if (user.password !== password) {
+			throw new Error("Wrong password, please try again.");
+		}
 		const { branch, cuit, enabled, firstName, lastName, phoneNumber, role } =
 			user;
+
 		const data = {
 			firstName,
 			lastName,
@@ -17,18 +27,13 @@ const getUserByEmailAndPasswordController = async ({ email, password }) => {
 			phoneNumber,
 			role,
 		};
-		if (!user) {
-			throw new Error(`User whit the email: ${email} does not exist.`);
-		}
 
-		if (user.password !== password) {
-			throw new Error("Wrong password, please try again.");
-		}
 		if (user && user.password === password) {
 			return data;
 		}
 	} catch (error) {
-		throw new Error(`Error retrieving user: ${error.message}`);
+		console.log(error)
+		throw new Error(`Error retrieving user hola: ${error.message}`);
 	}
 };
 

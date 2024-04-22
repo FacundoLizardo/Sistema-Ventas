@@ -2,6 +2,7 @@ import styles from "./Login.module.css";
 import LoginButton from "../../components/buttons/LoginButton/LoginButton";
 import { useState } from "react";
 
+
 const Login = () => {
 	const [user, setUser] = useState({
 		email: "",
@@ -48,7 +49,8 @@ const Login = () => {
 						</div>
 					</div>
 					<div>
-						<LoginButton user={user} />
+						<LoginButton user={user}/>
+
 					</div>
 				</form>
 			</div>
