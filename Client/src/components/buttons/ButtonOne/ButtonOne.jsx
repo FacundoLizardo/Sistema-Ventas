@@ -1,6 +1,6 @@
-import style from "./GlobalButton.module.css";
+import style from "./ButtonOne.module.css";
 
-const Buttons = ({ type, text, onClick }) => {
+const ButtonOne = ({ type, text, onClick }) => {
   let buttonColor = "";
   text === "Vender"
     ? (buttonColor = style.buyButtonColor)
@@ -19,4 +19,4 @@ const Buttons = ({ type, text, onClick }) => {
   );
 };
 
-export default Buttons;
+export default ButtonOne;

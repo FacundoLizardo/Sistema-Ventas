@@ -269,8 +269,8 @@ const generatePDF = async ({
       file_name: "Voucher",
       options: options,
     });
-
     console.log("Generated PDF data:", pdfData);
+    return pdfData;
   } catch (error) {
     throw new Error(
       `An error occurred while generating the PDF: ${error.message}`

@@ -44,13 +44,23 @@
     padding-bottom: 3px;
   }
 
-  & .buttonsSection{
+  & .buttonsSection {
     display: flex;
     width: 100%;
     align-items: center;
     justify-content: end;
     gap: 5px;
+  }
 
+  & .buttonsSectionAfip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    place-content: center;
+    text-align: center;
+    width: 100%;
+    align-items: center;
+    justify-content: end;
+    gap: 5px;
   }
 
   @media screen and (min-width: 768px) {

@@ -1,0 +1,14 @@
+.statisticsContainer {
+    width: 90dvw;
+    min-height: 100dvh;
+    max-width: 1024px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+  
+    justify-content: center;
+    align-items: center;
+  }
+  

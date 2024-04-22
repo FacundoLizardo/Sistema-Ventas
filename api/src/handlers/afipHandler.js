@@ -4,6 +4,7 @@ const { editProductStockController } = require("../controllers/products/putProdu
 
 const postAfip = async (req, res) => {
     const { products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount } = req.body
+    console.log(req.body);
     try {
 
         const afipInvoice = await postFacturaController({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount });
