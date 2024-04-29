@@ -13,13 +13,14 @@ const postUserController = async (
 	enabled,
 	role
 ) => {
-	password = await hashPassword(password);
+
+	const hashedPassword = await hashPassword(password);
 	try {
 		await User.build({
 			firstName,
 			lastName,
 			email,
-			password,
+			password : hashedPassword,
 			address,
 			phoneNumber,
 			cuit,
@@ -34,7 +35,7 @@ const postUserController = async (
 				firstName,
 				lastName,
 				email,
-				password,
+				password: hashedPassword,
 				address,
 				phoneNumber,
 				cuit,

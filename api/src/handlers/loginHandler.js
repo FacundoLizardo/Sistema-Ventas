@@ -12,4 +12,5 @@ const loginHandler = async (req, res) => {
 
 module.exports = { loginHandler };
 
-const bcrypt = require("bcrypt");
+
+

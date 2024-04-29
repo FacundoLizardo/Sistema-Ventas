@@ -64,10 +64,10 @@ const postUser = async (req, res) => {
     cuit,
     branch,
     enabled,
-    role,
+
   } = req.body;
 
-  if (!firstName || !lastName || !email || !password || !enabled || !role) {
+  if (!firstName || !lastName || !email || !password || !enabled ) {
     return res.status(400).json({ message: "Missing information" });
   }
   try {
@@ -80,8 +80,7 @@ const postUser = async (req, res) => {
       phoneNumber,
       cuit,
       branch,
-      enabled,
-      role
+      enabled
     );
     return res.status(200).json(newUser);
   } catch (error) {

@@ -17,7 +17,7 @@ const LoginButton = ({user}) => {
                 password,
             });
             const user = response.data.user;
-            if (response.data.success === true) {
+            if (response.status === 200) {
                 Swal2.fire({
                     title: "Bienvenido",
                     icon: "success",
@@ -43,7 +43,8 @@ const LoginButton = ({user}) => {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-
+                    console.log("hacer algo aca")
+                    console.log("habia que hacer algo con validUser", validUser)
                 } else if (result.isDenied) {
                     nav("/register")
                 }

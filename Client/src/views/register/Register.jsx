@@ -15,9 +15,7 @@ const Register = () => {
         address: undefined,
         phoneNumber: undefined,
         cuit: undefined,
-        branch: undefined,
         enabled: true,
-        role: "newUserData",
     });
 
     const nav = useNavigate();
@@ -37,11 +35,11 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`/user`, {
-                newUserData
+            const response = await axios.post(`/users`, {
+                ...newUserData
             });
             //const newUserData = response.data.user;
-            if (response.data.success === true) {
+            if (response.status === 200) {
                 Swal2.fire({
                     title: "Gracias por registrarte, ya puedes iniciar sesion.",
                     icon: "success",
@@ -54,7 +52,6 @@ const Register = () => {
                     .then(() => nav("/login"));
             }
         } catch (error) {
-
             window.alert(error.response.data.error);
         }
     };
