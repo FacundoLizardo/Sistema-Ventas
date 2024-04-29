@@ -1,5 +1,6 @@
 const { User } = require("../../db");
 const hashPassword = require("../../utils/hashPassword");
+const sendConfirmationEmail = require("../../utils/sendConfirmationEmail");
 
 const postUserController = async (
 	firstName,
@@ -44,7 +45,9 @@ const postUserController = async (
 				role,
 			},
 		});
-
+if(created){
+	await sendConfirmationEmail(newUser)
+}
 		return created
 			? newUser
 			: "User not created because it already exists or something is wrong, please try again";

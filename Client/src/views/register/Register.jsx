@@ -52,7 +52,7 @@ const Register = () => {
                     .then(() => nav("/login"));
             }
         } catch (error) {
-            window.alert(error.response.data.error);
+            window.alert(error.message);
         }
     };
 

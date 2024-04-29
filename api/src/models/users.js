@@ -10,6 +10,11 @@ module.exports = (sequelize) => {
 				primaryKey: true,
 				allowNull: false,
 			},
+			isVerified:{
+				type:DataTypes.BOOLEAN,
+				defaultValue:false,
+				allowNull:false
+			},
 			firstName: {
 				type: DataTypes.STRING,
 				allowNull: false,
