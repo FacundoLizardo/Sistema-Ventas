@@ -1,31 +1,34 @@
-const { postFacturaController } = require("../controllers/afip/postFacturaController");
-const { editProductStockController } = require("../controllers/products/putProductsControllers.js");
-
+const { generateTicket } = require("../controllers/afip/generateTicket.js");
+const { postFacturaAController } = require("../controllers/afip/postFacturaAController.js");
+const {
+  editProductStockController,
+} = require("../controllers/products/putProductsControllers.js");
 
 const postAfip = async (req, res) => {
-    const { products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount } = req.body
-    console.log(req.body);
-    try {
+  const { cbteTipo, products } = req.body;
 
-        const afipInvoice = await postFacturaController({ products, ptoVta, cbteTipo, concepto, docTipo, docNro, importeExentoIva, discount });
-
-        if (afipInvoice) {
-            for (const product of products) {
-
-                const { productId } = product
-                await editProductStockController({ productId })
-
-            }
-        }
-
-        return res.status(200).json({ success: true, afipInvoice })
-
-    } catch (error) {
-
-        console.error('Error in postAfip:', error);
-        return res.status(400).json({ error: error.message });
-
+  try {
+    let afipInvoice;
+    switch (cbteTipo) {
+      case 1:
+        afipInvoice = await postFacturaAController(req);
+        break;
+      default:
+        afipInvoice = await generateTicket(req);
     }
-}
 
-module.exports = { postAfip }
+    if (afipInvoice) {
+      for (const product of products) {
+        const { productId } = product;
+        await editProductStockController({ productId });
+      }
+    }
+
+    return res.status(200).json({ success: true, afipInvoice });
+  } catch (error) {
+    console.error("Error in postAfip:", error);
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = { postAfip };

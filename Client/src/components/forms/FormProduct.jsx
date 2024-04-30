@@ -6,6 +6,8 @@ import axios from "axios";
 import CheckboxInput from "../inputs/checkboxInput/checkboxInput.jsx";
 import ButtonTwo from "../buttons/ButtonTwo/ButtonTwo.jsx";
 
+const URL = import.meta.env.VITE_URL_BACKEND;
+
 //TODO refactorizar a menos de 300 lineas
 const FormProducts = ({ productToEdit = {}, setProductToEdit = () => {} }) => {
   // name, category, stock, allowNegativeStock, trackStock, enabled, barcode are required
@@ -68,7 +70,7 @@ const FormProducts = ({ productToEdit = {}, setProductToEdit = () => {} }) => {
   const handleSubmit = async () => {
     event.preventDefault();
     const response = await axios.put(
-      `/products/${productToEdit.productId}`,
+      `${URL}/products/${productToEdit.productId}`,
       dataProduct
     );
     if (response.status === 200) {
@@ -83,7 +85,7 @@ const FormProducts = ({ productToEdit = {}, setProductToEdit = () => {} }) => {
 
   async function createProduct() {
     event.preventDefault();
-    const response = await axios.post(`/products`, dataProduct);
+    const response = await axios.post(`${URL}/products`, dataProduct);
     if (response.status === 200) {
       window.alert(`Se creo el producto ${dataProduct.name} con exito.`);
       setProductToEdit({});

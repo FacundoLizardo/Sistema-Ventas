@@ -69,30 +69,11 @@
     <table class="bill-container">
       <tr>
         <td class="padding-b-3">
-          <p>Razón social: {{razonSocial}}</p>
+          <p>{{razonSocial}}</p>
           <p>Direccion: {{domicilio}}</p>
-          <p>C.U.I.T.: {{cuit}}</p>
-          <p>{{regimenTributario}}</p>
-          <p>IIBB: {{iibb}}</p>
-          <p>Inicio de actividad: {{inicioActividad}}</p>
         </td>
       </tr>
-      <tr>
-        <td class="border-top padding-t-3 padding-b-3">
-          <p class="text-center text-lg">FACTURA A</p>
-          <!-- 
-          <p class="text-center">Codigo {{cbteTipo}}</p> -->
-          <p>P.V: {{ptoVta}}</p>
-          <p>Nro: {{numeroFactura}}</p>
-          <p>Fecha: {{fecha}}</p>
-          <p>Concepto: {{concepto}}</p>
-        </td>
-      </tr>
-      <tr>
-        <td class="border-top padding-t-3 padding-b-3">
-          <p>{{condicionIVA}}</p>
-        </td>
-      </tr>
+
       <tr>
         <td class="border-top padding-t-3 padding-b-3">
           <div>
@@ -110,10 +91,6 @@
                 <td>Subtotal</td>
                 <td>{{ImpNeto}}</td>
               </tr>
-              <tr>
-                <td>IVA 21 %</td>
-                <td>{{ImpIVA}}</td>
-              </tr>
             </table>
           </div>
         </td>
@@ -130,16 +107,9 @@
           </div>
         </td>
       </tr>
-      <tr>
-        <td class="border-top padding-t-3">
-          <p>CAE: {{CAE}}</p>
-          <p>Vto: {{Vencimiento}}</p>
-        </td>
-      </tr>
+
       <tr class="text-center">
-        <td>
-          <img src="{{urlQr}}" />
-        </td>
+        <td>¡Gracias por su compra!</td>
       </tr>
     </table>
   </body>
