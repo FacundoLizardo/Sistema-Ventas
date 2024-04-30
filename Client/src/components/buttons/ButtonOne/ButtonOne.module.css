@@ -10,7 +10,12 @@
     border-radius: var(--radius);
     font-weight: 900;
     cursor: pointer;
+    transition: all .2s ease;
   }
+
+  & button:hover {
+     transform: scale(1.05);
+   }
 
   & .buyButtonColor {
     background-color: var(--buy-button-color);
@@ -31,4 +36,5 @@
     background-color: var(--basic-color);
     color: var(--text-third-color);
   }
+
 }

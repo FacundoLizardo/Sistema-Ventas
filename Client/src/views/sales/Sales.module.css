@@ -3,7 +3,7 @@
   width: 90dvw;
   min-height: 100dvh;
   max-width: 1024px;
-  margin: auto;
+  margin: 0 auto 50px;
   display: flex;
   flex-direction: column;
   gap: 10px;
