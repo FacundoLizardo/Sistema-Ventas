@@ -57,10 +57,10 @@ const generateVoucher = async ({
     products.forEach((product) => {
       importe_gravado +=
         discount > 0
-          ? parseFloat(product.finalPrice * discount)
-          : parseFloat(product.finalPrice);
+          ? Number(product.finalPrice * discount)
+          : Number(product.finalPrice);
       const ivaRate = 21;
-      const ivaAmount = (parseFloat(product.finalPrice) * ivaRate) / 100;
+      const ivaAmount = (Number(product.finalPrice) * ivaRate) / 100;
       importe_iva += ivaAmount;
     });
 
@@ -104,6 +104,8 @@ const generateVoucher = async ({
       products: products,
       ImpTrib: ImpTrib,
     };
+
+    console.log("data",data);
 
     const voucherData = await afip.ElectronicBilling.createVoucher(data);
 
@@ -254,7 +256,8 @@ const generatePDF = async ({
       .replace("{{condicionIVA}}", condicionIVA)
       .replace("{{fecha}}", fechaEmision)
       .replace("{{ImpIVA}}", data.ImpIVA)
-      .replace("{{ImpNeto}}", data.ImpNeto);
+      .replace("{{ImpNeto}}", data.ImpNeto)
+      .replace("{{discount}}", discount);
 
     const options = {
       width: 8,

@@ -5,7 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const pdf = require("html-pdf");
 
-const { RAZON_SOCIAL, DOMICILIO_FISCAL, BACKEND_URL } = process.env;
+const { RAZON_SOCIAL, DOMICILIO_FISCAL } = process.env;
 
 const generateTicket = async ({ products, cbteTipo, discount }) => {
   try {
@@ -81,7 +81,7 @@ const generateTicket = async ({ products, cbteTipo, discount }) => {
     };
 
     const pdfFileName = `Ticket-${moment().format("DD.MM.YYYY-HH.mm")}.pdf`;
-    const pdfFilePath = path.join(__dirname, "pdfs", pdfFileName);
+    const pdfFilePath = path.join(__dirname, "html", "pdfs", pdfFileName);
 
     await new Promise((resolve, reject) => {
       pdf.create(replacedHTML, options).toFile(pdfFilePath, (err, _) => {
@@ -94,7 +94,6 @@ const generateTicket = async ({ products, cbteTipo, discount }) => {
     });
     const pdfFile = fs.readFileSync(pdfFilePath);
     return { pdfFile };
-    
   } catch (error) {
     throw new Error(
       `An error occurred while generating the PDF: ${error.message}`
