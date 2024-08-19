@@ -1,10 +1,56 @@
-const { DataTypes } = require("sequelize");
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
-module.exports = (sequelize) => {
-	sequelize.define(
-		"User",
+export interface UserInterface {
+	id: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	password: string;
+	address?: string;
+	phoneNumber?: string;
+	cuit?: string;
+	branch?: string[];
+	enabled: boolean;
+	role: string;
+	createdAt?: Date;
+	updatedAt?: Date;
+}
+
+export interface UserCreationInterface
+	extends Optional<
+		UserInterface,
+		| "id"
+		| "address"
+		| "phoneNumber"
+		| "cuit"
+		| "branch"
+		| "createdAt"
+		| "updatedAt"
+	> {}
+
+class User
+	extends Model<UserInterface, UserCreationInterface>
+	implements UserInterface
+{
+	public id!: string;
+	public firstName!: string;
+	public lastName!: string;
+	public email!: string;
+	public password!: string;
+	public address?: string;
+	public phoneNumber?: string;
+	public cuit?: string;
+	public branch?: string[];
+	public enabled!: boolean;
+	public role!: string;
+	public readonly createdAt!: Date;
+	public readonly updatedAt!: Date;
+}
+
+export default (sequelize: Sequelize) => {
+	User.init(
 		{
-			userId: {
+			id: {
 				type: DataTypes.UUID,
 				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
@@ -72,7 +118,11 @@ module.exports = (sequelize) => {
 			},
 		},
 		{
+			sequelize,
+			modelName: "User",
 			timestamps: true,
 		}
 	);
+
+	return User;
 };

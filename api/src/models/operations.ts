@@ -1,47 +1,70 @@
-const { DataTypes } = require("sequelize");
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
+import { ProductInterface } from "./product";
 
-module.exports = (sequelize) => {
-	sequelize.define(
-		"Operation",
+export interface OperationInterface {
+	id: number;
+	products: ProductInterface[];
+	amount: number;
+	discount: number;
+	extraCharge: number;
+	debtAmount?: number;
+	branchId: string;
+	paymentType: string;
+	invoiceNumber?: string;
+	state: string;
+	isdelivery: boolean;
+	deliveryAddress?: string;
+	customersId?: string;
+	comments?: string;
+}
+
+export interface OperationCreationInterface
+	extends Optional<
+		OperationInterface,
+		| "id"
+		| "products"
+		| "debtAmount"
+		| "invoiceNumber"
+		| "deliveryAddress"
+		| "customersId"
+		| "comments"
+	> {}
+
+class Operation
+	extends Model<OperationInterface, OperationCreationInterface>
+	implements OperationInterface
+{
+	public id!: number;
+	public products!: any[];
+	public amount!: number;
+	public discount!: number;
+	public extraCharge!: number;
+	public debtAmount?: number;
+	public branchId!: string;
+	public paymentType!: string;
+	public invoiceNumber?: string;
+	public state!: string;
+	public isdelivery!: boolean;
+	public deliveryAddress?: string;
+	public customersId?: string;
+	public comments?: string;
+	public readonly createdAt!: Date;
+	public readonly updatedAt!: Date;
+}
+
+export default (sequelize: Sequelize) => {
+	Operation.init(
 		{
-			operationId: {
+			id: {
 				type: DataTypes.INTEGER,
 				primaryKey: true,
 				autoIncrement: true,
 				allowNull: false,
 			},
-
 			products: {
 				type: DataTypes.JSONB,
 				allowNull: true,
 				defaultValue: [],
-				validate: {
-					isValidProductsArray(value) {
-						if (!Array.isArray(value)) {
-							throw new Error("Products must be an array.");
-						}
-
-						if (value.length > 0) {
-							const { Product } = require("../db");
-							const isValidProducts = value.every((productWithQuantityObj) => {
-								if (!productWithQuantityObj.quantity) {
-									throw new Error(
-										"Every product must have the property quantity."
-									);
-								}
-								return Product.findByPk(
-									productWithQuantityObj.product.productId
-								);
-							});
-
-							if (!isValidProducts) {
-								throw new Error(
-									"Each product in the array must be a valid instance of Product."
-								);
-							}
-						}
-					},
-				},
 			},
 			amount: {
 				type: DataTypes.DECIMAL(10, 2),
@@ -66,7 +89,7 @@ module.exports = (sequelize) => {
 					},
 					min: {
 						args: [0],
-						msg: "The amount o debt should be equal or higher than 0.",
+						msg: "The amount of debt should be equal or higher than 0.",
 					},
 				},
 			},
@@ -113,7 +136,11 @@ module.exports = (sequelize) => {
 			},
 		},
 		{
+			sequelize,
+			modelName: "Operation",
 			timestamps: true,
 		}
 	);
+
+	return Operation;
 };
