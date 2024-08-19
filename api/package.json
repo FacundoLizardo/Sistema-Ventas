@@ -4,9 +4,9 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-	"test": "echo \"Error: no test specified\" && exit 1",
-	"startdev": "nodemon index.js",
-	"start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "startdev": "nodemon index.js",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,5 +23,9 @@
     "pg-hstore": "^2.3.4",
     "qrcode": "^1.5.3",
     "sequelize": "^6.37.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.4.1",
+    "typescript": "^5.5.4"
   }
 }
