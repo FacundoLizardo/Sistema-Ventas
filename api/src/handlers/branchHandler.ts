@@ -1,3 +1,5 @@
+import { BranchInterface } from "../models/branch";
+
 const {
   postBranchController,
 } = require("../controllers/branch/postBranchController");
@@ -14,30 +16,30 @@ const {
   putBranchController,
 } = require("../controllers/branch/putBranchController");
 
-const getBranch = async (req, res) => {
+const getBranch = async (req: Request, res: Response): Promise<Response> => {
   const { id } = req.params;
   try {
     const branch = await getBranchByIdController(id);
-    branch
+    return branch
       ? res.status(200).json({ success: true, branch })
       : res.status(404).json({ success: false, message: "No branchs found." });
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ error: error.message });
   }
 };
 
-const getBranchs = async (req, res) => {
+const getBranchs = async (req: Request, res: Response): Promise<Response> => {
   try {
     const branches = await getAllBranchesController();
-    branches
+    return branches
       ? res.status(200).json({ success: true, branches })
       : res.status(404).json({ success: false, message: "No branchs found." });
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ error: error.message });
   }
 };
 
-const postBranch = async (req, res) => {
+const postBranch = async (req: Request, res: Response): Promise<Response> => {
   const {
     afipId,
     name,
@@ -47,10 +49,12 @@ const postBranch = async (req, res) => {
     manager,
     hours,
     phoneNumber,
-  } = req.body;
+  } = req.body as BranchInterface;
+
   if (!name || !location) {
     return res.status(404).json("Missing information.");
   }
+
   try {
     const newBranch = await postBranchController(
       afipId,
@@ -63,12 +67,12 @@ const postBranch = async (req, res) => {
       phoneNumber
     );
     return res.status(200).json(newBranch);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ error: error.message });
   }
 };
 
-const putBranch = async (req, res) => {
+const putBranch = async (req: Request, res: Response): Promise<Response> => {
   try {
     const branchId = req.params.id;
     const {
@@ -80,7 +84,7 @@ const putBranch = async (req, res) => {
       manager,
       hours,
       phoneNumber,
-    } = req.body;
+    } = req.body as BranchInterface;
 
     const updatedBranch = await putBranchController(
       branchId,
@@ -93,26 +97,20 @@ const putBranch = async (req, res) => {
       hours,
       phoneNumber
     );
-    res.status(200).json(updatedBranch);
-  } catch (error) {
+    return res.status(200).json(updatedBranch);
+  } catch (error: any) {
     return res.status(400).json({ error: error.message });
   }
 };
 
-const deleteBranch = async (req, res) => {
+const deleteBranch = async (req: Request, res: Response): Promise<Response> => {
   try {
     const branchId = req.params.id;
     const deletedBranch = await deleteBranchController(branchId);
-    res.status(200).json(deletedBranch);
-  } catch (error) {
+    return res.status(200).json(deletedBranch);
+  } catch (error: any) {
     return res.status(400).json({ error: error.message });
   }
 };
 
-module.exports = {
-  getBranch,
-  getBranchs,
-  postBranch,
-  putBranch,
-  deleteBranch,
-};
+export { getBranch, getBranchs, postBranch, putBranch, deleteBranch };
