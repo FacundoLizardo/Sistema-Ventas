@@ -1,15 +1,47 @@
-const { DataTypes } = require("sequelize");
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
-module.exports = (sequelize) => {
-	sequelize.define(
-		"Costumer",
+export interface CostumerInterface {
+	dni: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	address?: string;
+	phoneNumber?: string;
+	dateOfBirth?: Date;
+	enableDebt?: boolean;
+}
+
+export interface CostumerCreationInterface
+	extends Optional<
+		CostumerInterface,
+		"address" | "phoneNumber" | "dateOfBirth" | "enableDebt"
+	> {}
+
+class Costumer
+	extends Model<CostumerInterface, CostumerCreationInterface>
+	implements CostumerInterface
+{
+	public dni!: string;
+	public firstName!: string;
+	public lastName!: string;
+	public email!: string;
+	public address?: string;
+	public phoneNumber?: string;
+	public dateOfBirth?: Date;
+	public enableDebt?: boolean;
+	public readonly createdAt!: Date;
+	public readonly updatedAt!: Date;
+}
+
+export default (sequelize: Sequelize) => {
+	Costumer.init(
 		{
 			dni: {
 				type: DataTypes.STRING,
 				primaryKey: true,
 				allowNull: false,
 				validate: {
-					esDNIoPasaporte(value) {
+					esDNIoPasaporte(value: string) {
 						const dniRegex = /^\d+$/;
 						const pasaporteRegex = /^[a-zA-Z0-9]+$/;
 
@@ -59,7 +91,7 @@ module.exports = (sequelize) => {
 				type: DataTypes.DATE,
 				allowNull: true,
 				validate: {
-					isValidDate(value) {
+					isValidDate(value: string) {
 						if (value && isNaN(Date.parse(value))) {
 							throw new Error("Date of birth is not valid.");
 						}
@@ -72,7 +104,11 @@ module.exports = (sequelize) => {
 			},
 		},
 		{
+			sequelize,
+			modelName: "Costumer",
 			timestamps: true,
 		}
 	);
+
+	return Costumer;
 };
