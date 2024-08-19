@@ -24,8 +24,6 @@ const postAfip = async (req, res) => {
       }
     }
 
-    console.log('test')
-
     return res.status(200).json({ success: true, afipInvoice });
   } catch (error) {
     console.error("Error in postAfip:", error);
