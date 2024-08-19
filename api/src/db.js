@@ -14,12 +14,13 @@ const CashRegisterModel = require("./models/cashRegister.js");
 
 /* ----- Database connection ----- */
 
-const { DB_URL } = process.env;
+//const { DB_URL } = process.env;
 //const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
 
 const sequelize = new Sequelize(
-  DB_URL,
-  //`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/sistema_ventas`,
+ // DB_URL,
+  //`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/sistema_ventas`
+    `postgres://postgres:123@localhost/sistema_ventas`,
   {
     logging: false,
     native: false,
