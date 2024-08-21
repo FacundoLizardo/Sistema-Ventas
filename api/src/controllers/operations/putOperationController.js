@@ -1,4 +1,4 @@
-const { Operation } = require("../../db");
+/* const { Operation } = require("../../db");
 
 const putOperationController = async (
 	operationId,
@@ -87,3 +87,4 @@ const putOperationStockController = async ({ OperationId, stock }) => {
 };
 
 module.exports = { putOperationController, putOperationStockController };
+ */

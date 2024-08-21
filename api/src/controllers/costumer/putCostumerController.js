@@ -1,4 +1,4 @@
-const { Costumer } = require("../../db");
+/* const { Costumer } = require("../../db");
 
 const putCostumerController = async (
 	dni,
@@ -41,3 +41,4 @@ const putCostumerController = async (
 };
 
 module.exports = { putCostumerController };
+ */

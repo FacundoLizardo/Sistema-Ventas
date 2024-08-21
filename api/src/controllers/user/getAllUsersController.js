@@ -1,4 +1,4 @@
-const { User } = require("../../db");
+/* const { User } = require("../../db");
 
 const getAllUsersController = async () => {
 	try {
@@ -10,3 +10,4 @@ const getAllUsersController = async () => {
 };
 
 module.exports = { getAllUsersController };
+ */

@@ -1,4 +1,4 @@
-const {
+/* const {
   postCostumersController,
 } = require("../controllers/costumer/postCostumerController");
 const {
@@ -119,3 +119,4 @@ module.exports = {
   putCostumer,
   deleteCostumer,
 };
+ */

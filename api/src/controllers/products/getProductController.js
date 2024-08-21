@@ -1,4 +1,4 @@
-const { Product } = require("../../db")
+/* const { Product } = require("../../db")
 
 const getProductController = async (id) => {
     try {
@@ -10,4 +10,4 @@ const getProductController = async (id) => {
 }
 
 
-module.exports = { getProductController }
+module.exports = { getProductController } */

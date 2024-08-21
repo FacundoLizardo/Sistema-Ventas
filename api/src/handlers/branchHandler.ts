@@ -1,6 +1,10 @@
+<<<<<<< Updated upstream:api/src/handlers/branchHandler.ts
 import { BranchInterface } from "../models/branch";
 
 const {
+=======
+/* const {
+>>>>>>> Stashed changes:api/src/handlers/branchHandler.js
   postBranchController,
 } = require("../controllers/branch/postBranchController");
 const {
@@ -113,4 +117,15 @@ const deleteBranch = async (req: Request, res: Response): Promise<Response> => {
   }
 };
 
+<<<<<<< Updated upstream:api/src/handlers/branchHandler.ts
 export { getBranch, getBranchs, postBranch, putBranch, deleteBranch };
+=======
+module.exports = {
+  getBranch,
+  getBranchs,
+  postBranch,
+  putBranch,
+  deleteBranch,
+};
+ */
+>>>>>>> Stashed changes:api/src/handlers/branchHandler.js

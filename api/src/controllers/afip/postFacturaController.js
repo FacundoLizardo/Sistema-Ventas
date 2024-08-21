@@ -1,4 +1,4 @@
-require("dotenv").config();
+/* require("dotenv").config();
 const QRCode = require("qrcode");
 const moment = require("moment");
 const Afip = require("@afipsdk/afip.js");
@@ -320,3 +320,4 @@ const postFacturaController = async ({
 };
 
 module.exports = { postFacturaController };
+ */

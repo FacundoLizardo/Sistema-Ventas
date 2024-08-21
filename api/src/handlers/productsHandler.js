@@ -1,4 +1,4 @@
-const {postProductController} = require("../controllers/products/postProductController");
+/* const {postProductController} = require("../controllers/products/postProductController");
 const {deleteProductController} = require("../controllers/products/deleteProductController");
 const {editProductController} = require("../controllers/products/putProductsControllers")
 const {getProductController} = require("../controllers/products/getProductController");
@@ -143,3 +143,4 @@ module.exports = {
     putProduct,
     deleteProduct,
 };
+ */

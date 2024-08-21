@@ -1,4 +1,4 @@
-const { Product } = require("../../db");
+/* const { Product } = require("../../db");
 
 const postProductController = async (
 	name,
@@ -61,3 +61,4 @@ module.exports = { postProductController };
 //     "taxes": 5.00,
 //     "barcode": "123456789012"
 //   }
+ 

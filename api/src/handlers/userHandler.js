@@ -1,4 +1,4 @@
-const {
+/* const {
   getUserByIdController,
 } = require("../controllers/user/getUserByIdController");
 const {
@@ -138,3 +138,4 @@ module.exports = {
   putUser,
   deleteUser,
 };
+ */

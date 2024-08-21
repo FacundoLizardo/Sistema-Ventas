@@ -1,4 +1,4 @@
-const { Operation } = require("../../db")
+/* const { Operation } = require("../../db")
 
 const getOperationsController = async () => {
     try {
@@ -9,4 +9,4 @@ const getOperationsController = async () => {
     }
 }
 
-module.exports = { getOperationsController }
+module.exports = { getOperationsController } */

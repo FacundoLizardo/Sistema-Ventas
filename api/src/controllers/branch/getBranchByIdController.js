@@ -1,4 +1,4 @@
-const { Branch } = require("../../db");
+/* const { Branch } = require("../../db");
 
 const getBranchByIdController = async (id) => {
 	try {
@@ -10,3 +10,4 @@ const getBranchByIdController = async (id) => {
 };
 
 module.exports = { getBranchByIdController };
+ */

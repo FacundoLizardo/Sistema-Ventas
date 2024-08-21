@@ -1,4 +1,4 @@
-const {
+/* const {
   postCashRegisterController,
 } = require("../controllers/cashRegister/postCashRegisterController");
 const {
@@ -120,3 +120,4 @@ module.exports = {
   putCashRegister,
   deleteCashRegister,
 };
+ */

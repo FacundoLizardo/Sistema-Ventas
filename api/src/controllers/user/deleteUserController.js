@@ -1,4 +1,4 @@
-const { User } = require("../../db");
+/* const { User } = require("../../db");
 
 const deleteUserController = async (cuit) => {
 	try {
@@ -17,3 +17,4 @@ const deleteUserController = async (cuit) => {
 };
 
 module.exports = { deleteUserController };
+ */

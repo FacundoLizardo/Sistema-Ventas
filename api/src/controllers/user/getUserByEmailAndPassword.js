@@ -1,4 +1,4 @@
-const { User } = require("../../db");
+/* const { User } = require("../../db");
 
 const getUserByEmailAndPasswordController = async ({ email, password }) => {
 	try {
@@ -33,3 +33,4 @@ const getUserByEmailAndPasswordController = async ({ email, password }) => {
 };
 
 module.exports = { getUserByEmailAndPasswordController };
+ */

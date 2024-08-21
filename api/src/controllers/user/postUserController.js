@@ -1,4 +1,4 @@
-const { User } = require("../../db");
+/* const { User } = require("../../db");
 const hashPassword = require("../../utils/hashPassword");
 
 const postUserController = async (
@@ -77,3 +77,4 @@ const postUserController = async (
 //   }
 
 module.exports = { postUserController };
+ */

@@ -1,4 +1,4 @@
-const { CashRegister } = require("../../db");
+/* const { CashRegister } = require("../../db");
 
 const deleteCashRegisterController = async (cashId) => {
 	try {
@@ -14,3 +14,4 @@ const deleteCashRegisterController = async (cashId) => {
 };
 
 module.exports = { deleteCashRegisterController };
+ */

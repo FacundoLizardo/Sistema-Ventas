@@ -1,4 +1,4 @@
-const { CashRegister } = require("../../db");
+/* const { CashRegister } = require("../../db");
 const { User } = require("../../db");
 
 const postCashRegisterController = async (
@@ -67,6 +67,9 @@ const postCashRegisterController = async (
 		}
 	}
 };
+
+module.exports = { postCashRegisterController };
+ */
 /*-----------------------modelo para testeo de ruta---------------*/
 // {
 
@@ -74,5 +77,3 @@ const postCashRegisterController = async (
 //     "userId": "e4593977-67f1-4211-8279-b59b2eb05c13"
 
 // }
-
-module.exports = { postCashRegisterController };
