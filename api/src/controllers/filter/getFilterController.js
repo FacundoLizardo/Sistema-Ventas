@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+/* const { Op } = require("sequelize");
 const { Product } = require("../../db");
 
 const getFilterController = async ({ query, category, pageSize, pageNumber }) => {
@@ -51,4 +51,4 @@ const getFilterController = async ({ query, category, pageSize, pageNumber }) =>
     }
 }
 
-module.exports = { getFilterController };
+module.exports = { getFilterController }; */

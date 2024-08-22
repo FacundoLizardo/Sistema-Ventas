@@ -1,4 +1,4 @@
-const { Branch } = require("../../db");
+/* const { Branch } = require("../../db");
 
 const deleteBranchController = async (branchId) => {
 	try {
@@ -18,3 +18,4 @@ const deleteBranchController = async (branchId) => {
 };
 
 module.exports = { deleteBranchController };
+ */

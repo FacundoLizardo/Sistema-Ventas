@@ -1,4 +1,4 @@
-const { postFacturaController } = require("../controllers/afip/postFacturaController");
+/* const { postFacturaController } = require("../controllers/afip/postFacturaController");
 const { editProductStockController } = require("../controllers/products/putProductsControllers.js");
 
 
@@ -28,4 +28,4 @@ const postAfip = async (req, res) => {
     }
 }
 
-module.exports = { postAfip }
+module.exports = { postAfip } */

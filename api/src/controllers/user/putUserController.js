@@ -1,4 +1,4 @@
-const { User } = require("../../db");
+/* const { User } = require("../../db");
 
 const putUserController = async (
 	firstName,
@@ -43,3 +43,4 @@ const putUserController = async (
 };
 
 module.exports = { putUserController };
+ */

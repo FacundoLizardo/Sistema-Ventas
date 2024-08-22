@@ -1,4 +1,4 @@
-const {Product} = require("../../db");
+/* const {Product} = require("../../db");
 
 const editProductController = async (
     productId,
@@ -69,3 +69,4 @@ const editProductStockController = async ({productId}) => {
 };
 
 module.exports = {editProductController, editProductStockController};
+ */

@@ -1,4 +1,4 @@
-const { Branch } = require("../../db");
+/* const { Branch } = require("../../db");
 
 const postBranchController = async (
 	afipId,
@@ -46,3 +46,4 @@ const postBranchController = async (
 //   }
 
 module.exports = { postBranchController };
+ */

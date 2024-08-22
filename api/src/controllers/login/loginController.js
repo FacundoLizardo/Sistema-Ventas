@@ -1,4 +1,4 @@
-const { User } = require("../../db");
+/* const { User } = require("../../db");
 const bcrypt = require("bcrypt");
 
 const loginController = async (email, password) => {
@@ -23,3 +23,4 @@ const loginController = async (email, password) => {
 };
 
 module.exports = { loginController };
+ */

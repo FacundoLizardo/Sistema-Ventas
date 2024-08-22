@@ -1,4 +1,4 @@
-const { Costumer } = require("../../db");
+/* const { Costumer } = require("../../db");
 
 const postCostumersController = async (
 	dni,
@@ -73,3 +73,4 @@ module.exports = { postCostumersController };
 //     "dateOfBirth": "1990-01-01",
 //     "enableDebt": false
 //   }
+ 

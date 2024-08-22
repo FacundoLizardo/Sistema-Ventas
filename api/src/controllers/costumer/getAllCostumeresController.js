@@ -1,4 +1,4 @@
-const { Costumer } = require("../../db");
+/* const { Costumer } = require("../../db");
 
 const getAllCostumeresController = async () => {
 	try {
@@ -10,3 +10,4 @@ const getAllCostumeresController = async () => {
 };
 
 module.exports = { getAllCostumeresController };
+ */

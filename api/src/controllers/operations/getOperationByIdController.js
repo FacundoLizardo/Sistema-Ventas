@@ -1,4 +1,4 @@
-const { Operation } = require("../../db");
+/* const { Operation } = require("../../db");
 
 const getOperationByIdController = async (id) => {
 	try {
@@ -16,3 +16,4 @@ const getOperationByIdController = async (id) => {
 };
 
 module.exports = { getOperationByIdController };
+ */

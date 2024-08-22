@@ -1,4 +1,4 @@
-const { loginController } = require("../controllers/login/loginController");
+/* const { loginController } = require("../controllers/login/loginController");
 
 const loginHandler = async (req, res) => {
   const { email, password } = req.body;
@@ -13,3 +13,4 @@ const loginHandler = async (req, res) => {
 module.exports = { loginHandler };
 
 const bcrypt = require("bcrypt");
+ */

@@ -1,4 +1,4 @@
-const { CashRegister } = require("../../db");
+/* const { CashRegister } = require("../../db");
 
 const getCashRegisterByIdController = async (id) => {
 	try {
@@ -10,3 +10,4 @@ const getCashRegisterByIdController = async (id) => {
 };
 
 module.exports = { getCashRegisterByIdController };
+ */

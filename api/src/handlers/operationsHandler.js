@@ -1,4 +1,4 @@
-const {
+/* const {
   getOperationsController,
 } = require("../controllers/operations/getOperationsController");
 const {
@@ -127,3 +127,4 @@ module.exports = {
   putOperation,
   deleteOperation,
 };
+ */

@@ -1,4 +1,4 @@
-const {
+/* const {
   getFilterController,
 } = require("../controllers/filter/getFilterController");
 
@@ -21,3 +21,4 @@ const getFilter = async (req, res) => {
 };
 
 module.exports = { getFilter };
+ */
