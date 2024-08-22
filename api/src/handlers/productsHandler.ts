@@ -1,34 +1,39 @@
-/* const {postProductController} = require("../controllers/products/postProductController");
-const {deleteProductController} = require("../controllers/products/deleteProductController");
-const {editProductController} = require("../controllers/products/putProductsControllers")
-const {getProductController} = require("../controllers/products/getProductController");
-const {
-    getProductsController,
-    getProductCategoriesController
-} = require("../controllers/products/getProductsController");
+import { Request, Response } from "express";
+import { getProductController } from "../controllers/products/getProductController";
+import { getProductsController } from "../controllers/products/getProductsController";
+import { createError } from "../utils/errorUtils";
+import { handleError } from "../utils/errorHandler";
 
-
-const getProduct = async (req, res) => {
-    const {id} = req.params;
-    try {
-        const product = await getProductController(id);
-        product
-            ? res.status(200).json({success: true, product})
-            : res.status(404).json({success: false, message: "No products found."});
-    } catch (error) {
-        return res.status(400).json({error: error.message});
+export const getProduct = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+  try {
+    const product = await getProductController(id);
+    if (product) {
+      res.status(200).json({ success: true, product });
+    } else {
+      throw createError("No product found.", 404);
     }
+  } catch (error) {
+    handleError(res, error, 400);
+  }
 };
 
-const getProducts = async (req, res) => {
-    try {
-        const products = await getProductsController();
-        return res.status(200).json(products);
-    } catch (error) {
-        return res.status(400).json({error: error.message});
+export const getProducts = async (_req: Request, res: Response) => {
+  try {
+    const products = await getProductsController();
+    if (products) {
+      res.status(200).json({ success: true, products });
+    } else {
+      throw createError("No products found.", 404);
     }
+  } catch (error) {
+    handleError(res, error, 400);
+  }
 };
-
+/* 
 const getCategories = async (req, res) => {
     try {
         const categories = await getProductCategoriesController()
@@ -135,12 +140,5 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-module.exports = {
-    getProduct,
-    getProducts,
-    getCategories,
-    postProducts,
-    putProduct,
-    deleteProduct,
-};
- */
+
+  */

@@ -53,7 +53,7 @@ Operation.hasMany(Product);
 User.hasMany(Operation);
 Operation.belongsTo(User);
 
-export default {
+export {
   sequelize,
   Product,
   User,
