@@ -6,6 +6,8 @@ interface CustomError extends Error {
 export function errorController(error: unknown): never {
   const customError = error as CustomError;
   throw new Error(
-    customError.message || "An error occurred while processing the request."
+    customError.message
+      ? `Controller Error: ${customError.message}`
+      : "Controller Error: An error occurred while processing the request."
   );
 }
