@@ -4,7 +4,7 @@ import { controllerError } from "../../utils/controllerError";
 export const deleteProductController = async (productId: string) => {
   try {
     const deleteProduct = await Product.destroy({
-      where: { productId: productId },
+      where: { id: productId },
     });
 
     if (deleteProduct === 0) {
