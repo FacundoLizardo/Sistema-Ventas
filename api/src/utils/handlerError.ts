@@ -1,6 +1,6 @@
 import { Response } from "express";
 
-export const handleError = (
+export const handlerError = (
   res: Response,
   error: unknown,
   statusCode: number = 400

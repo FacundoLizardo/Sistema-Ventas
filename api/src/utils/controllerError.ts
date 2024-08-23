@@ -3,7 +3,7 @@ interface CustomError extends Error {
   code?: number;
 }
 
-export function errorController(error: unknown): never {
+export function controllerError(error: unknown): never {
   const customError = error as CustomError;
   throw new Error(
     customError.message

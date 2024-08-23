@@ -68,7 +68,7 @@ export {
 
 export const syncDatabase = async () => {
   try {
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ alter: true });
     console.log("Database synced successfully.");
   } catch (error) {
     console.error("Failed to sync database:", error);

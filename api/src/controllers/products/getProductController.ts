@@ -1,11 +1,11 @@
 import { Product } from "../../db";
-import { errorController } from "../../utils/errorController";
+import { controllerError } from "../../utils/controllerError";
 
 export const getProductController = async (id: string) => {
   try {
     const product = await Product.findByPk(id);
     return product || [];
   } catch (error) {
-    errorController(error);
+    controllerError(error);
   }
 };

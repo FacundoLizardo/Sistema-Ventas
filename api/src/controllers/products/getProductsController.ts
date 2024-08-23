@@ -1,12 +1,12 @@
 import { Product } from "../../db";
-import { errorController } from "../../utils/errorController";
+import { controllerError } from "../../utils/controllerError";
 
 export const getProductsController = async () => {
   try {
     const products = await Product.findAll();
     return products || [];
   } catch (error) {
-    errorController(error);
+    controllerError(error);
   }
 };
 
@@ -20,6 +20,6 @@ export const getProductCategoriesController = async (): Promise<string[]> => {
       categoryObj.getDataValue("category")
     );
   } catch (error) {
-    errorController(error);
+    controllerError(error);
   }
 };
