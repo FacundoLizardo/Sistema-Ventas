@@ -53,7 +53,7 @@ Operation.hasMany(Product);
 User.hasMany(Operation);
 Operation.belongsTo(User);
 
-export default {
+export {
   sequelize,
   Product,
   User,
@@ -68,7 +68,7 @@ export default {
 
 export const syncDatabase = async () => {
   try {
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ alter: true });
     console.log("Database synced successfully.");
   } catch (error) {
     console.error("Failed to sync database:", error);
