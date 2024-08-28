@@ -14,16 +14,37 @@ import CashRegisterModel from "./models/cashRegister";
 
 /* ----- Database connection ----- */
 
-//const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
-const { DB_URL } = process.env;
-if (!DB_URL) {
-  throw new Error("DB_URL is not defined in environment variables");
+const { NODE_ENV, DB_URL, DB_USER, DB_PASSWORD, DB_HOST } = process.env;
+
+let sequelize: Sequelize;
+
+if (NODE_ENV === "production") {
+  // Production configuration
+  if (!DB_URL) {
+    throw new Error(
+      "DB_URL is not defined in production environment variables"
+    );
+  }
+  sequelize = new Sequelize(DB_URL, {
+    logging: false,
+    dialectModule: pg,
+  });
+  console.log("Connected to the production database.");
+} else {
+  // Local configuration
+  if (!DB_USER || !DB_PASSWORD || !DB_HOST) {
+    throw new Error("Local environment variables is not defined");
+  }
+  sequelize = new Sequelize(
+    `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/sistema_ventas`,
+    {
+      logging: false,
+      dialectModule: pg,
+    }
+  );
+  console.log("Connected to the local database.");
 }
 
-const sequelize = new Sequelize(DB_URL, {
-  logging: false,
-  dialectModule: pg,
-});
 /* ----- Models ----- */
 
 ProductModel(sequelize);

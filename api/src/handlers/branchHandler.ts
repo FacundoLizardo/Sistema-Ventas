@@ -1,121 +1,76 @@
-/* const {
-  postBranchController,
-} = require("../controllers/branch/postBranchController");
-const {
-  deleteBranchController,
-} = require("../controllers/branch/deleteBranchController");
-const {
-  getAllBranchesController,
-} = require("../controllers/branch/getAllBranchesController");
-const {
-  getBranchByIdController,
-} = require("../controllers/branch/getBranchByIdController");
-const {
-  putBranchController,
-} = require("../controllers/branch/putBranchController");
+import { Request, Response } from "express";
+import { deleteBranchController } from "../controllers/branch/deleteBranchController";
+import { handlerError } from "../utils/handlerError";
+import { createError } from "../utils/createError";
+import { getBranchByIdController } from "../controllers/branch/getBranchByIdController";
+import { getAllBranchesController } from "../controllers/branch/getAllBranchesController";
+import { postBranchController } from "../controllers/branch/postBranchController";
+import { BranchInterface } from "../models/branch";
+import { putBranchController } from "../controllers/branch/putBranchController";
 
-const getBranch = async (req: Request, res: Response): Promise<Response> => {
+export const getBranch = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
+    if (!id) throw createError("No branch found.", 404);
     const branch = await getBranchByIdController(id);
-    return branch
-      ? res.status(200).json({ success: true, branch })
-      : res.status(404).json({ success: false, message: "No branchs found." });
+    if (!branch) throw createError("No branch found.", 404);
+    res.status(200).json({ success: true, branch });
   } catch (error: any) {
-    return res.status(400).json({ error: error.message });
+    handlerError(res, error, 400);
   }
 };
 
-const getBranchs = async (req: Request, res: Response): Promise<Response> => {
+export const getBranchs = async (_req: Request, res: Response) => {
   try {
     const branches = await getAllBranchesController();
-    return branches
-      ? res.status(200).json({ success: true, branches })
-      : res.status(404).json({ success: false, message: "No branchs found." });
+    if (!branches) throw createError("No branches found.", 404);
+    res.status(200).json({ success: true, branches });
   } catch (error: any) {
-    return res.status(400).json({ error: error.message });
+    handlerError(res, error, 400);
   }
 };
 
-const postBranch = async (req: Request, res: Response): Promise<Response> => {
-  const {
-    afipId,
-    name,
-    location,
-    isStorage,
-    enable,
-    manager,
-    hours,
-    phoneNumber,
-  } = req.body as BranchInterface;
+export const postBranch = async (req: Request, res: Response) => {
+  const { name, location } = req.body as BranchInterface;
 
   if (!name || !location) {
-    return res.status(404).json("Missing information.");
+    res.status(404).json("Missing information.");
   }
 
   try {
-    const newBranch = await postBranchController(
-      afipId,
-      name,
-      location,
-      isStorage,
-      enable,
-      manager,
-      hours,
-      phoneNumber
-    );
-    return res.status(200).json(newBranch);
+    const newBranch = await postBranchController({ req });
+    if (!newBranch) throw createError("No branch found.", 404);
+    res.status(200).json(newBranch);
   } catch (error: any) {
-    return res.status(400).json({ error: error.message });
+    handlerError(res, error, 400);
   }
 };
 
-const putBranch = async (req: Request, res: Response): Promise<Response> => {
+export const putBranch = async (req: Request, res: Response) => {
   try {
     const branchId = req.params.id;
-    const {
-      afipId,
-      name,
-      location,
-      isStorage,
-      enable,
-      manager,
-      hours,
-      phoneNumber,
-    } = req.body as BranchInterface;
 
-    const updatedBranch = await putBranchController(
-      branchId,
-      afipId,
-      name,
-      location,
-      isStorage,
-      enable,
-      manager,
-      hours,
-      phoneNumber
-    );
-    return res.status(200).json(updatedBranch);
+    if (!branchId) throw createError("No branch found.", 404);
+
+    const updatedBranch = await putBranchController({ req });
+    res.status(200).json(updatedBranch);
   } catch (error: any) {
-    return res.status(400).json({ error: error.message });
+    handlerError(res, error, 400);
   }
 };
 
-const deleteBranch = async (req: Request, res: Response): Promise<Response> => {
+export const deleteBranch = async (req: Request, res: Response) => {
   try {
     const branchId = req.params.id;
+
+    if (!branchId) {
+      throw createError("Branch not deleted because it does not exist", 400);
+    }
+
     const deletedBranch = await deleteBranchController(branchId);
-    return res.status(200).json(deletedBranch);
-  } catch (error: any) {
-    return res.status(400).json({ error: error.message });
+
+    res.status(200).json(deletedBranch);
+  } catch (error) {
+    handlerError(res, error, 400);
   }
 };
-
-module.exports = {
-  getBranch,
-  getBranchs,
-  postBranch,
-  putBranch,
-  deleteBranch,
-};
- */
