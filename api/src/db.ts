@@ -14,7 +14,21 @@ import CashRegisterModel from "./models/cashRegister";
 
 /* ----- Database connection ----- */
 
-//const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
+
+//Conexion local
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
+const sequelize = new Sequelize(
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
+  {
+    logging: false,
+    native: false,
+    dialectModule: pg,
+  }
+);
+
+/*
+//Conexion local
+
 const { DB_URL } = process.env;
 if (!DB_URL) {
   throw new Error("DB_URL is not defined in environment variables");
@@ -24,6 +38,8 @@ const sequelize = new Sequelize(DB_URL, {
   logging: false,
   dialectModule: pg,
 });
+
+*/
 /* ----- Models ----- */
 
 ProductModel(sequelize);
@@ -68,6 +84,7 @@ export {
 
 export const syncDatabase = async () => {
   try {
+    await sequelize.authenticate();
     await sequelize.sync({ alter: true });
     console.log("Database synced successfully.");
   } catch (error) {
