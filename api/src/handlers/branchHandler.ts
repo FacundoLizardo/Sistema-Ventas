@@ -88,15 +88,3 @@ export const deleteBranch = async (
   }
 };
 
-<<<<<<< Updated upstream:api/src/handlers/branchHandler.ts
-export { getBranch, getBranchs, postBranch, putBranch, deleteBranch };
-=======
-module.exports = {
-  getBranch,
-  getBranchs,
-  postBranch,
-  putBranch,
-  deleteBranch,
-};
- */
->>>>>>> Stashed changes:api/src/handlers/branchHandler.js
