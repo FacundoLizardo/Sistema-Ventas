@@ -3,7 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import mainRouter from "./routes";
-import { syncDatabase } from "./db";
+import { orangeText, syncDatabase } from "./db";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -27,7 +27,9 @@ app.use(mainRouter);
 
 syncDatabase()
   .then(() => {
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () =>
+      console.log(orangeText, `Server running on port ${PORT}`)
+    );
   })
   .catch((error) => {
     console.error("Failed to sync database:", error);

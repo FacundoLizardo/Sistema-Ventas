@@ -12,6 +12,10 @@ import OperationModel from "./models/operations";
 import SupplierModel from "./models/suppliers";
 import CashRegisterModel from "./models/cashRegister";
 
+/* ----- Utils ----- */
+export const blueText = "\x1b[34m%s\x1b[0m";
+export const orangeText = "\x1b[33m%s\x1b[0m";
+
 /* ----- Database connection ----- */
 
 const { NODE_ENV, DB_URL, DB_USER, DB_PASSWORD, DB_HOST } = process.env;
@@ -29,7 +33,7 @@ if (NODE_ENV === "production") {
     logging: false,
     dialectModule: pg,
   });
-  console.log("Connected to the production database.");
+  console.log(blueText, "Connected to the production database.");
 } else {
   // Local configuration
   if (!DB_USER || !DB_PASSWORD || !DB_HOST) {
@@ -42,7 +46,7 @@ if (NODE_ENV === "production") {
       dialectModule: pg,
     }
   );
-  console.log("Connected to the local database.");
+  console.log(blueText, "Connected to the local database.");
 }
 
 /* ----- Models ----- */
@@ -90,7 +94,7 @@ export {
 export const syncDatabase = async () => {
   try {
     await sequelize.sync({ alter: true });
-    console.log("Database synced successfully.");
+    console.log(blueText, "Database synced successfully.");
   } catch (error) {
     console.error("Failed to sync database:", error);
   }
