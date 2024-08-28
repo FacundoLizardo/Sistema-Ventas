@@ -1,6 +1,6 @@
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
 
-async function hashPassword(password) {
+export const  hashPassword = async (password: string) => {
 	const saltRounds = 10;
 
 	try {
@@ -11,4 +11,3 @@ async function hashPassword(password) {
 	}
 }
 
-module.exports = hashPassword;

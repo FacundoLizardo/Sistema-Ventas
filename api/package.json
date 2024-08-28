@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "nodemon ./src/app.ts"
+    "start": "nodemon ./src/app.ts",
+  "build": "tsc --noEmit --pretty --diagnostics"
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +25,7 @@
     "sequelize": "^6.37.3"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/morgan": "^1.9.9",

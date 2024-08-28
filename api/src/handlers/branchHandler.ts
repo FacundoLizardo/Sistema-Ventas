@@ -87,3 +87,16 @@ export const deleteBranch = async (
     return res.status(500).json({ error: error.message });
   }
 };
+
+<<<<<<< Updated upstream:api/src/handlers/branchHandler.ts
+export { getBranch, getBranchs, postBranch, putBranch, deleteBranch };
+=======
+module.exports = {
+  getBranch,
+  getBranchs,
+  postBranch,
+  putBranch,
+  deleteBranch,
+};
+ */
+>>>>>>> Stashed changes:api/src/handlers/branchHandler.js
