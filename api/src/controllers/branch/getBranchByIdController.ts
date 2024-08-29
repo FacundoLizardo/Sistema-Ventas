@@ -1,4 +1,4 @@
-import { controllerError } from "../../utils/controllerError";
+/* import { controllerError } from "../../utils/servicesError";
 import { Branch } from "../../db";
 
 export const getBranchByIdController = async (id: string) => {
@@ -9,3 +9,4 @@ export const getBranchByIdController = async (id: string) => {
     controllerError(error);
   }
 };
+ */

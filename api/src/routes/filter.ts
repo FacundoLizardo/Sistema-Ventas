@@ -2,6 +2,6 @@
 
 const router = Router()
 
-/* router.get("/", getFilter) */
+// router.get("/", getFilter)
 
 module.exports = router 

@@ -1,5 +1,5 @@
-import { UserInterface } from "../../models/users";
-import { controllerError } from "../../utils/controllerError";
+/* import { UserInterface } from "../../models/users";
+import { controllerError } from "../../utils/servicesError";
 import { User } from "../../db";
 import { hashPassword } from "../../utils/hashPassword";
 import { Request } from "express";
@@ -48,7 +48,7 @@ export const postUserController = async ({ req }: { req: Request }) => {
   } catch (error) {
     controllerError(error);
   }
-};
+}; */
 
 //------------------modelo de usario para probar ruta --------------------//
 // {

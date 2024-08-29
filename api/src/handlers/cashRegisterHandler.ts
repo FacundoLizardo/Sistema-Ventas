@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { handlerError } from "../utils/handlerError";
+/* import { Request, Response } from "express";
+import { handlerError } from "../utils/controllerError";
 import { deleteCashRegisterController } from "../controllers/cashRegister/deleteCashRegisterController";
 import { getAllCashRegistersController } from "../controllers/cashRegister/getAllCashRegistersController";
 import { getCashRegisterByIdController } from "../controllers/cashRegister/getCashRegisterByIdController";
@@ -68,3 +68,4 @@ export const deleteCashRegister = async (req: Request, res: Response) => {
     handlerError(res, error, 400);
   }
 };
+ */

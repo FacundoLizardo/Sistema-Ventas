@@ -1,7 +1,7 @@
-import { Branch } from "../../db";
+/* import { Branch } from "../../db";
 import { Request } from "express";
 import { BranchInterface } from "../../models/branch";
-import { controllerError } from "../../utils/controllerError";
+import { controllerError } from "../../utils/servicesError";
 
 export const putBranchController = async ({ req }: { req: Request }) => {
   const {
@@ -48,3 +48,4 @@ export const putBranchController = async ({ req }: { req: Request }) => {
     controllerError(error);
   }
 };
+ */

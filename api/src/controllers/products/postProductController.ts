@@ -1,6 +1,6 @@
-import { Product } from "../../db";
+/* import { Product } from "../../db";
 import { ProductInterface } from "../../models/product";
-import { controllerError } from "../../utils/controllerError";
+import { controllerError } from "../../utils/servicesError";
 import { Request } from "express";
 
 export interface ProductUpdateInterface extends ProductInterface {
@@ -51,7 +51,7 @@ export const postProductController = async ({ req }: { req: Request }) => {
   } catch (error) {
     controllerError(error);
   }
-};
+}; */
 
 /*--------------- Test route model -------------------*/
 /* 

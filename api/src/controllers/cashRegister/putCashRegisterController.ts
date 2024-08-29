@@ -1,4 +1,4 @@
-import { Request } from "express";
+/* import { Request } from "express";
 
 import { CashRegister } from "../../db";
 
@@ -46,3 +46,4 @@ export const putCashRegisterController = async ({ req }: { req: Request }) => {
     );
   }
 };
+ */

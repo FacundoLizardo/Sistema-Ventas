@@ -1,5 +1,5 @@
-import { Product } from "../../db";
-import { controllerError } from "../../utils/controllerError";
+/* import { Product } from "../../db";
+import { controllerError } from "../../utils/servicesError";
 
 export const deleteProductController = async (productId: string) => {
   try {
@@ -16,3 +16,4 @@ export const deleteProductController = async (productId: string) => {
     controllerError(error);
   }
 };
+ */

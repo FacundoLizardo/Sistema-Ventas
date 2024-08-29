@@ -1,5 +1,5 @@
- import { User } from "../../db";
-import { controllerError } from "../../utils/controllerError";
+/*  import { User } from "../../db";
+import { controllerError } from "../../utils/servicesError";
 
 export const getUserByIdController = async (id: string) => {
 	try {
@@ -13,4 +13,4 @@ export const getUserByIdController = async (id: string) => {
 	  }
 };
 
- 
+  */

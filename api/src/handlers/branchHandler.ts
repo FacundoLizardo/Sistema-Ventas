@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
+/* import { Request, Response } from "express";
 import { deleteBranchController } from "../controllers/branch/deleteBranchController";
-import { handlerError } from "../utils/handlerError";
+import { handlerError } from "../utils/controllerError";
 import { createError } from "../utils/createError";
 import { getBranchByIdController } from "../controllers/branch/getBranchByIdController";
 import { getAllBranchesController } from "../controllers/branch/getAllBranchesController";
@@ -74,3 +74,4 @@ export const deleteBranch = async (req: Request, res: Response) => {
     handlerError(res, error, 400);
   }
 };
+ */

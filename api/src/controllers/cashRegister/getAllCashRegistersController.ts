@@ -1,5 +1,5 @@
-import { CashRegister } from "../../db";
-import { controllerError } from "../../utils/controllerError";
+/* import { CashRegister } from "../../db";
+import { controllerError } from "../../utils/servicesError";
 
 export const getAllCashRegistersController = async () => {
   try {
@@ -9,3 +9,4 @@ export const getAllCashRegistersController = async () => {
     controllerError(error);
   }
 };
+ */

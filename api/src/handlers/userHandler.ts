@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { handlerError } from "../utils/handlerError";
+/* import { Request, Response } from "express";
+import { handlerError } from "../utils/controllerError";
 import { createError } from "../utils/createError";
 import { getUserByIdController } from "../controllers/user/getUserByIdController";
 import { postUserController } from "../controllers/user/postUserController";
@@ -71,3 +71,4 @@ export const deleteUser = async (req: Request, res: Response) => {
     handlerError(res, error, 400);
   }
 };
+ */

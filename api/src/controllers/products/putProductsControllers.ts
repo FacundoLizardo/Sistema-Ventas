@@ -1,5 +1,5 @@
-import { ProductInterface } from "../../models/product";
-import { controllerError } from "../../utils/controllerError";
+/* import { ProductInterface } from "../../models/product";
+import { controllerError } from "../../utils/servicesError";
 import { Request } from "express";
 
 import { Product } from "../../db";
@@ -64,3 +64,4 @@ export const putProductController = async ({
     controllerError(error);
   }
 };
+ */

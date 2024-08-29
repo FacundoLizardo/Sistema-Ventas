@@ -1,5 +1,5 @@
-import { Request } from "express";
-import { controllerError } from "../../utils/controllerError";
+/* import { Request } from "express";
+import { controllerError } from "../../utils/servicesError";
 
 import { User } from "../../db";
 import bcrypt from "bcrypt";
@@ -29,3 +29,4 @@ export const loginController = async ({ req }: { req: Request }) => {
     controllerError(error);
   }
 };
+ */

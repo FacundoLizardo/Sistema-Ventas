@@ -1,6 +1,6 @@
-import { User } from "../../db";
+/* import { User } from "../../db";
 import { Request } from "express";
-import { controllerError } from "../../utils/controllerError";
+import { controllerError } from "../../utils/servicesError";
 
 export const putUserController = async ( {
   cuit, req,
@@ -50,3 +50,4 @@ export const putUserController = async ( {
     controllerError(error);
   }
 };
+ */

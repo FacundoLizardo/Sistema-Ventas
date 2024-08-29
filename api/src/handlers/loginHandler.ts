@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
+/* import { Request, Response } from "express";
 import { loginController } from "../controllers/login/loginController";
-import { handlerError } from "../utils/handlerError";
+import { handlerError } from "../utils/controllerError";
 import { createError } from "../utils/createError";
 
 export const loginHandler = async (req: Request, res: Response) => {
@@ -12,3 +12,4 @@ export const loginHandler = async (req: Request, res: Response) => {
     handlerError(res, error, 400);
   }
 };
+ */

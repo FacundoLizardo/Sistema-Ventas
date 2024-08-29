@@ -1,5 +1,5 @@
-import { Product } from "../../db";
-import { controllerError } from "../../utils/controllerError";
+/* import { Product } from "../../db";
+import { controllerError } from "../../utils/servicesError";
 
 export const getProductsController = async () => {
   try {
@@ -23,3 +23,4 @@ export const getProductCategoriesController = async (): Promise<string[]> => {
     controllerError(error);
   }
 };
+ */

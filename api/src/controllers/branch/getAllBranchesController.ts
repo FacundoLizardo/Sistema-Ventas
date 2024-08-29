@@ -1,5 +1,5 @@
-import { Branch } from "../../db";
-import { controllerError } from "../../utils/controllerError";
+/* import { Branch } from "../../db";
+import { controllerError } from "../../utils/servicesError";
 
 export const getAllBranchesController = async () => {
   try {
@@ -9,3 +9,4 @@ export const getAllBranchesController = async () => {
     controllerError(error);
   }
 };
+ */

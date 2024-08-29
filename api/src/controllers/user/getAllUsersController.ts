@@ -1,5 +1,5 @@
-import { User } from "../../db";
-import { controllerError } from "../../utils/controllerError";
+/* import { User } from "../../db";
+import { controllerError } from "../../utils/servicesError";
 
 export const getAllUsersController = async () => {
 	try {
@@ -9,3 +9,4 @@ export const getAllUsersController = async () => {
 		controllerError(error);
 	}
 };
+ */

@@ -1,4 +1,4 @@
-import { Request } from "express";
+/* import { Request } from "express";
 import { CashRegister } from "../../db";
 import { User } from "../../db";
 import { controllerError } from "../../utils/controllerError";
@@ -23,15 +23,15 @@ export const postCashRegisterController = async ({ req }: { req: Request }) => {
   }
 
   try {
-/*     const lastCashRegister = await CashRegister.findOne({
+    const lastCashRegister = await CashRegister.findOne({
       order: [["createdAt", "DESC"]],
     });
- */
-/*     if (lastCashRegister && lastCashRegister.finalAmount === null) {
+ 
+    if (lastCashRegister && lastCashRegister.finalAmount === null) {
       throw new Error(
         "Final Amount in the last Cash Register instance cannot be null"
       );
-    } */
+    } 
 
     const userInstance = await User.findByPk(userId);
     if (!userInstance) {
@@ -63,7 +63,7 @@ export const postCashRegisterController = async ({ req }: { req: Request }) => {
     controllerError(error);
   }
 };
-
+ */
 // ----------------------- TEST -----------------------
 
 /* 

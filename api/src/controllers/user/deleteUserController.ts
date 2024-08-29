@@ -1,5 +1,5 @@
-import { User } from "../../db";
-import { controllerError } from "../../utils/controllerError";
+/* import { User } from "../../db";
+import { controllerError } from "../../utils/servicesError";
 
 export const deleteUserController = async (cuit: string) => {
   try {
@@ -22,4 +22,4 @@ console.log({deleteUserController});
   } catch (error) {
     controllerError(error);
   }
-};
+}; */

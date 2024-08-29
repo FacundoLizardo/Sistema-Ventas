@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
+/* import { Request, Response } from "express";
 import { getProductController } from "../controllers/products/getProductController";
 import {
   getProductCategoriesController,
   getProductsController,
 } from "../controllers/products/getProductsController";
 import { createError } from "../utils/createError";
-import { handlerError } from "../utils/handlerError";
+import { handlerError } from "../utils/controllerError";
 import { deleteProductController } from "../controllers/products/deleteProductController";
 import { postProductController } from "../controllers/products/postProductController";
 import { putProductController } from "../controllers/products/putProductsControllers";
@@ -116,3 +116,4 @@ export const deleteProduct = async (req: Request, res: Response) => {
     handlerError(res, error, 400);
   }
 };
+ */
