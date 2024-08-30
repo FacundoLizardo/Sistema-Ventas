@@ -128,7 +128,7 @@ export default (sequelize: Sequelize) => {
         allowNull: false,
         validate: {
           isIn: {
-            args: [["SUPER_ADMIN", "ADMIN", "DEVELOPER", "BASIC"]],
+            args: [["SUPER_ADMIN", "OWNER", "ADMIN", "BASIC"]],
             msg: "Role must be one of SUPER_ADMIN, ADMIN, DEVELOPER, BASIC",
           },
         },
@@ -143,3 +143,11 @@ export default (sequelize: Sequelize) => {
 
   return User;
 };
+
+/* 
+    Roles: ["SUPER_ADMIN", "OWNER", "ADMIN", "BASIC"]
+    SUPER_ADMIN: tiene acceso a todos los recursos
+    OWNER: tiene acceso a todos los recursos MENOS al dashboard de SUPER_ADMIN
+    ADMIN: tiene acceso a los recursos de usuarios y de sucursales
+    BASIC: tiene acceso solo a los recursos de sucursales 
+*/
