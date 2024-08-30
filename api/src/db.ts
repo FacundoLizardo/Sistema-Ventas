@@ -3,7 +3,7 @@ import { Sequelize } from "sequelize";
 import pg from "pg";
 
 import ProductModel from "./models/product";
-import UserModel from "./models/users";
+import UserModel from "./models/user";
 import BranchModel from "./models/branch";
 import CostumerModel from "./models/costumers";
 import OfferModel from "./models/offers";
@@ -11,6 +11,7 @@ import PurchaseModel from "./models/purchases";
 import OperationModel from "./models/operations";
 import SupplierModel from "./models/suppliers";
 import CashRegisterModel from "./models/cashRegister";
+import CompanyModel from "./models/company";
 
 /* ----- Utils ----- */
 export const blueText = "\x1b[34m%s\x1b[0m";
@@ -20,36 +21,59 @@ export const orangeText = "\x1b[33m%s\x1b[0m";
 
 const { NODE_ENV, DB_URL, DB_USER, DB_PASSWORD, DB_HOST } = process.env;
 
-let sequelize: Sequelize;
+const sequelize = (() => {
+  if (NODE_ENV === "production") {
+    // Production configuration
 
-if (NODE_ENV === "production") {
-  // Production configuration
-  if (!DB_URL) {
-    throw new Error(
-      "DB_URL is not defined in production environment variables"
+    if (!DB_URL) {
+      throw new Error(
+        "DB_URL is not defined in production environment variables"
+      );
+    }
+    console.log(
+      blueText,
+      "Connecting to the database in production environment."
     );
-  }
-  sequelize = new Sequelize(DB_URL, {
-    logging: false,
-    dialectModule: pg,
-  });
-  console.log(blueText, "Connected to the production database.");
-} else {
-  // Local configuration
-  if (!DB_USER || !DB_PASSWORD || !DB_HOST) {
-    throw new Error("Local environment variables is not defined");
-  }
-  sequelize = new Sequelize(
-    `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/sistema_ventas`,
-    {
+    return new Sequelize(DB_URL, {
       logging: false,
       dialectModule: pg,
-    }
-  );
-  console.log(blueText, "Connected to the local database.");
-}
+    });
+  } else if (NODE_ENV === "development") {
+    // Local configuration
 
-/* ----- Models ----- */
+    if (!DB_USER || !DB_PASSWORD || !DB_HOST) {
+      throw new Error("Local environment variables are not defined");
+    }
+    console.log(
+      blueText,
+      "Connecting to the database in development environment."
+    );
+    return new Sequelize(
+      `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/gpi`,
+      {
+        logging: false,
+        dialectModule: pg,
+      }
+    );
+  } else {
+    throw new Error("NODE_ENV is not defined or not set to a valid value");
+  }
+})();
+
+export const syncDatabase = async () => {
+  try {
+    await sequelize.sync({ force: false });
+    console.log("Database synced successfully.");
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Failed to sync database:", error.message);
+    } else {
+      console.error("Failed to sync database:", error);
+    }
+  }
+};
+
+/* ----- Models Initialization ----- */
 
 ProductModel(sequelize);
 UserModel(sequelize);
@@ -60,23 +84,28 @@ PurchaseModel(sequelize);
 OperationModel(sequelize);
 SupplierModel(sequelize);
 CashRegisterModel(sequelize);
+CompanyModel(sequelize);
 
 const {
   Product,
   User,
   Branch,
   Costumer,
-  Offers,
-  Purchases,
+  Offer,
+  Purchase,
   Operation,
-  Suppliers,
+  Supplier,
   CashRegister,
+  Company,
 } = sequelize.models;
 
-Operation.hasMany(Product);
+/* ----- Relationships Setup ----- */
 
-User.hasMany(Operation);
-Operation.belongsTo(User);
+User.belongsTo(Company, { foreignKey: "companyId" });
+Company.hasMany(User, { foreignKey: "companyId" });
+
+User.hasMany(Branch, { foreignKey: "userId" });
+Branch.belongsTo(User, { foreignKey: "userId" });
 
 export {
   sequelize,
@@ -84,18 +113,10 @@ export {
   User,
   Branch,
   Costumer,
-  Offers,
-  Purchases,
+  Offer,
+  Purchase,
   Operation,
-  Suppliers,
+  Supplier,
   CashRegister,
-};
-
-export const syncDatabase = async () => {
-  try {
-    await sequelize.sync({ alter: true });
-    console.log(blueText, "Database synced successfully.");
-  } catch (error) {
-    console.error("Failed to sync database:", error);
-  }
+  Company,
 };
