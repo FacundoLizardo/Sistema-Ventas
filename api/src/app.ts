@@ -4,6 +4,8 @@ import morgan from "morgan";
 import cors from "cors";
 import mainRouter from "./routes";
 import { orangeText, syncDatabase } from "./db";
+import { authenticateToken } from "./utils/authenticateToken";
+import loginRouter from "./routes/login";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -23,7 +25,8 @@ app.use((_req, res, next) => {
   next();
 });
 
-app.use(mainRouter);
+app.use("/login", loginRouter);
+app.use("/", authenticateToken, mainRouter);
 
 syncDatabase()
   .then(() => {
