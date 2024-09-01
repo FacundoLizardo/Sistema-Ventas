@@ -16,7 +16,7 @@ class LoginController {
         maxAge: 3600000,
       });
 
-      res.status(200).json({ success: true, user });
+      res.status(200).json({ success: true });
     } catch (error) {
       controllerError(res, error, 500);
     }

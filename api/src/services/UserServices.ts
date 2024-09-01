@@ -28,16 +28,16 @@ class UserServices {
   ): Promise<UserInterface | string> {
     try {
       const password = await hashPassword(data.password);
-  
+
       const [user, created] = await User.findOrCreate({
         where: { email: data.email },
         defaults: {
           ...data,
           password,
-          companyId,
+          companyId
         },
       });
-  
+
       if (created) {
         return user.get({ plain: true }) as UserInterface;
       } else {

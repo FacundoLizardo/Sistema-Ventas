@@ -1,8 +1,9 @@
  import { Router } from "express";
+import AfipController from "../controllers/afipController";
 
 const router = Router();
 
-/* router.post("/", postAfip); */
+router.post("/", AfipController.postAfip);
 
 module.exports = router;
  

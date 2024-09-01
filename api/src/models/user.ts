@@ -10,7 +10,6 @@ export interface UserInterface {
   address?: string;
   phoneNumber?: string;
   cuit?: string;
-  companyId: string; 
   branches?: BranchInterface[];
   enabled: boolean;
   role: string;
@@ -42,7 +41,6 @@ class User
   public address?: string;
   public phoneNumber?: string;
   public cuit?: string;
-  public companyId!: string;
   public branches?: BranchInterface[];
   public enabled!: boolean;
   public role!: string;
@@ -105,14 +103,6 @@ export default (sequelize: Sequelize) => {
         allowNull: true,
         validate: {
           len: [0, 50],
-        },
-      },
-      companyId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: 'Companies',
-          key: 'id',
         },
       },
       branches: {

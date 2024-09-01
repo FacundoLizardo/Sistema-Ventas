@@ -1,7 +1,5 @@
-require("dotenv").config();
 import { Sequelize } from "sequelize";
 import pg from "pg";
-
 import ProductModel from "./models/product";
 import UserModel from "./models/user";
 import BranchModel from "./models/branch";
@@ -12,53 +10,33 @@ import OperationModel from "./models/operations";
 import SupplierModel from "./models/suppliers";
 import CashRegisterModel from "./models/cashRegister";
 import CompanyModel from "./models/company";
+import { NODE_ENV, DB_URL, DB_USER, DB_PASSWORD, DB_HOST } from "./config";
 
 /* ----- Utils ----- */
 export const blueText = "\x1b[34m%s\x1b[0m";
 export const orangeText = "\x1b[33m%s\x1b[0m";
 
-/* ----- Database connection ----- */
+if (NODE_ENV === "production" && !DB_URL) {
+  throw new Error("DB_URL must be defined in production environment");
+}
+if (NODE_ENV === "development" && (!DB_USER || !DB_PASSWORD || !DB_HOST)) {
+  throw new Error(
+    "DB_USER, DB_PASSWORD, and DB_HOST must be defined in development environment"
+  );
+}
 
-const { NODE_ENV, DB_URL, DB_USER, DB_PASSWORD, DB_HOST } = process.env;
-
-const sequelize = (() => {
-  if (NODE_ENV === "production") {
-    // Production configuration
-
-    if (!DB_URL) {
-      throw new Error(
-        "DB_URL is not defined in production environment variables"
-      );
-    }
-    console.log(
-      blueText,
-      "Connecting to the database in production environment."
-    );
-    return new Sequelize(DB_URL, {
-      logging: false,
-      dialectModule: pg,
-    });
-  } else if (NODE_ENV === "development") {
-    // Local configuration
-
-    if (!DB_USER || !DB_PASSWORD || !DB_HOST) {
-      throw new Error("Local environment variables are not defined");
-    }
-    console.log(
-      blueText,
-      "Connecting to the database in development environment."
-    );
-    return new Sequelize(
-      `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/gpi`,
-      {
+const sequelize =
+  NODE_ENV === "production"
+    ? new Sequelize(DB_URL!, {
         logging: false,
         dialectModule: pg,
-      }
-    );
-  } else {
-    throw new Error("NODE_ENV is not defined or not set to a valid value");
-  }
-})();
+        dialect: "postgres",
+      })
+    : new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/gpi`, {
+        logging: false,
+        dialectModule: pg,
+        dialect: "postgres",
+      });
 
 export const syncDatabase = async () => {
   try {

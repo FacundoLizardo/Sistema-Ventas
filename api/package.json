@@ -23,7 +23,8 @@
     "nodemon": "^3.1.4",
     "pg": "^8.11.5",
     "pg-hstore": "^2.3.4",
-    "qrcode": "^1.5.3",
+    "puppeteer": "^23.2.1",
+    "qrcode": "^1.5.4",
     "sequelize": "^6.37.3"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.4.1",
     "@types/pg": "^8.11.6",
+    "@types/qrcode": "^1.5.5",
     "@types/sequelize": "^4.28.20",
     "ts-node": "^10.9.2",
     "typescript": "5.5.4"
