@@ -3,7 +3,11 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 
 import { usePathname } from "next/navigation";
-import { SALES_PAGE_URL, STOCK_PAGE_URL } from "@/lib/navigationConstants";
+import {
+  DASHBOARD_PAGE_URL,
+  SALES_PAGE_URL,
+  STOCK_PAGE_URL,
+} from "@/lib/navigationConstants";
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -21,8 +25,9 @@ export default function NavBar() {
       <Link href={STOCK_PAGE_URL}>
         <Button>Stock</Button>
       </Link>
-
-      <Button>Dashboard</Button>
+      <Link href={DASHBOARD_PAGE_URL}>
+        <Button>Dashboard</Button>
+      </Link>
     </nav>
   );
 }

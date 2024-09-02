@@ -2,7 +2,7 @@ export const LANDING_PAGE_URL = '/';
 export const LOGIN_PAGE_URL = '/login';
 export const CHECK_EMAIL_URL = '/email';
 export const DASHBOARD_PAGE_URL = '/dashboard';
-export const DASHBOARD_LISTS_PAGE_URL = DASHBOARD_PAGE_URL.concat('/stats');
+export const DASHBOARD_STATS_PAGE_URL = DASHBOARD_PAGE_URL.concat('/stats');
 
 export const SALES_PAGE_URL = '/sales'
 export const STOCK_PAGE_URL = '/stock'
