@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import OperationServices from "../services/OperationServices";
 
 class OperationsController {
-  static async getOperation(req: Request, res: Response) {
+  async getOperation(req: Request, res: Response) {
     try {
       const { id } = req.params;
 
@@ -20,7 +20,7 @@ class OperationsController {
     }
   }
 
-  static async getOperations(_req: Request, res: Response) {
+  async getOperations(_req: Request, res: Response) {
     try {
       const operations = await OperationServices.getOperations();
 
@@ -35,7 +35,7 @@ class OperationsController {
     }
   }
 
-  static async postOperation(req: Request, res: Response) {
+  async postOperation(req: Request, res: Response) {
     try {
       const newOperation = await OperationServices.postOperation(req.body);
 
@@ -52,7 +52,7 @@ class OperationsController {
     }
   }
 
-  static async putOperation(req: Request, res: Response) {
+  async putOperation(req: Request, res: Response) {
     const { id } = req.params;
 
     try {
@@ -70,7 +70,7 @@ class OperationsController {
     }
   }
 
-  static async deleteOperation(req: Request, res: Response) {
+  async deleteOperation(req: Request, res: Response) {
     const { id } = req.params;
 
     try {
