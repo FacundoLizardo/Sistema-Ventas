@@ -1,7 +1,8 @@
- import { Router } from 'express'
+import { Router } from "express";
+import filterController from "../controllers/filterController";
 
-const router = Router()
+const router = Router();
 
-/* router.get("/", getFilter) */
+router.get("/", filterController.getFilterProducts);
 
-module.exports = router 
+module.exports = router;
