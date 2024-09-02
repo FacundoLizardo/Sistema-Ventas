@@ -33,11 +33,11 @@ export const generatePDF = async ({
   try {
     const htmlPath =
       data.CbteTipo === 1
-        ? path.join(__dirname, "html", "facturaA.html")
+        ? path.join(__dirname, "facturaA.html")
         : data.CbteTipo === 6
-        ? path.join(__dirname, "html", "facturaB.html")
+        ? path.join(__dirname, "facturaB.html")
         : data.CbteTipo === 11
-        ? path.join(__dirname, "html", "facturaC.html")
+        ? path.join(__dirname, "facturaC.html")
         : "";
 
     let html = fs.readFileSync(htmlPath, "utf8");

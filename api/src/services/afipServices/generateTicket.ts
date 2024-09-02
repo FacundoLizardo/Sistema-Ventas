@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import { promises as fsPromises } from "fs"; // Importa fs/promises para trabajar con promesas
 import moment from "moment";
 import puppeteer from "puppeteer";
 import { DOMICILIO_FISCAL, RAZON_SOCIAL } from "../../config";
@@ -7,13 +8,14 @@ import { serviceError } from "../../utils/serviceError";
 import { Request } from "express";
 
 export const generateTicket = async ({ req }: { req: Request }) => {
-
   const { products, cbteTipo } = req.body;
 
   try {
+    // Ruta del archivo HTML para el ticket
     const htmlPath = cbteTipo === 0 ? path.join(__dirname, "ticket.html") : "";
     let html = fs.readFileSync(htmlPath, "utf8");
 
+    // Función para generar las filas de productos
     const generateProductRows = (products: any[]) => {
       const productMap = new Map();
 
@@ -78,9 +80,14 @@ export const generateTicket = async ({ req }: { req: Request }) => {
 
     await page.setContent(replacedHTML, { waitUntil: "networkidle0" });
 
+    // Construcción de la ruta del archivo PDF
     const pdfFileName = `Ticket-${moment().format("DD.MM.YYYY-HH.mm")}.pdf`;
-    const pdfFilePath = path.join(__dirname, "html", "pdfs", pdfFileName);
+    const pdfFilePath = path.join(__dirname, "afipPDFs", pdfFileName);
 
+    // Asegúrate de que el directorio exista
+    await fsPromises.mkdir(path.dirname(pdfFilePath), { recursive: true });
+
+    // Generación del PDF
     await page.pdf({
       path: pdfFilePath,
       format: "A4",
@@ -94,6 +101,7 @@ export const generateTicket = async ({ req }: { req: Request }) => {
 
     await browser.close();
 
+    // Lectura del archivo PDF
     const pdfFile = fs.readFileSync(pdfFilePath);
     return { pdfFile };
   } catch (error) {

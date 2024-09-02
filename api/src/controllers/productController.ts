@@ -67,12 +67,12 @@ class ProductController {
   async putProduct(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const updateResult = await ProductService.putProduct(id, req.body);
+      const updateProduct = await ProductService.putProduct(id, req.body);
 
-      if (updateResult === true) {
-        res.status(200).json({ success: true });
+      if (updateProduct !== true) {
+        res.status(400).json({ message: "Product not updated." });
       } else {
-        res.status(404).json({ message: updateResult });
+        res.status(204).json({ success: true });
       }
     } catch (error) {
       controllerError(res, error, 500);
@@ -82,12 +82,12 @@ class ProductController {
   async deleteProduct(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const deleteResult = await ProductService.deleteProduct(id);
+      const deleteProduct = await ProductService.deleteProduct(id);
 
-      if (deleteResult === true) {
-        res.status(204).json({ success: true });
+      if (deleteProduct !== true) {
+        res.status(400).json({ message: "Product not deleted." });
       } else {
-        res.status(404).json({ message: deleteResult });
+        res.status(204).json({ success: true });
       }
     } catch (error) {
       controllerError(res, error, 500);

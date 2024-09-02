@@ -4,10 +4,11 @@ import { ProductInterface } from "../../models/product";
 import QRCode from "qrcode";
 import { serviceError } from "../../utils/serviceError";
 import { Request } from "express";
+import { generatePDF } from "./generatePDF";
 
 const afip = new Afip({ CUIT: CUIT });
 
-export async function facturaA({ req }: { req: Request }) {
+export async function issueInvoice({ req }: { req: Request }) {
   const {
     products,
     discount,
@@ -41,6 +42,14 @@ export async function facturaA({ req }: { req: Request }) {
     let fecha_servicio_desde = null;
     let fecha_servicio_hasta = null;
     let fecha_vencimiento_pago = null;
+
+    /**
+     * Concepto de la factura
+     Opciones:
+     1 = Productos
+     2 = Servicios
+     3 = Productos y Servicios
+     **/
 
     if (concepto === 2 || concepto === 3) {
       fecha_servicio_desde = 20191213;
@@ -123,7 +132,15 @@ export async function facturaA({ req }: { req: Request }) {
 
     const urlQr = await QRCode.toDataURL(URL);
 
-    return { voucherData, data, urlQr };
+    const pdfData = await generatePDF({
+      voucherData,
+      data,
+      numeroFactura,
+      urlQr,
+      discount,
+    });
+
+    return pdfData;
   } catch (error) {
     serviceError(error);
   }

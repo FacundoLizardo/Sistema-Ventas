@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { facturaA } from "./afipServices/facturaA";
+import { issueInvoice } from "./afipServices/issueInvoice";
 import { generateTicket } from "./afipServices/generateTicket";
 
 class AfipServices {
@@ -7,8 +7,16 @@ class AfipServices {
     return await generateTicket({ req });
   }
 
-  async facturaA({ req }: { req: Request }) {
-    return await facturaA({ req });
+  async issueInvoice({ req }: { req: Request }) {
+    return await issueInvoice({ req });
+  }
+
+  async electronicCreditInvoices() {
+    return console.log("electronicCreditInvoice");
+  }
+
+  async creditNote() {
+    return console.log("creditNote");
   }
 }
 

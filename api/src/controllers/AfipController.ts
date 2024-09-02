@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { controllerError } from "../utils/controllerError.js";
-import afipService from "../services/AfipServices.js";
+import { controllerError } from "../utils/controllerError";
+import afipService from "../services/AfipServices";
 
 class AfipController {
   postAfip = async (req: Request, res: Response) => {
@@ -11,8 +11,8 @@ class AfipController {
 
       if (cbteTipo === 0) {
         afipInvoice = await afipService.generateTicket({ req });
-      } else {
-        afipInvoice = await afipService.facturaA({ req });
+      } else  {
+        afipInvoice = await afipService.issueInvoice({ req });
       }
 
       /*  
