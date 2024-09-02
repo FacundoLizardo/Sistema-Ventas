@@ -2,7 +2,7 @@ import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 import urlValidator from "../utils/urlValidator";
 
 export interface SupplierInterface {
-	supplierId: string;
+	id: string;
 	location?: string;
 	purchases?: string[];
 	phoneNumber?: string;
@@ -27,7 +27,7 @@ class Supplier
 	extends Model<SupplierInterface, SupplierCreationInterface>
 	implements SupplierInterface
 {
-	public supplierId!: string;
+	public id!: string;
 	public location?: string;
 	public purchases?: string[];
 	public phoneNumber?: string;
@@ -42,7 +42,7 @@ class Supplier
 export default (sequelize: Sequelize) => {
 	Supplier.init(
 		{
-			supplierId: {
+			id: {
 				type: DataTypes.UUID,
 				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
