@@ -17,6 +17,10 @@ export interface UserInterface {
   updatedAt?: Date;
 }
 
+export interface UserLogin extends UserInterface {
+  companyId: string;
+}
+
 export interface UserCreationInterface
   extends Optional<
     UserInterface,
