@@ -1,4 +1,4 @@
-# <!-- ¿Qué funcionalidad nueva se agrega o se cambia? -->
+# <!-- Título de la tarea -->
 
 - Enlace a Notion: [tarea](enlace)
 

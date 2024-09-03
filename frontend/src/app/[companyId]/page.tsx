@@ -1,8 +1,11 @@
-export default function RootPage() {
-    return (
-        //todo hacer un check para ver si el id del path es un id de una company
-      <main>
-        <h1>la compañia</h1>
-      </main>
-    );
-  }
+import { redirect } from "next/navigation";
+
+export default function Page({
+  params: { companyId },
+}: {
+  params: {
+    companyId: string;
+  };
+}) {
+  return redirect(`/${companyId}/sales`);
+}

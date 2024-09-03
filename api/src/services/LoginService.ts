@@ -1,15 +1,15 @@
-import { User as SequelizeUser } from "../db";
+import {  User } from "../db";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UserInterface } from "../models/user";
 
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export class LoginService {
   async authenticate(email: string, password: string): Promise<UserInterface> {
-    const user = (await SequelizeUser.findOne({
+    const user = await User.findOne({
       where: { email },
-    })) as UserInterface | null;
+    }) as UserInterface | null;
 
     if (!user) {
       throw new Error(`User with the email: ${email} not found.`);
@@ -20,7 +20,7 @@ export class LoginService {
     if (!validPassword) {
       throw new Error("Invalid password.");
     }
-
+  
     return user;
   }
 
