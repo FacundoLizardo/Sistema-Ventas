@@ -4,7 +4,8 @@ export interface CompanyInterface {
   id: string;
   name: string;
   address?: string;
-  phoneNumber?: string;
+  country?: string;
+  phoneNumbers?: string;
   cuit?: string;
   isActive: boolean;
 }
@@ -12,7 +13,7 @@ export interface CompanyInterface {
 export interface CompanyCreationInterface
   extends Optional<
     CompanyInterface,
-    "id" | "address" | "phoneNumber" | "cuit"
+    "id" | "address" | "phoneNumbers" | "cuit"
   > {}
 
 class Company
@@ -22,7 +23,8 @@ class Company
   public id!: string;
   public name!: string;
   public address?: string;
-  public phoneNumber?: string;
+  public country?: string;
+  public phoneNumbers?: string;
   public cuit?: string;
   public isActive!: boolean;
   public readonly createdAt!: Date;
@@ -46,8 +48,12 @@ export default (sequelize: Sequelize) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      phoneNumber: {
+      country: {
         type: DataTypes.STRING,
+        allowNull: true,
+      },
+      phoneNumbers: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: true,
       },
       cuit: {
