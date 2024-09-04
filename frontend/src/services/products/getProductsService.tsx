@@ -8,7 +8,7 @@ export const getProductsService = async (token?: string) => {
     }
     
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products`,
       {
         method: "GET",
         headers: {
@@ -17,6 +17,7 @@ export const getProductsService = async (token?: string) => {
         },
       }
     );
+
 
     if (!response.ok) {
       throw new Error("Network response was not ok");

@@ -1,7 +1,10 @@
+"use server";
+import { cookies } from "next/headers";
 export const loginService = async (email: string, password: string) => {
+  const cookieStore = cookies();
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/login`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`,
       {
         method: "POST",
         headers: {
@@ -16,6 +19,15 @@ export const loginService = async (email: string, password: string) => {
     }
 
     const data = await response.json();
+    const token = data.token;
+
+    cookieStore.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 3600,
+    });
+
     return data;
   } catch (error) {
     console.error("Error during login:", error);

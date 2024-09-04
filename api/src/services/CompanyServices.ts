@@ -62,17 +62,11 @@ export default new CompanyServices();
 
 /* 
     {
-        "afipId": "1234567289",
-        "ptoVta": 213221,
-        "name": "Sucursal Principal",
-        "location": "Ciudad Principal",
-        "isStorage": false,
-        "enable": true,
-        "manager": [
-            "c1d74da3-634a-4d2d-a5a1-72e68d20f0d7",
-            "e3b55df8-871c-4e0b-bf61-9f3a19fd0e99"
-        ],
-        "hours": "9:00 AM - 6:00 PM",
-        "phoneNumber": "+1234567890"
+      "name": "GPI 360.",
+      "address": "Calle 123",
+      "country": "Argentina",
+      "phoneNumbers": ["+1-234-567-8900", "3442644665"],
+      "cuit": "20-12345678-9",
+      "isActive": true
     }
  */

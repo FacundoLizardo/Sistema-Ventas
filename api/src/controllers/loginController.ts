@@ -11,6 +11,11 @@ class LoginController {
         email,
         password
       )) as UserLogin;
+
+      if (!user) {
+        throw new Error(`User with the email: ${email} not found.`);
+      }
+
       const token = loginService.generateToken(user);
 
       const dataUser = {

@@ -22,12 +22,6 @@ class ProductController {
   async getProducts(_req: Request, res: Response): Promise<void> {
     try {
       const products = await ProductService.getProducts();
-
-      if (!products.length) {
-        res.status(404).json({ message: "No products found" });
-        return;
-      }
-
       res.status(200).json({ success: true, products });
     } catch (error) {
       controllerError(res, error, 500);

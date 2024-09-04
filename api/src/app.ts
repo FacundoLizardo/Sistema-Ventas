@@ -28,9 +28,9 @@
     next();
   });
 
-  app.use("/login", loginRouter);
-  if (NODE_ENV === "production") app.use("/", authenticateToken ,mainRouter);
-  if (NODE_ENV === "development") app.use("/", mainRouter);
+  app.use("/api/login", loginRouter);
+  if (NODE_ENV === "production") app.use("/api", authenticateToken ,mainRouter);
+  if (NODE_ENV === "development") app.use("/api", mainRouter);
 
   syncDatabase()
     .then(() => {
