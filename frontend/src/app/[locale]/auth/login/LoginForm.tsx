@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import AuthServices from "@/services/auth/AuthServices";
+import ButtonWithLoading from "@/components/common/ButtonWithLoading";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Correo electrónico inválido" }),
@@ -53,18 +54,22 @@ export default function LoginClient({ locale }: { locale: string }) {
     }
   };
 
+  const { isDirty, isValid, isSubmitting, isSubmitSuccessful } = form.formState;
+  const submitDisabled = !isDirty || !isValid;
+  const submitLoading = isSubmitting || isSubmitSuccessful;
+
   return (
     <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
-        <CardDescription>
-          Ingrese su email y contraseña para ingresar.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardHeader>
+            <CardTitle className="text-2xl">Login</CardTitle>
+            <CardDescription>
+              Ingrese su email y contraseña para ingresar.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div>
               <FormField
                 control={form.control}
                 name="email"
@@ -85,7 +90,7 @@ export default function LoginClient({ locale }: { locale: string }) {
                 )}
               />
             </div>
-            <div className="space-y-2">
+            <div>
               <FormField
                 control={form.control}
                 name="password"
@@ -113,13 +118,20 @@ export default function LoginClient({ locale }: { locale: string }) {
               >
                 ¿Olvidaste la contraseña?
               </Link>
-              <Button type="submit" className="ml-auto">
+              <ButtonWithLoading
+                loading={submitLoading}
+                loadingText="Ingresando..."
+                variant="default"
+                className="flex flex-row items-center"
+                type="submit"
+                disabled={submitDisabled}
+              >
                 Ingresar
-              </Button>
+              </ButtonWithLoading>
             </CardFooter>
-          </form>
-        </Form>
-      </CardContent>
+          </CardContent>
+        </form>
+      </Form>
     </Card>
   );
 }
