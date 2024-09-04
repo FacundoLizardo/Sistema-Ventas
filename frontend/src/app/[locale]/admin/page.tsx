@@ -3,12 +3,14 @@ import { useTranslations } from "next-intl";
 
 export default function Page() {
   const t = useTranslations("Admin");
+
   return (
-    //dashboar del superadmin
-    //esta vista se va a mostrar si tenes permiso de superadmin
+    // Dashboard del superadmin
+    // Esta vista se va a mostrar si tienes permiso de superadmin
     <main>
-      Hola
+      <h1>{t('title')}</h1>
       <LanguageSelector />
     </main>
   );
 }
+
