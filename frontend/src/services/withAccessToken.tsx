@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies } from "next/dist/client/components/headers";
 
 type ServiceFunction<T> = (token?: string, ...args: any[]) => Promise<T>;
 
