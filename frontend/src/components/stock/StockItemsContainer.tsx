@@ -6,7 +6,7 @@ import { StockItem } from "./StockItem"
 interface StockItemsProps {
     data: ProductInterface[]
 }
-export default function StockCards ({data}: StockItemsProps) {
+export default function StockItemsContainer ({data}: StockItemsProps) {
     return (
         <div className="flex flex-col bg-foreground text-black">
           {data.map((product)=>{

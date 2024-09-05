@@ -3,7 +3,8 @@
 import { products } from "@/mockData";
 import StockPagination from "./StockPagination";
 import StockSearchBar from "./StockSearchBar";
-import StockItems from "./StockItems";
+import StockItemsContainer from "./StockItemsContainer";
+
 
 export default function SearchProducts() {
   const tags = Array.from({ length: 12 }).map(
@@ -12,7 +13,7 @@ export default function SearchProducts() {
   return (
     <div className={`flex flex-col gap-2`}>
         <StockSearchBar/>
-        <StockItems data={products}/>
+        <StockItemsContainer data={products}/>
         <StockPagination/>
     </div>
   );
