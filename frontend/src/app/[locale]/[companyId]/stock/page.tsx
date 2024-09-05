@@ -8,7 +8,7 @@ export default function Page({
 }) {
     return (
       <main>
-        <SearchProducts/>
+        {/* <SearchProducts/> */}
         <ProductForm locale={locale}/>
       </main>
     );

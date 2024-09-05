@@ -4,7 +4,7 @@ import { postProductService } from "./postProductsService";
 
 class ProductsServices {
   getProducts = withAccessToken(getProductsService);
-  postProduct = withAccessToken(postProductService)
+  postProduct = postProductService;
 }
 
 export default new ProductsServices();
