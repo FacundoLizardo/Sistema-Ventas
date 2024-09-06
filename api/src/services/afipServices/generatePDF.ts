@@ -60,7 +60,7 @@ export const generatePDF = async ({
             description: existingProduct.description,
             quantity: existingProduct.quantity + 1,
             unitPrice: existingProduct.unitPrice,
-            totalAmount: existingProduct.totalAmount + finalPrice,
+            totalAmount: existingProduct.totalAmount += finalPrice,
           });
         }
       });
@@ -142,7 +142,8 @@ export const generatePDF = async ({
       .replace("{{fecha}}", fechaEmision)
       .replace("{{ImpIVA}}", data.ImpIVA)
       .replace("{{ImpNeto}}", data.ImpNeto)
-      .replace("{{discount}}", discount.toFixed(2) || "");
+      .replace("{{discount}}", discount.toFixed(2) || "")
+      .replace("{{importeGravado}}", data.importeGravado)
 
     const options = {
       width: 8,
@@ -157,9 +158,9 @@ export const generatePDF = async ({
       file_name: "Voucher",
       options: options,
     });
+    
+    return pdfData
 
-    console.log("Generated PDF data:", pdfData);
-    return pdfData;
   } catch (error) {
     throw new Error(`An error occurred while generating the PDF: ${error}`);
   }
