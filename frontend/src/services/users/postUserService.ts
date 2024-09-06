@@ -10,25 +10,30 @@ interface IUserCreationServiceParams {
   address?: string;
   phoneNumber?: string;
   cuit?: string;
-  enabled: string;
+  enabled: boolean;
   role: string;
 }
 
 export const postUserService = async (
   params: IUserCreationServiceParams
 ) => {
+  console.log({params});
+  
   try {
     const cookiesInstance = cookies();
     const token = cookiesInstance.get("token")?.value;
 
     const {companyId, ...userData} = params
 
+    console.log({userData});
+    
+
     if (!token) {
       throw new Error("No token provided");
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users${companyId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/${companyId}`,
       {
         method: "POST",
         headers: {

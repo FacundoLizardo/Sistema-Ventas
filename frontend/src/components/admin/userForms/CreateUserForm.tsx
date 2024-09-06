@@ -1,26 +1,19 @@
 "use client";
+import ButtonWithLoading from "@/components/common/ButtonWithLoading";
+import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { postUserService } from "@/services/users/postProductService";
-import ButtonWithLoading from "@/components/common/ButtonWithLoading";
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -28,46 +21,51 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { postUserService } from "@/services/users/postUserService";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown } from "lucide-react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const branchesList = [
-  { id: "1", name: "sucursal 1" },
+  { id: "1ae9cc57-df39-48fc-be22-46b02a0632a1", name: "sucursal 1" },
   { id: "2", name: "sucursal 2" },
   { id: "3", name: "sucursal 3" },
   { id: "4", name: "sucursal 4" },
 ];
 
 const formSchema = z.object({
-  firstName: z.string().min(3, { message: "El nombre es requerido." }),
-  lastName: z.string().min(3, { message: "El apellido es requerido." }),
+  firstName: z
+    .string()
+    .min(3, { message: "El nombre tiene que ser más largo." }),
+  lastName: z
+    .string()
+    .min(3, { message: "El apellido tiene que ser más largo." }),
   email: z.string().email({ message: "Debe ser un correo válido." }),
   password: z
     .string()
     .min(8, { message: "La contraseña debe tener al menos 8 caracteres." }),
-  address: z.string().optional(),
-  phoneNumber: z
-    .string()
-    .regex(/^[0-9]+$/, {
-      message: "El número de teléfono solo debe contener dígitos.",
-    })
-    .optional(),
-  cuit: z
-    .string()
-    .regex(/^[0-9]{11}$/, {
-      message: "El CUIT debe contener exactamente 11 dígitos.",
-    })
-    .optional(),
-  branches: z.string().array(),
-  enabled: z.string().includes('true').includes('false'),
-  role: z.string().min(1, { message: "El rol es requerido." }),
+  address: z.string(),
+  phoneNumber: z.string().regex(/^[0-9]+$/, {
+    message: "El número de teléfono solo debe contener dígitos.",
+  }),
+  cuit: z.string().regex(/^[0-9]{11}$/, {
+    message: "El CUIT debe contener exactamente 11 dígitos.",
+  }),
+  branch: z.string().array(),
+  enabled: z.boolean(),
+  role: z.string(),
 });
 
 export default function CreateUserForm({ companyId }: { companyId: string }) {
@@ -81,13 +79,17 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
       address: undefined,
       phoneNumber: undefined,
       cuit: undefined,
-      branches: [],
-      enabled: "true",
-      role: undefined,
+      branch: [],
+      enabled: true,
+      role: "BASIC",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    console.log({ data });
+    console.log("en el submit");
+
+
     const request = postUserService({ companyId, ...data });
 
     toast.promise(request, {
@@ -100,9 +102,16 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
     });
   };
 
+  console.log("datos del formulario", form.watch());
+
   const { isDirty, isValid, isSubmitting } = form.formState;
   const submitDisabled = !isDirty || !isValid;
   const submitLoading = isSubmitting;
+
+  useEffect(() => {
+    console.log("Is Valid:", isValid);
+    console.log("Form Errors:", form.formState.errors);
+  }, [isValid, form.formState.errors, form.formState]);
 
   return (
     <Card>
@@ -122,12 +131,7 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
                     <Input
                       id="firstName"
                       placeholder="Ingrese el nombre del usuario"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value === "" ? undefined : e.target.value;
-                        field.onChange(value);
-                      }}
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -276,7 +280,7 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
 
             <FormField
               control={form.control}
-              name="branches"
+              name="branch"
               render={({ field }) => {
                 const selectedBranchNames = field.value.length
                   ? field.value
@@ -289,7 +293,7 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
 
                 return (
                   <FormItem className="flex flex-col justify-between">
-                    <Label htmlFor="branches">Sucursales</Label>
+                    <Label htmlFor="branch">Sucursales</Label>
                     <FormControl>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -345,13 +349,13 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
                   <Label htmlFor="enabled">Estado del usuario</Label>
                   <FormControl>
                     <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      {...field}
+                      onValueChange={(value) => {
+                        field.onChange(value === "true");
+                      }}
+                      defaultValue={String(field.value)}
                     >
-                      {}
                       <SelectTrigger>
-                        <SelectValue/>
+                        <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value={"true"}>Habilitado</SelectItem>
@@ -363,7 +367,7 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
               )}
             />
 
-<FormField
+            <FormField
               control={form.control}
               name="role"
               render={({ field }) => (
@@ -375,9 +379,8 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
                       defaultValue={field.value}
                       {...field}
                     >
-                      {}
                       <SelectTrigger>
-                        <SelectValue/>
+                        <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value={"OWNER"}>OWNER</SelectItem>
@@ -389,18 +392,17 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
                 </FormItem>
               )}
             />
-
           </CardContent>
           <CardFooter>
             <ButtonWithLoading
               loading={submitLoading}
-              loadingText="Creando usuario..."
+              loadingText="Creando producto..."
               variant="default"
               className="flex flex-row items-center"
               type="submit"
               disabled={submitDisabled}
             >
-              Crear producto
+              Crear usuario
             </ButtonWithLoading>
           </CardFooter>
         </form>
