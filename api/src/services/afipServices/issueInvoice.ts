@@ -28,7 +28,8 @@ export async function issueInvoice({ req }: { req: Request }) {
     deliveryAddress,
     branchId
   } = req.body;
-  const companyId = req.params.companyId;
+  const companyId = req.query.companyId;
+  const userId = req.query.userId;
   const sequelize = Product.sequelize as Sequelize;
   const transaction = await sequelize.transaction();
 
@@ -65,7 +66,6 @@ export async function issueInvoice({ req }: { req: Request }) {
 
     // Actualizar el stock de los productos
     await updateProductStock(products, transaction);
-    await transaction.commit();
 
     const lastVoucher = await afip.ElectronicBilling.getLastVoucher(
       ptoVta,
@@ -161,7 +161,7 @@ export async function issueInvoice({ req }: { req: Request }) {
     });
 
     // Crear la operacion y la almacenar en la base de datos
-    const customer = await CustumerServices.getCustomerWithDNI(docNro);
+    const customer = await CustumerServices.getCustomerByQuery(docNro);
     const operationData = {
       products: products,
       amount: ImpTotal,
@@ -174,10 +174,11 @@ export async function issueInvoice({ req }: { req: Request }) {
       state: "completed",
       isdelivery: isdelivery,
       deliveryAddress: deliveryAddress,
-      customer: customer?.dni,
+      customer: `DNI: ${customer?.dni} - ${customer?.firstName} ${customer?.lastName}`,
       comments: comments,
       invoiceLink: "",
       companyId: companyId,
+      userId: userId,
     };
     console.log(operationData);
     

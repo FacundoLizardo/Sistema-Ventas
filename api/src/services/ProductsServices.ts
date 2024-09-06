@@ -40,16 +40,17 @@ class ProductService {
   }
   async postProduct(
     data: ProductCreationInterface,
-    companyId?: string
+    companyId: string,
+    userId: string
   ): Promise<ProductInterface | string> {
-    console.log("companyId", companyId);
-    
+
     try {
       const [product, created] = await Product.findOrCreate({
         where: { name: data.name },
         defaults: {
           ...data,
-          companyId
+          companyId,
+          userId,
         },
       });
 
@@ -84,17 +85,16 @@ class ProductService {
   async deleteProduct(id: string): Promise<boolean> {
     try {
       const deletedCount = await Product.destroy({ where: { id } });
-  
+
       if (deletedCount === 0) {
         throw new Error("Product not found");
       }
-  
+
       return true;
     } catch (error) {
-      serviceError(error); 
+      serviceError(error);
     }
   }
-  
 }
 
 export default new ProductService();

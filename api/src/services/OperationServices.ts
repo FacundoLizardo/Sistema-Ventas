@@ -35,7 +35,7 @@ class OperationServices {
       const operation = await Operation.create({
         defaults: {
           ...data,
-          companyId,
+          companyId
         },
       });
 

@@ -82,6 +82,9 @@ const {
 User.hasMany(Branch, { foreignKey: "userId" });
 Branch.belongsTo(User, { foreignKey: "userId" });
 
+Operation.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Operation, { foreignKey: "userId" });
+
 Company.hasMany(User, { foreignKey: "companyId" });
 User.belongsTo(Company, { foreignKey: "companyId" });
 

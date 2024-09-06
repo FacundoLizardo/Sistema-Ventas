@@ -20,11 +20,11 @@ class CustomerController {
     }
   }
 
-  async getCustomerByDNI(req: Request, res: Response): Promise<void> {
+  async getCustomerByQuery(req: Request, res: Response): Promise<void> {
     try {
-      const { DNI } = req.params;
+      const query = req.query;
 
-      const customer = await CustomerService.getCustomerWithDNI(DNI);
+      const customer = await CustomerService.getCustomerByQuery(query);
 
       if (!customer) {
         res.status(404).json({ message: "Customer not found" });
@@ -54,8 +54,12 @@ class CustomerController {
 
   async postCustomer(req: Request, res: Response): Promise<void> {
     try {
-      const companyId = req.params.companyId;
-      const newCustomer = await CustomerService.postCustomer(req.body, companyId);
+      const company = req.query.companyId as string;
+
+      const newCustomer = await CustomerService.postCustomer(
+        req.body,
+        company,
+      );
 
       if (typeof newCustomer === "string") {
         res.status(400).json({ message: newCustomer });

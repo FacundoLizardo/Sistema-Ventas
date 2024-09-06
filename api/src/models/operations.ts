@@ -8,7 +8,7 @@ export interface OperationInterface {
 	discount: number;
 	extraCharge: number;
 	debtAmount?: number;
-	branchId: string;
+	branchId?: string;
 	paymentType: string;
 	invoiceNumber?: string;
 	state: string;
@@ -41,7 +41,7 @@ class Operation
 	public discount!: number;
 	public extraCharge!: number;
 	public debtAmount?: number;
-	public branchId!: string;
+	public branchId?: string;
 	public paymentType!: string;
 	public invoiceNumber?: string;
 	public state!: string;
@@ -69,7 +69,7 @@ export default (sequelize: Sequelize) => {
 				defaultValue: [],
 			},
 			amount: {
-				type: DataTypes.INTEGER,
+				type: DataTypes.DECIMAL(10, 2),
 				allowNull: false,
 			},
 			discount: {
@@ -97,7 +97,7 @@ export default (sequelize: Sequelize) => {
 			},
 			branchId: {
 				type: DataTypes.STRING,
-				allowNull: false,
+				allowNull: true,
 			},
 			paymentType: {
 				type: DataTypes.STRING,
