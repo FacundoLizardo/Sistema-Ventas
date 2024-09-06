@@ -14,8 +14,9 @@ export interface OperationInterface {
 	state: string;
 	isdelivery: boolean;
 	deliveryAddress?: string;
-	customersId?: string;
+	customer?: string;
 	comments?: string;
+	invoiceLink?: string;
 }
 
 export interface OperationCreationInterface
@@ -26,7 +27,7 @@ export interface OperationCreationInterface
 		| "debtAmount"
 		| "invoiceNumber"
 		| "deliveryAddress"
-		| "customersId"
+		| "customer"
 		| "comments"
 	> {}
 
@@ -46,8 +47,9 @@ class Operation
 	public state!: string;
 	public isdelivery!: boolean;
 	public deliveryAddress?: string;
-	public customersId?: string;
+	public customer?: string;
 	public comments?: string;
+	public invoiceLink?: string;
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
 }
@@ -56,9 +58,9 @@ export default (sequelize: Sequelize) => {
 	Operation.init(
 		{
 			id: {
-				type: DataTypes.INTEGER,
+				type: DataTypes.UUID,
+				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
-				autoIncrement: true,
 				allowNull: false,
 			},
 			products: {
@@ -67,7 +69,7 @@ export default (sequelize: Sequelize) => {
 				defaultValue: [],
 			},
 			amount: {
-				type: DataTypes.DECIMAL(10, 2),
+				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
 			discount: {
@@ -126,7 +128,7 @@ export default (sequelize: Sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
-			customersId: {
+			customer: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
@@ -134,6 +136,10 @@ export default (sequelize: Sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
+			invoiceLink: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			}
 		},
 		{
 			sequelize,

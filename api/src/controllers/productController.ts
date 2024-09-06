@@ -45,7 +45,9 @@ class ProductController {
 
   async postProduct(req: Request, res: Response): Promise<void> {
     try {
-      const newProduct = await ProductService.postProduct(req.body);
+      const companyId = req.params.companyId;
+
+      const newProduct = await ProductService.postProduct(req.body, companyId);
 
       if (typeof newProduct === "string") {
         res.status(400).json({ message: newProduct });

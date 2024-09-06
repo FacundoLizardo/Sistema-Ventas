@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
-export interface CostumerInterface {
+export interface CustomerInterface {
 	dni: string;
 	firstName: string;
 	lastName: string;
@@ -11,15 +11,15 @@ export interface CostumerInterface {
 	enableDebt?: boolean;
 }
 
-export interface CostumerCreationInterface
+export interface CustomerCreationInterface
 	extends Optional<
-		CostumerInterface,
+		CustomerInterface,
 		"address" | "phoneNumber" | "dateOfBirth" | "enableDebt"
 	> {}
 
-class Costumer
-	extends Model<CostumerInterface, CostumerCreationInterface>
-	implements CostumerInterface
+class Customer
+	extends Model<CustomerInterface, CustomerCreationInterface>
+	implements CustomerInterface
 {
 	public dni!: string;
 	public firstName!: string;
@@ -34,7 +34,7 @@ class Costumer
 }
 
 export default (sequelize: Sequelize) => {
-	Costumer.init(
+	Customer.init(
 		{
 			dni: {
 				type: DataTypes.STRING,
@@ -105,10 +105,10 @@ export default (sequelize: Sequelize) => {
 		},
 		{
 			sequelize,
-			modelName: "Costumer",
+			modelName: "Customer",
 			timestamps: true,
 		}
 	);
 
-	return Costumer;
+	return Customer;
 };

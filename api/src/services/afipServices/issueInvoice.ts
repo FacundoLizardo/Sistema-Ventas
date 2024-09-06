@@ -3,9 +3,11 @@ import Afip from "@afipsdk/afip.js";
 import QRCode from "qrcode";
 import { Request } from "express";
 import { Sequelize } from "sequelize";
-import { Product } from "../../db";
+import { Operation, Product } from "../../db";
 import { generatePDF } from "./generatePDF";
 import { serviceError } from "../../utils/serviceError";
+import { updateProductStock } from "../../utils/updateProductStock";
+import CustumerServices from "../CustomerServices";
 
 const afip = new Afip({ CUIT: CUIT });
 
@@ -21,8 +23,12 @@ export async function issueInvoice({ req }: { req: Request }) {
     docNro,
     docTipo,
     iva,
+    isdelivery,
+    comments,
+    deliveryAddress,
+    branchId
   } = req.body;
-
+  const companyId = req.params.companyId;
   const sequelize = Product.sequelize as Sequelize;
   const transaction = await sequelize.transaction();
 
@@ -57,13 +63,9 @@ export async function issueInvoice({ req }: { req: Request }) {
     let fecha_servicio_hasta = null;
     let fecha_vencimiento_pago = null;
 
-    for (const product of products) {
-      const productRecord = await Product.findByPk(product.id, { transaction });
-
-      if (!productRecord) {
-        throw new Error(`Product with ID ${product.id} not found.`);
-      }
-    }
+    // Actualizar el stock de los productos
+    await updateProductStock(products, transaction);
+    await transaction.commit();
 
     const lastVoucher = await afip.ElectronicBilling.getLastVoucher(
       ptoVta,
@@ -126,8 +128,6 @@ export async function issueInvoice({ req }: { req: Request }) {
       importeGravado: importe_gravado,
     };
 
-    console.log("DATA", data);
-
     const voucherData = await afip.ElectronicBilling.createVoucher(data);
 
     const qrData = {
@@ -159,11 +159,34 @@ export async function issueInvoice({ req }: { req: Request }) {
       urlQr,
       discount,
     });
-    console.log("pdfData", pdfData);
+
+    // Crear la operacion y la almacenar en la base de datos
+    const customer = await CustumerServices.getCustomerWithDNI(docNro);
+    const operationData = {
+      products: products,
+      amount: ImpTotal,
+      discount: discount || 0,
+      extraCharge: 0,
+      debtAmount: 0,
+      branchId: branchId,
+      paymentType: "cash",
+      invoiceNumber: numeroFactura.toString(),
+      state: "completed",
+      isdelivery: isdelivery,
+      deliveryAddress: deliveryAddress,
+      customer: customer?.dni,
+      comments: comments,
+      invoiceLink: "",
+      companyId: companyId,
+    };
+    console.log(operationData);
+    
+    await Operation.create(operationData, { transaction });
+    await transaction.commit();
 
     console.log({
-      cae: voucherData.CAE, //CAE asignado a la Factura
-      vencimiento: voucherData.CAEFchVto, //Fecha de vencimiento del CAE
+      cae: voucherData.CAE,
+      vencimiento: voucherData.CAEFchVto,
     });
 
     return pdfData;

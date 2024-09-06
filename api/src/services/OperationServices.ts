@@ -28,11 +28,15 @@ class OperationServices {
   }
 
   async postOperation(
-    data: OperationCreationInterface
+    data: OperationCreationInterface,
+    companyId?: string
   ): Promise<OperationInterface | string> {
     try {
       const operation = await Operation.create({
-        defaults: data,
+        defaults: {
+          ...data,
+          companyId,
+        },
       });
 
       if (operation) {

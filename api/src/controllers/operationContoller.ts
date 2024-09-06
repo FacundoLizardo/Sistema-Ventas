@@ -2,7 +2,7 @@ import { controllerError } from "../utils/controllerError";
 import { Request, Response } from "express";
 import OperationServices from "../services/OperationServices";
 
-class OperationsController {
+class OperationController {
   async getOperation(req: Request, res: Response) {
     try {
       const { id } = req.params;
@@ -37,7 +37,16 @@ class OperationsController {
 
   async postOperation(req: Request, res: Response) {
     try {
-      const newOperation = await OperationServices.postOperation(req.body);
+      const companyId = req.params.companyId;
+
+      if (!companyId) {
+        res.status(404).json({
+          message: "The operation could not be created, companyId not found. Please try again.",
+        });
+        return;
+      }
+
+      const newOperation = await OperationServices.postOperation(req.body, companyId);
 
       if (!newOperation) {
         res.status(404).json({
@@ -53,14 +62,11 @@ class OperationsController {
   }
 
   async putOperation(req: Request, res: Response) {
-    const { id } = req.params;
-
     try {
-      const updatedOperation = await OperationServices.putOperation(
-        id,
-        req.body
-      );
-      if (updatedOperation !== true) {
+      const { id } = req.params;
+      const updateOperation = await OperationServices.putOperation(id, req.body);
+
+      if (updateOperation !== true) {
         res.status(400).json({ message: "Operation not updated." });
       } else {
         res.status(204).json({ success: true });
@@ -86,4 +92,4 @@ class OperationsController {
   }
 }
 
-module.exports = OperationsController;
+export default new OperationController();

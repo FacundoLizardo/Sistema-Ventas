@@ -39,12 +39,18 @@ class ProductService {
     }
   }
   async postProduct(
-    data: ProductCreationInterface
+    data: ProductCreationInterface,
+    companyId?: string
   ): Promise<ProductInterface | string> {
+    console.log("companyId", companyId);
+    
     try {
       const [product, created] = await Product.findOrCreate({
         where: { name: data.name },
-        defaults: data,
+        defaults: {
+          ...data,
+          companyId
+        },
       });
 
       if (created) {
