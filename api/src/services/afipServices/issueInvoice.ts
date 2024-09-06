@@ -32,17 +32,26 @@ export async function issueInvoice({ req }: { req: Request }) {
 
     // Aplicar el descuento tanto al importe gravado como al importe exento de IVA
     const descuento = discount || 0;
-    const importe_gravado_con_descuento = importe_gravado * (1 - descuento / 100);
-    const importe_exento_iva_con_descuento = importe_exento_iva * (1 - descuento / 100);
+    const importe_gravado_con_descuento =
+      importe_gravado * (1 - descuento / 100);
+    const importe_exento_iva_con_descuento =
+      importe_exento_iva * (1 - descuento / 100);
 
     // Calcular el importe del IVA
     const porcentajeIVA = iva; // Porcentaje del IVA
     const importe_iva = (importe_gravado_con_descuento * porcentajeIVA) / 100;
 
     // Calcular el importe total
-    const ImpTotConc = 0; 
+    const ImpTotConc = 0;
     const ImpTrib = 0;
-    const ImpTotal = ImpTotConc + importe_gravado_con_descuento + importe_exento_iva_con_descuento + ImpTrib + importe_iva;
+    const ImpTotal =
+      cbteTipo === 11
+        ? importe_gravado_con_descuento + ImpTrib
+        : ImpTotConc +
+          importe_gravado_con_descuento +
+          importe_exento_iva_con_descuento +
+          ImpTrib +
+          importe_iva;
 
     let fecha_servicio_desde = null;
     let fecha_servicio_hasta = null;
@@ -97,7 +106,7 @@ export async function issueInvoice({ req }: { req: Request }) {
       ImpTotConc: ImpTotConc,
       ImpNeto: importe_gravado_con_descuento,
       ImpOpEx: importe_exento_iva_con_descuento,
-      ImpIVA: importe_iva,
+      ImpIVA: cbteTipo === 11 ? 0 : importe_iva,
       ImpTrib: 0,
       MonId: "PES",
       MonCotiz: 1,
@@ -167,28 +176,29 @@ export async function issueInvoice({ req }: { req: Request }) {
 
 /* 
 
-  {
-    "products": [
-      {
-        "id": "11b8a085-22a2-4515-8f4c-36e86145a5db",
-        "name": "Pelota",
-        "finalPrice": 100
-      },
-      {
-        "id": "11b8a085-22a2-4515-8f4c-36e86145a5db",
-        "name": "Pelota",
-        "finalPrice": 100
-      }
-    ],
-    "discount": 0,
-    "cbteTipo": 1,
-    "ptoVta": 1,
-    "concepto": 1,
-    "importeGravado": 200,
-    "importeExentoIva": 0,
-    "docNro": 33693450239,
-    "docTipo": 80,
-    "iva": 21
-  }
+    {
+      "products": [
+        {
+          "id": "11b8a085-22a2-4515-8f4c-36e86145a5db",
+          "name": "Pelota",
+          "finalPrice": 100
+        },
+        {
+          "id": "11b8a085-22a2-4515-8f4c-36e86145a5db",
+          "name": "Pelota",
+          "finalPrice": 100
+        }
+      ],
+      "discount": 10,
+      "cbteTipo": 1,
+      "ptoVta": 1,
+      "concepto": 1,
+      "importeGravado": 200,
+      "importeExentoIva": 0,
+      "docNro": 33693450239,
+      "docTipo": 80,
+      "iva": 21,
+      "outputDir": "C:/Users/lucas/Downloads"
+    }
 
 */
