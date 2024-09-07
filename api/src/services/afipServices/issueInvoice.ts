@@ -27,7 +27,7 @@ export async function issueInvoice({ req }: { req: Request }) {
     comments,
     deliveryAddress,
     branchId,
-    userId
+    userId,
   } = req.body;
   const { companyId } = req.params;
 
@@ -163,16 +163,29 @@ export async function issueInvoice({ req }: { req: Request }) {
 
     // Crear la operacion y la almacenar en la base de datos
     let customer;
-    if (docTipo === 80) { // Ejemplo de cómo mapear el tipo de documento
+    if (docTipo === 80) {
       customer = await CustumerServices.getCustomerByDocument({ cuit: docNro });
     } else if (docTipo === 96) {
       customer = await CustumerServices.getCustomerByDocument({ cuil: docNro });
     } else if (docTipo === 99) {
       customer = await CustumerServices.getCustomerByDocument({ dni: docNro });
     } else if (docTipo === 3) {
-      customer = await CustumerServices.getCustomerByDocument({ passport: docNro });
+      customer = await CustumerServices.getCustomerByDocument({
+        passport: docNro,
+      });
     }
-    
+
+    let customerName = "";
+    if (customer?.customerType === "person") {
+      customerName = `${customer?.firstName} ${customer?.lastName}`;
+    } else if (customer?.customerType === "company") {
+      customerName = customer?.companyName || "";
+    }
+
+    const customerData = `DNI: ${
+      customer?.dni || customer?.cuit || customer?.passport || customer?.cuil
+    } - ${customerName}`;
+
     const operationData = {
       products: products,
       amount: ImpTotal,
@@ -185,13 +198,13 @@ export async function issueInvoice({ req }: { req: Request }) {
       state: "completed",
       isdelivery: isdelivery,
       deliveryAddress: deliveryAddress,
-      customer: `DNI: ${customer?.dni} - ${customer?.firstName} ${customer?.lastName}`,
+      customer: customerData,
       comments: comments,
       invoiceLink: "",
       companyId: companyId,
       userId: userId,
+      cbteTipo: cbteTipo,
     };
-    console.log(operationData);
 
     await Operation.create(operationData, { transaction });
     await transaction.commit();
@@ -211,16 +224,18 @@ export async function issueInvoice({ req }: { req: Request }) {
 
 /* 
 
-    {
+  FACTURA A
+
+   {
       "products": [
         {
-          "id": "11b8a085-22a2-4515-8f4c-36e86145a5db",
-          "name": "Pelota",
+          "id": "69d32a36-cbf5-4633-96bd-24844d60ae55",
+          "name": "Vino tinto",
           "finalPrice": 100
         },
         {
-          "id": "11b8a085-22a2-4515-8f4c-36e86145a5db",
-          "name": "Pelota",
+          "id": "3ee851fe-ad37-4066-8237-faf0cef3b0b0",
+          "name": "Vino blanco",
           "finalPrice": 100
         }
       ],
@@ -233,7 +248,17 @@ export async function issueInvoice({ req }: { req: Request }) {
       "docNro": 33693450239,
       "docTipo": 80,
       "iva": 21,
-      "outputDir": "C:/Users/lucas/Downloads"
+      "outputDir": "C:/Users/lucas/Downloads",
+      "paymentType": "cash",
+      "isdelivery": false,
+      "deliveryAddress": "Calle pepito",
+      "comments": "",
+      "branchId": "",
+      "userId": "5592d25d-f0b2-4287-adc4-9bc938f7e87e"
     }
+
+    FACTURA B
+
+    FACTURA C
 
 */

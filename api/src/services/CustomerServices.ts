@@ -48,9 +48,7 @@ class CustomerService {
   async getCustomers(): Promise<CustomerInterface[]> {
     try {
       const customers = await Customer.findAll();
-      return customers
-        ? customers.map((customerObj) => customerObj.get({ plain: true }))
-        : [];
+      return customers.map((customerObj) => customerObj.get({ plain: true }));
     } catch (error) {
       serviceError(error);
     }
@@ -143,7 +141,7 @@ export default new CustomerService();
 
     {
       "customerType": "company",
-      "cuit": 20357146179,
+      "cuit": 33693450239,
       "companyName": "Tech Solutions S.A.",
       "email": "info@techsolutions.com",
       "address": "456 Industrial Ave, Buenos Aires",

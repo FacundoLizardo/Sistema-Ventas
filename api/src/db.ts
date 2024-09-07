@@ -101,7 +101,7 @@ User.hasMany(Product, { foreignKey: "userId" });
 Product.belongsTo(User, { foreignKey: "userId" });
 
 User.hasMany(Customer, { foreignKey: "userId" });
-Customer.hasOne(User, { foreignKey: "userId" });
+Customer.belongsTo(User, { foreignKey: "userId" }); 
 
 export {
   sequelize,

@@ -7,13 +7,31 @@ import { DOMICILIO_FISCAL, RAZON_SOCIAL } from "../../config";
 import { serviceError } from "../../utils/serviceError";
 import { Request } from "express";
 import { ProductInterface } from "../../models/product";
+import { Product } from "../../db";
+import { Sequelize } from "sequelize";
+import { updateProductStock } from "../../utils/updateProductStock";
 
 export const generateTicket = async ({ req }: { req: Request }) => {
-  const { products, cbteTipo, outputDir } = req.body;
+  const {
+    products,
+    cbteTipo,
+    outputDir,
+    discount,
+    importeGravado,
+  } = req.body;
+  const sequelize = Product.sequelize as Sequelize;
+  const transaction = await sequelize.transaction();
+  
+  console.log(products);
+  
 
   try {
     const htmlPath = cbteTipo === 0 ? path.join(__dirname, "ticket.html") : "";
     let html = fs.readFileSync(htmlPath, "utf8");
+
+    await updateProductStock(products, transaction);
+
+    await transaction.commit();
 
     const generateProductRows = (products: ProductInterface[]) => {
       const productMap = new Map();
@@ -68,11 +86,16 @@ export const generateTicket = async ({ req }: { req: Request }) => {
     let domicilio = DOMICILIO_FISCAL;
     let fechaEmision = moment().format("DD-MM-YYYY");
 
+    const ImpTotal = (importeGravado * (1 - discount / 100)).toFixed(2);
+
     const replacedHTML = html
       .replace("{{razonSocial}}", razonSocial || "")
       .replace("{{domicilio}}", domicilio || "")
       .replace("{{productRows}}", productRows || "")
-      .replace("{{fecha}}", fechaEmision);
+      .replace("{{fecha}}", fechaEmision)
+      .replace("{{discount}}", discount.toFixed(2) || "")
+      .replace("{{importeGravado}}", importeGravado || "")
+      .replace("{{ImpTotal}}", ImpTotal || "");
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();

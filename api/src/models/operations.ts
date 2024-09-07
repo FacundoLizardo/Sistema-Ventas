@@ -17,6 +17,7 @@ export interface OperationInterface {
 	customer?: string;
 	comments?: string;
 	invoiceLink?: string;
+	cbteTipo: number;
 }
 
 export interface OperationCreationInterface
@@ -50,6 +51,7 @@ class Operation
 	public customer?: string;
 	public comments?: string;
 	public invoiceLink?: string;
+	public cbteTipo!: number;
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
 }
@@ -139,6 +141,11 @@ export default (sequelize: Sequelize) => {
 			invoiceLink: {
 				type: DataTypes.STRING,
 				allowNull: true,
+			},
+			cbteTipo: {
+				type: DataTypes.INTEGER,
+				allowNull: false,
+				defaultValue: 0,
 			}
 		},
 		{
