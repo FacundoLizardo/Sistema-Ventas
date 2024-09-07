@@ -20,11 +20,10 @@ class CustomerController {
     }
   }
 
-  async getCustomerByQuery(req: Request, res: Response): Promise<void> {
+  async getCustomerByDocument(req: Request, res: Response): Promise<void> {
     try {
-      const query = req.query;
 
-      const customer = await CustomerService.getCustomerByQuery(query);
+      const customer = await CustomerService.getCustomerByDocument(req.body);
 
       if (!customer) {
         res.status(404).json({ message: "Customer not found" });
@@ -43,7 +42,6 @@ class CustomerController {
 
       if (!customers.length) {
         res.status(404).json({ message: "No customers found" });
-        return;
       }
 
       res.status(200).json({ success: true, customers });
@@ -54,11 +52,15 @@ class CustomerController {
 
   async postCustomer(req: Request, res: Response): Promise<void> {
     try {
-      const company = req.query.companyId as string;
+      const { companyId } = req.params;
+
+      if (!companyId) {
+        res.status(400).json({ message: "Company id is required" });
+      }
 
       const newCustomer = await CustomerService.postCustomer(
         req.body,
-        company,
+        companyId
       );
 
       if (typeof newCustomer === "string") {

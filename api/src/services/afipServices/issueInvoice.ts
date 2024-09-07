@@ -26,10 +26,11 @@ export async function issueInvoice({ req }: { req: Request }) {
     isdelivery,
     comments,
     deliveryAddress,
-    branchId
+    branchId,
+    userId
   } = req.body;
-  const companyId = req.query.companyId;
-  const userId = req.query.userId;
+  const { companyId } = req.params;
+
   const sequelize = Product.sequelize as Sequelize;
   const transaction = await sequelize.transaction();
 
@@ -161,7 +162,17 @@ export async function issueInvoice({ req }: { req: Request }) {
     });
 
     // Crear la operacion y la almacenar en la base de datos
-    const customer = await CustumerServices.getCustomerByQuery(docNro);
+    let customer;
+    if (docTipo === 80) { // Ejemplo de cómo mapear el tipo de documento
+      customer = await CustumerServices.getCustomerByDocument({ cuit: docNro });
+    } else if (docTipo === 96) {
+      customer = await CustumerServices.getCustomerByDocument({ cuil: docNro });
+    } else if (docTipo === 99) {
+      customer = await CustumerServices.getCustomerByDocument({ dni: docNro });
+    } else if (docTipo === 3) {
+      customer = await CustumerServices.getCustomerByDocument({ passport: docNro });
+    }
+    
     const operationData = {
       products: products,
       amount: ImpTotal,
@@ -181,7 +192,7 @@ export async function issueInvoice({ req }: { req: Request }) {
       userId: userId,
     };
     console.log(operationData);
-    
+
     await Operation.create(operationData, { transaction });
     await transaction.commit();
 

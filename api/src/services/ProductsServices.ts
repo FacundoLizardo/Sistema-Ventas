@@ -41,7 +41,6 @@ class ProductService {
   async postProduct(
     data: ProductCreationInterface,
     companyId: string,
-    userId: string
   ): Promise<ProductInterface | string> {
 
     try {
@@ -49,8 +48,7 @@ class ProductService {
         where: { name: data.name },
         defaults: {
           ...data,
-          companyId,
-          userId,
+          companyId
         },
       });
 
@@ -103,8 +101,8 @@ export default new ProductService();
 
 /* 
     {
-        "name": "Computadora",
-        "category": "Electrónicos",
+        "name": "Vino tinto",
+        "category": "Vinos",
         "cost": 50.00,
         "finalPrice": 75.00,
         "discount": 10.00,
@@ -113,6 +111,7 @@ export default new ProductService();
         "enabled": true,
         "notesDescription": "Descripción de prueba",
         "taxes": 5.00,
-        "barcode": "123456789012"
-   }
+        "barcode": "231351655648",
+        "userId": "57ee18e7-1109-412a-b1b3-711b3832b87c"
+    }
 */

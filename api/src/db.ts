@@ -97,6 +97,12 @@ Product.belongsTo(Company, { foreignKey: "companyId" });
 Company.hasMany(Customer, { foreignKey: "companyId" });
 Customer.belongsTo(Company, { foreignKey: "companyId" });
 
+User.hasMany(Product, { foreignKey: "userId" });
+Product.belongsTo(User, { foreignKey: "userId" });
+
+User.hasMany(Customer, { foreignKey: "userId" });
+Customer.hasOne(User, { foreignKey: "userId" });
+
 export {
   sequelize,
   Product,

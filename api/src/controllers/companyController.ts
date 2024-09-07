@@ -8,8 +8,14 @@ class CompanyController {
     const { id } = req.params;
     try {
       if (!id) throw new Error("Company ID is required.");
+
       const company = await CompanyServices.getCompanyById(id);
-      if (!company) throw new Error("Company not found.");
+
+      if (!company) {
+        res.status(404).json({ message: "Company not found" });
+        return;
+      }
+
       res.status(200).json({ success: true, company });
     } catch (error) {
       controllerError(res, error, 404);
@@ -19,7 +25,12 @@ class CompanyController {
   async getCompanies(_req: Request, res: Response): Promise<void> {
     try {
       const companies = await CompanyServices.getAllCompanies();
-      if (companies.length === 0) throw new Error("No companies found.");
+
+      if (!companies) {
+        res.status(404).json({ message: "Companies not found" });
+        return;
+      }
+
       res.status(200).json({ success: true, companies });
     } catch (error) {
       controllerError(res, error, 404);

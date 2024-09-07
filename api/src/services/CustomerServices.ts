@@ -17,40 +17,31 @@ class CustomerService {
     }
   }
 
-  async getCustomerByQuery(query: {
-    dni?: string;
-    cuil?: string;
-    cuit?: string;
-    passport?: string;
-  }): Promise<CustomerInterface | null> {
+  async getCustomerByDocument(
+    data: Partial<CustomerInterface>
+  ): Promise<CustomerInterface | null> {
     try {
-      const { dni, cuil, cuit, passport } = query;
+      const { dni, cuil, cuit, passport } = data;
 
-      let customer;
-      if (dni) {
-        customer = await Customer.findOne({
-          where: { dni: parseInt(dni, 10) },
-        });
-      } else if (cuil) {
-        customer = await Customer.findOne({
-          where: { cuil: parseInt(cuil, 10) },
-        });
+      const whereCondition: any = {};
+
+      if (passport) {
+        whereCondition.passport = passport;
       } else if (cuit) {
-        customer = await Customer.findOne({
-          where: { cuit: parseInt(cuit, 10) },
-        });
-      } else if (passport) {
-        customer = await Customer.findOne({ where: { passport } });
-      } else {
-        throw new Error("No valid identifier provided.");
+        whereCondition.cuit = cuit;
+      } else if (cuil) {
+        whereCondition.cuil = cuil;
+      } else if (dni) {
+        whereCondition.dni = dni;
       }
+
+      const customer = await Customer.findOne({ where: whereCondition });
 
       return customer
         ? (customer.get({ plain: true }) as CustomerInterface)
         : null;
     } catch (error) {
       serviceError(error);
-      return null; // Retorna null en caso de error
     }
   }
 
@@ -151,18 +142,20 @@ export default new CustomerService();
     CLIENTE EMPRESA
 
     {
-      "cuit": "30708012345",
+      "customerType": "company",
+      "cuit": 20357146179,
       "companyName": "Tech Solutions S.A.",
       "email": "info@techsolutions.com",
       "address": "456 Industrial Ave, Buenos Aires",
       "phoneNumber": "011-4567-8900",
-      "enableDebt": false
+      "enableDebt": false,
+      "userId": "57ee18e7-1109-412a-b1b3-711b3832b87c"
     }
-
 
     CLIENTE PERSONA
 
     {
+      "customerType": "person",
       "dni": 33693450,
       "firstName": "Juan",
       "lastName": "Pérez",
@@ -170,7 +163,8 @@ export default new CustomerService();
       "address": "Av. Siempre Viva 742, Springfield",
       "phoneNumber": "011-1234-5678",
       "dateOfBirth": "1990-05-10",
-      "enableDebt": true
-    }
+      "enableDebt": true,
+      "userId": "57ee18e7-1109-412a-b1b3-711b3832b87c"
+    } 
 
 */
