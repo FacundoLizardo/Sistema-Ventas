@@ -1,4 +1,4 @@
-export interface Branch {
+export interface BranchInterface {
     id: string;
     ptoVta: number;
     afipId?: string;
@@ -11,6 +11,19 @@ export interface Branch {
     phoneNumber?: string;
     createdAt: Date;
     updatedAt: Date;
+  }
+
+  export interface CompanyInterface {
+    id: string;
+    name: string;
+    address?: string;
+    country?: string;
+    phoneNumbers?: string;
+    cuit?: string;
+    isActive: boolean;
+    users?: UserInterface[];
+    branches?: BranchInterface[];
+    createdAt: Date;
   }
 
   export interface BranchCreation {

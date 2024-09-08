@@ -1,19 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import {
   Table,
   TableBody,
@@ -22,179 +8,49 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { IoMenu } from "react-icons/io5";
+import { CompanyInterface } from "@/types";
+import Link from "next/link";
 
-export default function Dashboard() {
+interface DashboardProps {
+  companies: CompanyInterface[];
+}
+
+export default function Component({ companies }: DashboardProps) {
+  console.log({ companies });
+
   return (
-    <div className="grid auto-rows-max items-start my-10 gap-4 md:gap-8 lg:col-span-2">
-      <Tabs defaultValue="usuarios">
-        <div className="flex items-center">
-          <TabsList>
-            <TabsTrigger value="usuarios">Usuarios</TabsTrigger>
-            <TabsTrigger value="empresas">Empresas</TabsTrigger>
-            <TabsTrigger value="estadisticas">Estadísticas</TabsTrigger>
-          </TabsList>
+    <div className="bg-background text-foreground">
+      <div className="container mx-auto py-8">
+        <h1 className="mb-6 text-2xl font-bold">Compañías</h1>
+        <div className="overflow-x-auto rounded-lg border shadow-sm">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nombre</TableHead>
+                <TableHead>Propietario</TableHead>
+                <TableHead>Sucursales</TableHead>
+                <TableHead>Fecha de creacion</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {companies.map((company) => {
+                return (
+                  <TableRow key={company.id}>
+                    <Link href={`admin/${company.id}`}>
+                      <TableCell className="font-medium">
+                        {company.name}
+                      </TableCell>
+                    </Link>
+                    <TableCell>El carlos</TableCell>
+                    <TableCell>{company.branches?.length}</TableCell>
+                    <TableCell>{company.createdAt.toString()}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
         </div>
-        <TabsContent value="usuarios">
-          <Card x-chunk="dashboard-05-chunk-3">
-            <CardHeader className="px-7">
-              <CardTitle>Usuarios</CardTitle>
-              <CardDescription>
-                Gestiona los usuarios de tu sistema.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nombre</TableHead>
-                    <TableHead className="hidden sm:table-cell">
-                      Correo
-                    </TableHead>
-                    <TableHead className="hidden sm:table-cell">
-                      Empresa
-                    </TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Fecha de registro
-                    </TableHead>
-                    <TableHead className="text-right">Acciones</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      <div className="font-medium">Olivia Smith</div>
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">
-                      olivia@example.com
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">
-                      Acme Inc
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      2023-06-24
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            aria-haspopup="true"
-                            size="icon"
-                            variant="default"
-                          >
-                            <IoMenu className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Editar</DropdownMenuItem>
-                          <DropdownMenuItem>Eliminar</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      <div className="font-medium">Noah Williams</div>
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">
-                      noah@example.com
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">
-                      Acme Inc
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      2023-06-25
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            aria-haspopup="true"
-                            size="icon"
-                            variant="default"
-                          >
-                            <IoMenu className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Editar</DropdownMenuItem>
-                          <DropdownMenuItem>Eliminar</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      <div className="font-medium">Emma Brown</div>
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">
-                      emma@example.com
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">
-                      Acme Inc
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      2023-06-26
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            aria-haspopup="true"
-                            size="icon"
-                            variant="default"
-                          >
-                            <IoMenu className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Editar</DropdownMenuItem>
-                          <DropdownMenuItem>Eliminar</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="empresas">
-          <Card x-chunk="dashboard-05-chunk-3">
-            <CardHeader className="px-7">
-              <CardTitle>Empresas</CardTitle>
-              <CardDescription>
-                Gestiona las empresas de tu sistema.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nombre</TableHead>
-                    <TableHead className="hidden sm:table-cell">
-                      Dirección
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-
-      <Card x-chunk="dashboard-05-chunk-0">
-        <CardHeader className="pb-3">
-          <CardTitle>Crear nuevo usuario</CardTitle>
-          <CardDescription className="max-w-lg text-balance leading-relaxed">
-            Crea nuevos usuarios y gestiona los existentes.
-          </CardDescription>
-        </CardHeader>
-        <CardFooter>
-          <Button>Crear nuevo usuario</Button>
-        </CardFooter>
-      </Card>
+      </div>
     </div>
   );
 }

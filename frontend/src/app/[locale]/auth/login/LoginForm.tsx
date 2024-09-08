@@ -43,7 +43,7 @@ export default function LoginClient({ locale }: { locale: string }) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       const response = await AuthServices.login(data.email, data.password);
-
+   
       const companyId = response.dataUser.companyId;
 
       const newURL = `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/${companyId}/sales`;

@@ -19,9 +19,17 @@ export const loginService = async (email: string, password: string) => {
     }
 
     const data = await response.json();
-    const token = data.token;
+    const { token, ...restData } = data;
+    const userId = restData.dataUser.id;
 
     cookieStore.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 3600,
+    });
+
+    cookieStore.set("userId", userId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",

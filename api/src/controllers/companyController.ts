@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { controllerError } from "../utils/controllerError";
 import CompanyServices from "../services/CompanyServices";
 import { CompanyInterface } from "../models/company";
+import UserServices from "../services/UserServices";
 
 class CompanyController {
   async getCompany(req: Request, res: Response): Promise<void> {
@@ -16,10 +17,24 @@ class CompanyController {
     }
   }
 
-  async getCompanies(_req: Request, res: Response): Promise<void> {
+  async getCompanies(req: Request, res: Response): Promise<void> {
     try {
+      const params = req.params;
+
+      console.log({ params });
+
+      const userId = params.userId;
+      
+      if (!userId) {
+        res.status(400).json({ message: "Missing information." });
+      }
+      const user = await UserServices.getUser(userId);
+
       const companies = await CompanyServices.getAllCompanies();
+      
+      if (user?.role !== "SUPER_ADMIN") throw new Error("You don't have permission.");
       if (companies.length === 0) throw new Error("No companies found.");
+
       res.status(200).json({ success: true, companies });
     } catch (error) {
       controllerError(res, error, 404);
