@@ -3,7 +3,7 @@ import pg from "pg";
 import ProductModel from "./models/product";
 import UserModel from "./models/user";
 import BranchModel from "./models/branch";
-import CostumerModel from "./models/costumers";
+import CustomerModel from "./models/customer";
 import OfferModel from "./models/offers";
 import PurchaseModel from "./models/purchases";
 import OperationModel from "./models/operations";
@@ -56,7 +56,7 @@ export const syncDatabase = async () => {
 ProductModel(sequelize);
 UserModel(sequelize);
 BranchModel(sequelize);
-CostumerModel(sequelize);
+CustomerModel(sequelize);
 OfferModel(sequelize);
 PurchaseModel(sequelize);
 OperationModel(sequelize);
@@ -68,7 +68,7 @@ const {
   Product,
   User,
   Branch,
-  Costumer,
+  Customer,
   Offer,
   Purchase,
   Operation,
@@ -79,18 +79,36 @@ const {
 
 /* ----- Relationships Setup ----- */
 
-User.belongsTo(Company, { foreignKey: "companyId" });
-Company.hasMany(User, { foreignKey: "companyId" });
-
 User.hasMany(Branch, { foreignKey: "userId" });
 Branch.belongsTo(User, { foreignKey: "userId" });
+
+Operation.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Operation, { foreignKey: "userId" });
+
+Company.hasMany(User, { foreignKey: "companyId" });
+User.belongsTo(Company, { foreignKey: "companyId" });
+
+Company.hasMany(Operation, { foreignKey: "companyId" });
+Operation.belongsTo(Company, { foreignKey: "companyId" });
+
+Company.hasMany(Product, { foreignKey: "companyId" });
+Product.belongsTo(Company, { foreignKey: "companyId" });
+
+Company.hasMany(Customer, { foreignKey: "companyId" });
+Customer.belongsTo(Company, { foreignKey: "companyId" });
+
+User.hasMany(Product, { foreignKey: "userId" });
+Product.belongsTo(User, { foreignKey: "userId" });
+
+User.hasMany(Customer, { foreignKey: "userId" });
+Customer.belongsTo(User, { foreignKey: "userId" }); 
 
 export {
   sequelize,
   Product,
   User,
   Branch,
-  Costumer,
+  Customer,
   Offer,
   Purchase,
   Operation,

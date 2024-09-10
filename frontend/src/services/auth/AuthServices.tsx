@@ -1,9 +1,12 @@
-import { loginService } from "./loginService";
+import { authenticateUser } from "./authenticateUser";
 
-class AuthServices {
-  async login(email: string, password: string) {
-    return await loginService(email, password);
+export async function login(email: string, password: string) {
+  try {
+    const user = await authenticateUser(email, password);
+    return user;
+  } catch (error) {
+    console.error("Error during login:", error);
+    throw error;
   }
 }
 
-export default new AuthServices();

@@ -6,6 +6,11 @@ class UserController {
   async getUser(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
+
+      if (!id) {
+        res.status(404).json({ message: "User id is required" });
+      }
+
       const user = await UserServices.getUser(id);
 
       if (!user) {
@@ -37,6 +42,11 @@ class UserController {
   async postUser(req: Request, res: Response): Promise<void> {
     try {
       const companyId = req.params.companyId;
+
+      if (!companyId) {
+        res.status(404).json({ message: "Company id is required" });
+      }
+
       const newUser = await UserServices.postUser(req.body, companyId);
 
       if (typeof newUser === "string") {
@@ -53,6 +63,11 @@ class UserController {
   async putUser(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
+
+      if (!id) {
+        res.status(400).json({ message: "User id is required" });
+      }
+
       const updateResult = await UserServices.putUser(id, req.body);
 
       if (updateResult === true) {
@@ -68,12 +83,17 @@ class UserController {
   async deleteUser(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const deleteResult = await UserServices.deleteUser(id);
 
-      if (deleteResult === true) {
-        res.status(204).json({ success: true });
+      if (!id) {
+        res.status(400).json({ message: "User id is required" });
+      }
+
+      const deleteUser = await UserServices.deleteUser(id);
+
+      if (deleteUser !== true) {
+        res.status(400).json({ message: "User not deleted." });
       } else {
-        res.status(404).json({ message: deleteResult });
+        res.status(204).json({ success: true });
       }
     } catch (error) {
       controllerError(res, error, 500);

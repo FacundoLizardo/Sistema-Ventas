@@ -2,16 +2,19 @@ import { controllerError } from "../utils/controllerError";
 import { Request, Response } from "express";
 import OperationServices from "../services/OperationServices";
 
-class OperationsController {
+class OperationController {
   async getOperation(req: Request, res: Response) {
     try {
       const { id } = req.params;
+
+      if (!id) {
+        res.status(404).json({ message: "Operation id is required" });
+      }
 
       const operation = await OperationServices.getOperation(id);
 
       if (!operation) {
         res.status(404).json({ message: "Operation not found" });
-        return;
       }
 
       res.status(200).json({ success: true, operation });
@@ -37,13 +40,24 @@ class OperationsController {
 
   async postOperation(req: Request, res: Response) {
     try {
-      const newOperation = await OperationServices.postOperation(req.body);
+      const companyId = req.params.companyId;
+
+      if (!companyId) {
+        res.status(404).json({
+          message:
+            "The operation could not be created, companyId not found. Please try again.",
+        });
+      }
+
+      const newOperation = await OperationServices.postOperation(
+        req.body,
+        companyId
+      );
 
       if (!newOperation) {
         res.status(404).json({
           message: "The operation could not be created. Please try again.",
         });
-        return;
       }
 
       res.status(201).json(newOperation);
@@ -53,14 +67,19 @@ class OperationsController {
   }
 
   async putOperation(req: Request, res: Response) {
-    const { id } = req.params;
-
     try {
-      const updatedOperation = await OperationServices.putOperation(
+      const { id } = req.params;
+
+      if (!id) {
+        res.status(404).json({ message: "Operation id is required" });
+      }
+
+      const updateOperation = await OperationServices.putOperation(
         id,
         req.body
       );
-      if (updatedOperation !== true) {
+
+      if (updateOperation !== true) {
         res.status(400).json({ message: "Operation not updated." });
       } else {
         res.status(204).json({ success: true });
@@ -71,19 +90,25 @@ class OperationsController {
   }
 
   async deleteOperation(req: Request, res: Response) {
-    const { id } = req.params;
-
     try {
+      const { id } = req.params;
+
+      if (!id) {
+        res.status(404).json({ message: "Operation id is required" });
+      }
+
       const deletedOperation = await OperationServices.deleteOperation(id);
+
       if (deletedOperation !== true) {
         res.status(400).json({ message: "Operation not deleted." });
       } else {
         res.status(204).json({ success: true });
       }
+      
     } catch (error) {
       controllerError(res, error, 500);
     }
   }
 }
 
-module.exports = OperationsController;
+export default new OperationController();

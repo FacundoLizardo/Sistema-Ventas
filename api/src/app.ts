@@ -1,43 +1,65 @@
-  import "dotenv/config";
-  import express from "express";
-  import morgan from "morgan";
-  import cors from "cors";
-  import mainRouter from "./routes";
-  import { orangeText, syncDatabase } from "./db";
-  import loginRouter from "./routes/login";
-  import { authenticateToken } from "./utils/authenticateToken";
-  import cookieParser from 'cookie-parser';
+import "dotenv/config";
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
+import mainRouter from "./routes";
+import { orangeText, syncDatabase } from "./db";
+import loginRouter from "./routes/login";
+import { authenticateToken } from "./utils/authenticateToken";
+import cookieParser from "cookie-parser";
+var session = require("express-session");
+import { PORT, NODE_ENV, SESSION_SECRET } from "./config";
 
-  const PORT = process.env.PORT || 3000;
-  const app = express();
-  const NODE_ENV = process.env.NODE_ENV || "development";
+const app = express();
 
-  app.use(morgan("dev"));
-  app.use(express.json());
-  app.use(cors());
-  app.use(cookieParser());
+app.use(morgan("dev"));
+app.use(express.json());
+app.use(cors());
+app.use(cookieParser());
 
-  app.use((_req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
+app.use(
+  session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 3600000, // 1 hora
+    },
+  })
+);
+
+app.use((req, _res, next) => {
+  console.log("Session:", req.session);
+  next();
+});
+
+app.use((_req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  next();
+});
+
+app.use("/api/login", loginRouter);
+app.use(
+  "/api",
+  NODE_ENV === "production" ? authenticateToken : (_req, _res, next) => next(),
+  mainRouter
+);
+
+syncDatabase()
+  .then(() => {
+    app.listen(PORT || 3000, () =>
+      console.log(orangeText, `Server running on port ${PORT}`)
     );
-    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-    next();
+  })
+  .catch((error) => {
+    console.error("Failed to sync database:", error);
   });
-
-  app.use("/api/login", loginRouter);
-  if (NODE_ENV === "production") app.use("/api", authenticateToken ,mainRouter);
-  if (NODE_ENV === "development") app.use("/api", mainRouter);
-
-  syncDatabase()
-    .then(() => {
-      app.listen(PORT, () =>
-        console.log(orangeText, `Server running on port ${PORT}`)
-      );
-    })
-    .catch((error) => {
-      console.error("Failed to sync database:", error);
-    });

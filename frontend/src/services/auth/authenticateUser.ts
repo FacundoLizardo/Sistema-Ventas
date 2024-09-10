@@ -1,16 +1,18 @@
 "use server";
+
 import { cookies } from "next/headers";
-export const loginService = async (email: string, password: string) => {
-  const cookieStore = cookies();
+
+export async function authenticateUser(email: string, password: string) {
   try {
+    const cookieStore = cookies();
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: "include",
       }
     );
 
@@ -19,9 +21,8 @@ export const loginService = async (email: string, password: string) => {
     }
 
     const data = await response.json();
-    const token = data.token;
 
-    cookieStore.set("token", token, {
+    cookieStore.set("session", JSON.stringify(data), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
@@ -30,7 +31,7 @@ export const loginService = async (email: string, password: string) => {
 
     return data;
   } catch (error) {
-    console.error("Error during login:", error);
+    console.error("Error during authentication:", error);
     throw error;
   }
-};
+}

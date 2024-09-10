@@ -8,14 +8,16 @@ export interface OperationInterface {
 	discount: number;
 	extraCharge: number;
 	debtAmount?: number;
-	branchId: string;
+	branchId?: string;
 	paymentType: string;
 	invoiceNumber?: string;
 	state: string;
 	isdelivery: boolean;
 	deliveryAddress?: string;
-	customersId?: string;
+	customer?: string;
 	comments?: string;
+	invoiceLink?: string;
+	cbteTipo: number;
 }
 
 export interface OperationCreationInterface
@@ -26,7 +28,7 @@ export interface OperationCreationInterface
 		| "debtAmount"
 		| "invoiceNumber"
 		| "deliveryAddress"
-		| "customersId"
+		| "customer"
 		| "comments"
 	> {}
 
@@ -40,14 +42,16 @@ class Operation
 	public discount!: number;
 	public extraCharge!: number;
 	public debtAmount?: number;
-	public branchId!: string;
+	public branchId?: string;
 	public paymentType!: string;
 	public invoiceNumber?: string;
 	public state!: string;
 	public isdelivery!: boolean;
 	public deliveryAddress?: string;
-	public customersId?: string;
+	public customer?: string;
 	public comments?: string;
+	public invoiceLink?: string;
+	public cbteTipo!: number;
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
 }
@@ -56,9 +60,9 @@ export default (sequelize: Sequelize) => {
 	Operation.init(
 		{
 			id: {
-				type: DataTypes.INTEGER,
+				type: DataTypes.UUID,
+				defaultValue: DataTypes.UUIDV4,
 				primaryKey: true,
-				autoIncrement: true,
 				allowNull: false,
 			},
 			products: {
@@ -95,7 +99,7 @@ export default (sequelize: Sequelize) => {
 			},
 			branchId: {
 				type: DataTypes.STRING,
-				allowNull: false,
+				allowNull: true,
 			},
 			paymentType: {
 				type: DataTypes.STRING,
@@ -126,7 +130,7 @@ export default (sequelize: Sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
-			customersId: {
+			customer: {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
@@ -134,6 +138,15 @@ export default (sequelize: Sequelize) => {
 				type: DataTypes.STRING,
 				allowNull: true,
 			},
+			invoiceLink: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			},
+			cbteTipo: {
+				type: DataTypes.INTEGER,
+				allowNull: false,
+				defaultValue: 0,
+			}
 		},
 		{
 			sequelize,

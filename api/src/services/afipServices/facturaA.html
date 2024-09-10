@@ -80,8 +80,7 @@
       <tr>
         <td class="border-top padding-t-3 padding-b-3">
           <p class="text-center text-lg">FACTURA A</p>
-          <!-- 
-          <p class="text-center">Codigo {{cbteTipo}}</p> -->
+          <p class="text-center">Codigo {{cbteTipo}}</p>
           <p>P.V: {{ptoVta}}</p>
           <p>Nro: {{numeroFactura}}</p>
           <p>Fecha: {{fecha}}</p>
@@ -96,7 +95,7 @@
       <tr>
         <td class="border-top padding-t-3 padding-b-3">
           <div>
-            <table>
+            <table class="text-center">
               {{productRows}}
             </table>
           </div>
@@ -107,16 +106,20 @@
           <div>
             <table>
               <tr>
-                <td>Subtotal</td>
+                <td>Subtotal sin descuento</td>
+                <td>{{importeGravado}}</td>
+              </tr>
+              <tr>
+                <td>Descuento</td>
+                <td>% {{discount}}</td>
+              </tr>
+              <tr>
+                <td>Subtotal con descuento</td>
                 <td>{{ImpNeto}}</td>
               </tr>
               <tr>
                 <td>IVA 21 %</td>
                 <td>{{ImpIVA}}</td>
-              </tr>
-              <tr>
-                <td>Descuento %</td>
-                <td>{{discount}}</td>
               </tr>
             </table>
           </div>
@@ -127,8 +130,8 @@
           <div>
             <table>
               <tr>
-                <td>TOTAL</td>
-                <td>{{ImpTotal}}</td>
+                <td><strong>TOTAL</strong></td>
+                <td><strong>{{ImpTotal}}</strong></td>
               </tr>
             </table>
           </div>
