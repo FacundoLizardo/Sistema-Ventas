@@ -2,7 +2,6 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -25,10 +24,10 @@ import ButtonWithLoading from "@/components/common/ButtonWithLoading";
 import { login } from "@/services/auth/AuthServices";
 
 const formSchema = z.object({
-  email: z.string().email({ message: "Correo electrónico inválido" }),
+  email: z.string().email({ message: "Correo electrónico no válido" }),
   password: z
     .string()
-    .min(6, { message: "El password debe tener al menos 6 caracteres." }),
+    .min(6, { message: "La contraseña debe tener al menos 6 caracteres." }),
 });
 
 export default function LoginClient({ locale }: { locale: string }) {
@@ -63,9 +62,10 @@ export default function LoginClient({ locale }: { locale: string }) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
-            <CardTitle className="text-2xl">Login</CardTitle>
+            <CardTitle className="text-2xl">Iniciar sesión</CardTitle>
             <CardDescription>
-              Ingrese su email y contraseña para ingresar.
+              Por favor, ingrese su correo electrónico y contraseña para
+              acceder.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -75,7 +75,7 @@ export default function LoginClient({ locale }: { locale: string }) {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">Correo electrónico</Label>
                     <FormControl>
                       <Input
                         id="email"
@@ -101,7 +101,7 @@ export default function LoginClient({ locale }: { locale: string }) {
                       <Input
                         id="password"
                         {...field}
-                        autoComplete="password"
+                        autoComplete="current-password"
                         type="password"
                       />
                     </FormControl>
@@ -116,15 +116,16 @@ export default function LoginClient({ locale }: { locale: string }) {
                 className="text-sm text-muted-foreground hover:underline"
                 prefetch={false}
               >
-                ¿Olvidaste la contraseña?
+                ¿Olvidaste tu contraseña?
               </Link>
               <ButtonWithLoading
                 loading={submitLoading}
                 loadingText="Ingresando..."
-                variant="default"
+                variant="gradient"
                 className="flex flex-row items-center"
+                size={"default"}
                 type="submit"
-                disabled={submitDisabled}
+                disabled={submitDisabled || submitLoading} 
               >
                 Ingresar
               </ButtonWithLoading>

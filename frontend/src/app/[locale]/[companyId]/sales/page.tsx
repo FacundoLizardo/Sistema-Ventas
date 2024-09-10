@@ -1,13 +1,19 @@
 import SalesContainer from "@/components/sales/SalesContainer";
-import ProductsServices from '@/services/products/ProductsServices';
+import ProductsServices from "@/services/products/ProductsServices";
 
-export default async function RootPage() {
-   const products = await ProductsServices.getAll()
-  console.log(products) 
+export default async function RootPage({
+  params,
+}: {
+  params: {
+    companyId: string;
+  };
+}) {
+  const { companyId } = params;
+  const { products } = await ProductsServices.getAll(companyId);
+
   return (
-    //todo hacer un check para ver si el id del path es un id de una company
     <main>
-      <SalesContainer />
+      <SalesContainer products={products} />
     </main>
   );
 }

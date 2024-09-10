@@ -17,7 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { postProductService } from "@/services/products/postProductsService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -30,6 +29,7 @@ import {
   FormItem,
   FormMessage,
 } from "../ui/form";
+import ProductsServices from "@/services/products/ProductsServices";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "El nombre es requerido." }),
@@ -70,7 +70,7 @@ const formSchema = z.object({
   barcode: z.string(),
 });
 
-export default function ProductForm({ locale }: { locale: string }) {
+export default function ProductForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -92,7 +92,7 @@ export default function ProductForm({ locale }: { locale: string }) {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const request = postProductService(data);
+    const request = ProductsServices.post(data);
 
     toast.promise(request, {
       loading: "Creando el producto...",

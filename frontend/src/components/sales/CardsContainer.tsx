@@ -1,16 +1,20 @@
-import { ProductInterface } from "@/types";
+import { ProductInterface } from "@/services/products/ProductsServices";
 import SaleCard from "./SaleCard";
 
-interface  CardsContainerProps {
-  data:  ProductInterface[]
-}
-
-export const CardsContainer = ({data}:CardsContainerProps) => {
+export const CardsContainer = ({
+  products,
+}: {
+  products: ProductInterface[];
+}) => {
   return (
     <div className="flex flex-col justify-items-center bg-card rounded-md py-2">
-      {data.map((item) => {
-        return <SaleCard key={item.id} />;
-      })}
+      {products.length > 0 ? (
+        products.map((product) => (
+          <SaleCard key={product.id} product={product} />
+        ))
+      ) : (
+        <p>No hay productos disponibles</p>
+      )}
     </div>
   );
 };

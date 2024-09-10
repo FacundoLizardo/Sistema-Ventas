@@ -26,15 +26,10 @@ app.use(
       httpOnly: true,
       secure: NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 3600000, // 1 hora
+      maxAge: 3600000,
     },
   })
 );
-
-app.use((req, _res, next) => {
-  console.log("Session:", req.session);
-  next();
-});
 
 app.use((_req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -50,7 +45,13 @@ app.use((_req, res, next) => {
 app.use("/api/login", loginRouter);
 app.use(
   "/api",
-  NODE_ENV === "production" ? authenticateToken : (_req, _res, next) => next(),
+  (req, res, next) => {
+    if (NODE_ENV === "production") {
+      authenticateToken(req, res, next);
+    } else {
+      next();
+    }
+  },
   mainRouter
 );
 

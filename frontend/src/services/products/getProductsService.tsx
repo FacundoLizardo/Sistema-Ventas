@@ -1,13 +1,19 @@
 "use server";
 
-export const getProductsService = async (token?: string) => {
+export const getProductsService = async ({
+  token,
+  companyId,
+}: {
+  token?: string;
+  companyId: string;
+}) => {
   try {
     if (!token) {
       throw new Error("No token provided");
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products?companyId=${companyId}`,
       {
         method: "GET",
         headers: {
@@ -18,7 +24,6 @@ export const getProductsService = async (token?: string) => {
     );
 
     console.log("response status:", response.status);
-    
 
     if (!response.ok) {
       throw new Error("Network response was not ok");

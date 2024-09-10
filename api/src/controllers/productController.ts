@@ -23,9 +23,15 @@ class ProductController {
     }
   }
 
-  async getProducts(_req: Request, res: Response): Promise<void> {
+  async getProducts(req: Request, res: Response): Promise<void> {
     try {
-      const products = await ProductService.getProducts();
+      const companyId = req.query.companyId as string;
+
+      if (!companyId) {
+        res.status(400).json({ message: "Company id is required" });
+      }
+
+      const products = await ProductService.getProducts(companyId);
 
       if (!products) {
         res.status(404).json({ message: "Products not found" });

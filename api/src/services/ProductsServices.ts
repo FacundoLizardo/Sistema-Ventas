@@ -14,9 +14,11 @@ class ProductService {
     }
   }
 
-  async getProducts() {
+  async getProducts(companyId: string) {
     try {
-      const products = await Product.findAll();
+      const products = await Product.findAll({
+        where: { companyId },
+      });
       return products
         ? products.map((productObj) => productObj.get({ plain: true }))
         : [];
@@ -40,15 +42,14 @@ class ProductService {
   }
   async postProduct(
     data: ProductCreationInterface,
-    companyId: string,
+    companyId: string
   ): Promise<ProductInterface | string> {
-
     try {
       const [product, created] = await Product.findOrCreate({
         where: { name: data.name },
         defaults: {
           ...data,
-          companyId
+          companyId,
         },
       });
 

@@ -1,25 +1,9 @@
-'use server';
-import { cookies } from "next/headers";
+"use server";
 
-interface IproductCreationServiceParams {
-  name: string;
-  stock?: number | undefined; 
-  allowNegativeStock: boolean;
-  trackStock: boolean;
-  minimumStock?: number | undefined;
-  enabled: boolean;
-  notesDescription?: string | undefined;
-  taxes?: number | undefined;
-  barcode?: string | undefined;
-  category?: string | undefined;
-  cost?: number | undefined;
-  finalPrice?: number | undefined;
-  discount?: number | undefined;
-  profitPercentage?: number | undefined;
-}
+import { ProductCreationInterface } from "./ProductsServices";
 
 export const postProductService = async (
-  params: IproductCreationServiceParams,
+  params: ProductCreationInterface,
   token: string
 ) => {
   try {

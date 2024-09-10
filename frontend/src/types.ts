@@ -1,3 +1,5 @@
+import { ProductInterface } from "./services/products/ProductsServices";
+
 export interface Branch {
     id: string;
     ptoVta: number;
@@ -128,41 +130,6 @@ export interface OfferInterface {
     customersId?: string;
     comments?: string;
   }
-
-export interface ProductInterface {
-	id: string;
-	name: string;
-	category?: string;
-	cost?: number;
-	finalPrice?: number;
-	discount?: number;
-	profitPercentage?: number;
-	stock: number;
-	allowNegativeStock: boolean;
-	trackStock: boolean;
-	minimumStock: number;
-	enabled: boolean;
-	notesDescription?: string;
-	taxes?: number;
-	barcode: string;
-}
-
-export interface ProductCreationInterface {
-	name: string;
-	category?: string;
-	cost?: number;
-	finalPrice?: number;
-	discount?: number;
-	profitPercentage?: number;
-	stock: number;
-	allowNegativeStock: boolean;
-	trackStock: boolean;
-	minimumStock: number;
-	enabled: boolean;
-	notesDescription?: string;
-	taxes?: number;
-	barcode: string;
-}
 
 export interface PurchaseInterface {
     id: string;
