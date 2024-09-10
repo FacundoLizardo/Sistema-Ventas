@@ -1,10 +1,6 @@
-import { ProductInterface } from "@/types";
+import { ProductInterface } from "@/services/products/ProductsServices";
 
-interface StockItemProps {
-    product: ProductInterface
-}
-
-export const StockItem = ({ product }: StockItemProps) => {
+export const StockItem = ({ product }: { product: ProductInterface}) => {
   return (
     <div className="flex items-center justify-between p-2">
       <span className="text-lg">{product.name}</span>
