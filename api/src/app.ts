@@ -42,7 +42,7 @@ app.use((_req, res, next) => {
   next();
 });
 
-app.use("/api/login", loginRouter);
+app.use("/api/auth/", loginRouter);
 app.use(
   "/api",
   (req, res, next) => {

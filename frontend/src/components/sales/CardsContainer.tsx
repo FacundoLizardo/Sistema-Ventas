@@ -1,10 +1,10 @@
-import { ProductInterface } from "@/services/products/ProductsServices";
+import { IProduct } from "@/services/products/ProductsServices";
 import SaleCard from "./SaleCard";
 
 export const CardsContainer = ({
   products,
 }: {
-  products: ProductInterface[];
+  products: IProduct[];
 }) => {
   return (
     <div className="flex flex-col justify-items-center bg-card rounded-md py-2">

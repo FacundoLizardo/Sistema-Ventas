@@ -40,7 +40,7 @@ const formSchema = z.object({
     .optional(),
   finalPrice: z
     .number()
-    .nonnegative({ message: "El costo no puede ser negativo." })
+    .nonnegative({ message: "El precio final no puede ser negativo." })
     .optional(),
   discount: z.number().optional(),
   profitPercentage: z
@@ -52,10 +52,13 @@ const formSchema = z.object({
       message: "El porcentaje de ganancia debe ser menor o igual a 100.",
     })
     .optional(),
-  stock: z.number().optional(),
+  stock: z.number().min(0, { message: "El stock no puede ser negativo." }),
   allowNegativeStock: z.boolean(),
   trackStock: z.boolean(),
-  minimumStock: z.number().optional(),
+  minimumStock: z
+    .number()
+    .min(0, { message: "El stock mínimo no puede ser negativo." })
+    .default(0), // Ensure default value for minimumStock
   enabled: z.boolean(),
   notesDescription: z
     .string()
@@ -65,17 +68,17 @@ const formSchema = z.object({
     .optional(),
   taxes: z
     .number()
-    .gte(0, { message: "Las tasas no pueden ser negativas." })
+    .nonnegative({ message: "Las tasas no pueden ser negativas." })
     .optional(),
-  barcode: z.string(),
+  barcode: z.string().min(1, { message: "El código de barras es requerido." }),
 });
 
 export default function ProductForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: undefined,
-      category: undefined,
+      name: "",
+      category: "",
       cost: undefined,
       finalPrice: undefined,
       discount: undefined,
@@ -85,9 +88,9 @@ export default function ProductForm() {
       trackStock: false,
       minimumStock: undefined,
       enabled: false,
-      notesDescription: undefined,
+      notesDescription: "",
       taxes: undefined,
-      barcode: undefined,
+      barcode: "",
     },
   });
 
@@ -279,7 +282,6 @@ export default function ProductForm() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="stock"
@@ -294,9 +296,7 @@ export default function ProductForm() {
                       value={field.value ?? ""}
                       onChange={(e) => {
                         const value =
-                          e.target.value === ""
-                            ? undefined
-                            : Number(e.target.value);
+                          e.target.value === "" ? 0 : Number(e.target.value);
                         field.onChange(value);
                       }}
                     />
@@ -372,13 +372,13 @@ export default function ProductForm() {
               control={form.control}
               name="enabled"
               render={({ field }) => (
-                <FormItem  className="flex gap-2 items-center">
+                <FormItem className="flex gap-2 items-center">
                   <FormControl>
                     <Checkbox
                       id="enabled"
                       checked={field.value}
                       onCheckedChange={field.onChange}
-                       className="mt-2"
+                      className="mt-2"
                     />
                   </FormControl>
                   <Label htmlFor="enabled">Habilitado para la venta</Label>

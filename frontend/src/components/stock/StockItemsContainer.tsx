@@ -1,12 +1,12 @@
 "use client";
 
-import { ProductInterface } from "@/services/products/ProductsServices";
+import { IProduct } from "@/services/products/ProductsServices";
 import { StockItem } from "./StockItem";
 
 export default function StockItemsContainer({
   products,
 }: {
-  products: ProductInterface[];
+  products: IProduct[];
 }) {
   return (
     <div className="flex flex-col bg-foreground text-black">

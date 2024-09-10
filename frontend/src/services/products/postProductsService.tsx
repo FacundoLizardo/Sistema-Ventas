@@ -1,9 +1,9 @@
 "use server";
 
-import { ProductCreationInterface } from "./ProductsServices";
+import { IProductCreate } from "./ProductsServices";
 
 export const postProductService = async (
-  params: ProductCreationInterface,
+  params: IProductCreate,
   token: string
 ) => {
   try {

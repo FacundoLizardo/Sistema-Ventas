@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { ProductInterface } from "@/services/products/ProductsServices";
+import { IProduct } from "@/services/products/ProductsServices";
 import { MinusIcon, PlusIcon, Trash2Icon } from "lucide-react";
 
-export default function SaleCard({ product }: { product: ProductInterface }) {
+export default function SaleCard({ product }: { product: IProduct }) {
   return (
     <div className="w-full bg-card rounded-md shadow-sm">
       <div className="flex items-center justify-between h-10 px-4">

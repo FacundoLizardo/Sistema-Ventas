@@ -2,7 +2,7 @@ import { getProductsService } from "./getProductsService";
 import { postProductService } from "./postProductsService";
 import { accessToken } from "../accessToken";
 
-export interface ProductInterface {
+export interface IProduct {
   id: string;
   name: string;
   category?: string;
@@ -20,22 +20,7 @@ export interface ProductInterface {
   barcode: string;
 }
 
-export interface ProductCreationInterface {
-  name: string;
-  stock?: number | undefined;
-  allowNegativeStock: boolean;
-  trackStock: boolean;
-  minimumStock?: number | undefined;
-  enabled: boolean;
-  notesDescription?: string | undefined;
-  taxes?: number | undefined;
-  barcode?: string | undefined;
-  category?: string | undefined;
-  cost?: number | undefined;
-  finalPrice?: number | undefined;
-  discount?: number | undefined;
-  profitPercentage?: number | undefined;
-}
+export interface IProductCreate extends Omit<IProduct, "id"> {}
 
 class ProductsServices {
   static async getToken() {
@@ -58,7 +43,7 @@ class ProductsServices {
     }
   }
 
-  static async post(params: ProductCreationInterface) {
+  static async post(params: IProductCreate) {
     try {
       const token = await this.getToken();
       return await postProductService(params, token);

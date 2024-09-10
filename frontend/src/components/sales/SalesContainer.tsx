@@ -1,11 +1,11 @@
 import { CardsContainer } from "@/components/sales/CardsContainer";
 import SaleSeachBar from "@/components/sales/SaleSearchBar";
-import { ProductInterface } from "@/services/products/ProductsServices";
+import { IProduct } from "@/services/products/ProductsServices";
 
 export default function SalesContainer({
   products,
 }: {
-  products: ProductInterface[];
+  products: IProduct[];
 }) {
   return (
     //todo hacer un check para ver si el id del path es un id de una company

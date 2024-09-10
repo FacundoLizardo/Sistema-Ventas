@@ -58,9 +58,9 @@ export default function LoginClient({ locale }: { locale: string }) {
   const submitLoading = isSubmitting || isSubmitSuccessful;
 
   return (
-    <Card className="w-full max-w-md">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle className="text-2xl">Iniciar sesión</CardTitle>
             <CardDescription>
@@ -69,70 +69,79 @@ export default function LoginClient({ locale }: { locale: string }) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div>
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <Label htmlFor="email">Correo electrónico</Label>
-                    <FormControl>
-                      <Input
-                        id="email"
-                        placeholder="m@example.com"
-                        autoComplete="email"
-                        type="email"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div>
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <Label htmlFor="password">Contraseña</Label>
-                    <FormControl>
-                      <Input
-                        id="password"
-                        {...field}
-                        autoComplete="current-password"
-                        type="password"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <CardFooter className="flex justify-between items-center">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <Label htmlFor="email">Correo electrónico</Label>
+                  <FormControl>
+                    <Input
+                      id="email"
+                      placeholder="gpi360@example.com"
+                      autoComplete="email"
+                      type="email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <Label htmlFor="password">Contraseña</Label>
+                  <FormControl>
+                    <Input
+                      id="password"
+                      {...field}
+                      autoComplete="current-password"
+                      type="password"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+          <CardFooter className="flex flex-col justify-between items-center gap-4 md:gap-6">
+            <ButtonWithLoading
+              loading={submitLoading}
+              loadingText="Ingresando..."
+              variant="gradient"
+              className="flex flex-row items-center w-full"
+              size={"default"}
+              type="submit"
+              disabled={submitDisabled || submitLoading}
+            >
+              Ingresar
+            </ButtonWithLoading>
+            <div className="text-xs text-muted-foreground text-center">
+              Si tienes algún problema,{" "}
               <Link
                 href="#"
-                className="text-sm text-muted-foreground hover:underline"
+                className="hover:underline text-primary"
                 prefetch={false}
               >
-                ¿Olvidaste tu contraseña?
-              </Link>
-              <ButtonWithLoading
-                loading={submitLoading}
-                loadingText="Ingresando..."
-                variant="gradient"
-                className="flex flex-row items-center"
-                size={"default"}
-                type="submit"
-                disabled={submitDisabled || submitLoading} 
+                contáctanos
+              </Link>{" "}
+              o si no recuerdas tu contraseña,{" "}
+              <Link
+                href="#"
+                className="hover:underline text-primary"
+                prefetch={false}
               >
-                Ingresar
-              </ButtonWithLoading>
-            </CardFooter>
-          </CardContent>
-        </form>
-      </Form>
-    </Card>
+                recupérala aquí
+              </Link>
+              .
+            </div>
+          </CardFooter>
+        </Card>
+      </form>
+    </Form>
   );
 }
