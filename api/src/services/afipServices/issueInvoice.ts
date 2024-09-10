@@ -8,6 +8,7 @@ import { generatePDF } from "./generatePDF";
 import { serviceError } from "../../utils/serviceError";
 import { updateProductStock } from "../../utils/updateProductStock";
 import CustumerServices from "../CustomerServices";
+import { format } from "date-fns";
 
 const afip = new Afip({ CUIT: CUIT });
 
@@ -72,12 +73,13 @@ export async function issueInvoice({ req }: { req: Request }) {
       ptoVta,
       cbteTipo
     );
+    console.log("lastVoucher", lastVoucher);
 
-    let numeroFactura = lastVoucher + 1;
-    const fecha = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-      .toISOString()
-      .split("T")[0];
+    const numeroFactura = lastVoucher + 1;
+    console.log("numeroFactura", numeroFactura);
 
+    const fecha = format(new Date(), "yyyyMMdd");
+    
     /**
      * Concepto de la factura
      Opciones:
@@ -101,7 +103,7 @@ export async function issueInvoice({ req }: { req: Request }) {
       DocNro: docNro,
       CbteDesde: numeroFactura,
       CbteHasta: numeroFactura,
-      CbteFch: parseInt(fecha.replace(/-/g, "")),
+      CbteFch: fecha,
       FchServDesde: fecha_servicio_desde,
       FchServHasta: fecha_servicio_hasta,
       FchVtoPago: fecha_vencimiento_pago,

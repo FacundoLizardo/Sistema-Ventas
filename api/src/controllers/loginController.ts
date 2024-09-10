@@ -1,16 +1,25 @@
 import { Request, Response } from "express";
-import { controllerError } from "../utils/controllerError";
 import loginService from "../services/LoginService";
-import { UserLogin } from "../models/user";
+import {  UserLogin } from "../models/user";
+import { controllerError } from "../utils/controllerError";
+
+declare module 'express-session' {
+  interface SessionData {
+    user?: {
+      id: string;
+      email: string;
+      companyId: string;
+      token: string;
+    };
+  }
+}
+
 class LoginController {
   async login(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body;
 
     try {
-      const user = (await loginService.authenticate(
-        email,
-        password
-      )) as UserLogin;
+      const user = (await loginService.authenticate(email, password)) as UserLogin;
 
       if (!user) {
         throw new Error(`User with the email: ${email} not found.`);
@@ -18,20 +27,23 @@ class LoginController {
 
       const token = loginService.generateToken(user);
 
-      const dataUser = {
+      req.session.user = {
         id: user.id,
         email: user.email,
         companyId: user.companyId,
+        token,
       };
 
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 3600000,
-      });
+      req.session.save((err) => {
+        if (err) {
+          throw err;
+        }
 
-      res.status(200).json({ success: true, token, dataUser });
+        res.status(200).json({
+          success: true,
+          dataUser: req.session.user,
+        });
+      });
     } catch (error) {
       controllerError(res, error, 500);
     }
