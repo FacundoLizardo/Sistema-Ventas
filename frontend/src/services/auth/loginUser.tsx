@@ -17,7 +17,10 @@ export async function loginUser(email: string, password: string) {
     );
 
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      if (response.status === 401) {
+        return { success: false, error: "Correo o contraseña incorrectos." };
+      }
+      return { success: false, error: "Error en la autenticación." };
     }
 
     const data = await response.json();
@@ -32,6 +35,6 @@ export async function loginUser(email: string, password: string) {
     return data;
   } catch (error) {
     console.error("Error during authentication:", error);
-    throw error;
+    return { success: false, error: "Error en la autenticación." };
   }
 }

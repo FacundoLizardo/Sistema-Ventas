@@ -13,15 +13,10 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import ButtonWithLoading from "@/components/common/ButtonWithLoading";
 import { login } from "@/services/auth/AuthServices";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Correo electrónico no válido" }),
@@ -31,6 +26,8 @@ const formSchema = z.object({
 });
 
 export default function LoginClient({ locale }: { locale: string }) {
+  const [globalError, setGlobalError] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,6 +37,7 @@ export default function LoginClient({ locale }: { locale: string }) {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setGlobalError(null);
     try {
       const response = await login(data.email, data.password);
 
@@ -48,14 +46,22 @@ export default function LoginClient({ locale }: { locale: string }) {
       const newURL = `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/${companyId}/sales`;
 
       window.location.href = newURL;
+      form.reset();
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
+      setGlobalError("Correo electrónico o contraseña incorrectos.");
+      form.reset();
     }
   };
 
-  const { isDirty, isValid, isSubmitting, isSubmitSuccessful } = form.formState;
+  const { isDirty, isValid, isSubmitting } = form.formState;
   const submitDisabled = !isDirty || !isValid;
-  const submitLoading = isSubmitting || isSubmitSuccessful;
+
+  useEffect(() => {
+    if (isDirty) {
+      setGlobalError(null);
+    }
+  }, [isDirty]);
 
   return (
     <Form {...form}>
@@ -84,7 +90,6 @@ export default function LoginClient({ locale }: { locale: string }) {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -103,20 +108,24 @@ export default function LoginClient({ locale }: { locale: string }) {
                       type="password"
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
+            {globalError && (
+              <div className="text-sm font-medium text-destructive">
+                {globalError}
+              </div>
+            )}
           </CardContent>
           <CardFooter className="flex flex-col justify-between items-center gap-4 md:gap-6">
             <ButtonWithLoading
-              loading={submitLoading}
+              loading={isSubmitting}
               loadingText="Ingresando..."
               variant="gradient"
               className="flex flex-row items-center w-full"
               size={"default"}
               type="submit"
-              disabled={submitDisabled || submitLoading}
+              disabled={submitDisabled || isSubmitting}
             >
               Ingresar
             </ButtonWithLoading>

@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import loginService from "../services/LoginService";
 import { UserLogin } from "../models/user";
-import { controllerError } from "../utils/controllerError";
 
 declare module "express-session" {
   interface SessionData {
@@ -25,11 +24,13 @@ class LoginController {
       )) as UserLogin;
 
       if (!user) {
-        throw new Error(`User with the email: ${email} not found.`);
+        res
+          .status(401)
+          .json({ success: false, message: "Email o contraseña incorrectos." });
+        return; 
       }
 
       const token = loginService.generateToken(user);
-
       req.session.user = {
         id: user.id,
         email: user.email,
@@ -39,16 +40,20 @@ class LoginController {
 
       req.session.save((err) => {
         if (err) {
-          throw err;
+          console.error("Error saving session:", err);
+          res.status(500).json({ error: "Error en la autenticación." });
+        } else {
+          res.status(200).json({
+            success: true,
+            dataUser: req.session.user,
+          });
         }
-
-        res.status(200).json({
-          success: true,
-          dataUser: req.session.user,
-        });
       });
     } catch (error) {
-      controllerError(res, error, 500);
+      console.error("Error durante la autenticación:", error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Error en la autenticación." });
+      }
     }
   }
 
