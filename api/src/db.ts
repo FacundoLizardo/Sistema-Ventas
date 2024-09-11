@@ -79,8 +79,8 @@ const {
 
 /* ----- Relationships Setup ----- */
 
-User.hasMany(Branch, { foreignKey: "userId" });
-Branch.belongsTo(User, { foreignKey: "userId" });
+/* Branch.hasMany(User, { foreignKey: "userId" });
+User.belongsTo(Branch, { foreignKey: "userId" }); */
 
 Operation.belongsTo(User, { foreignKey: "userId" });
 User.hasMany(Operation, { foreignKey: "userId" });
@@ -102,6 +102,9 @@ Product.belongsTo(User, { foreignKey: "userId" });
 
 User.hasMany(Customer, { foreignKey: "userId" });
 Customer.belongsTo(User, { foreignKey: "userId" }); 
+
+Company.hasMany(Branch, { foreignKey: "companyId" });
+Branch.belongsTo(Company, { foreignKey: "companyId" });
 
 export {
   sequelize,

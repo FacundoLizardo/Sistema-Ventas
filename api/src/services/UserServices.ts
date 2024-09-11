@@ -34,7 +34,7 @@ class UserServices {
         defaults: {
           ...data,
           password,
-          companyId
+          companyId,
         },
       });
 
@@ -54,6 +54,9 @@ class UserServices {
   ): Promise<boolean | string> {
     try {
       const existingUser = await User.findOne({ where: { id } });
+      const branches = data.branches;
+      console.log("branches", branches);
+      
 
       if (!existingUser) {
         return `The user with id: ${id} does not exist`;
@@ -63,7 +66,10 @@ class UserServices {
         data.password = await hashPassword(data.password);
       }
 
-      await existingUser.update(data);
+      const currentBranches = existingUser.dataValues.branches || [];
+
+
+      await existingUser.update({ branches: currentBranches, ...data });
       return true;
     } catch (error) {
       serviceError(error);

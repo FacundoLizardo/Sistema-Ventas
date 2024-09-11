@@ -1,3 +1,4 @@
+import NoAccess from "@/components/common/NoAccess";
 import SalesContainer from "@/components/sales/SalesContainer";
 import ProductsServices from "@/services/products/ProductsServices";
 import { cookies } from "next/headers";
@@ -6,12 +7,14 @@ export default async function Page({
   params,
 }: {
   params: {
+    locale: string;
     companyId: string;
   };
 }) {
   const { companyId } = params;
   const cookiesStore = cookies();
   const session = cookiesStore.get("session")?.value;
+  const locale = params.locale;
 
   let products = [];
 
@@ -25,7 +28,7 @@ export default async function Page({
       {session ? (
         <SalesContainer products={products} />
       ) : (
-        <p>No tienes acceso. Por favor, inicia sesión.</p>
+        <NoAccess locale={locale} />
       )}
     </main>
   );

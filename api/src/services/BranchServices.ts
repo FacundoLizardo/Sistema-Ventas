@@ -1,5 +1,5 @@
 import { Branch } from "../db";
-import { BranchInterface } from "../models/branch";
+import { BranchCreationInterface, BranchInterface } from "../models/branch";
 import { serviceError } from "../utils/serviceError";
 
 class BranchServices {
@@ -19,13 +19,24 @@ class BranchServices {
     }
   }
 
-  async postBranch(data: Partial<BranchInterface>) {
+  async postBranch(
+    data: BranchCreationInterface,
+    companyId: string
+  ): Promise<string | BranchInterface> {
     try {
-      const [branch, created] = await Branch.findOrCreate({
-        where: { afipId: data.afipId },
-        defaults: data,
+      const [product, created] = await Branch.findOrCreate({
+        where: { name: data.name },
+        defaults: {
+          ...data,
+          companyId,
+        },
       });
-      return created ? branch : "Branch already exists or creation failed.";
+
+      if (created) {
+        return product.get({ plain: true }) as BranchInterface;
+      } else {
+        return "Branch not created because it already exists or something is wrong, please try again";
+      }
     } catch (error) {
       serviceError(error);
     }

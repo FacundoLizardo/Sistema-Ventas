@@ -67,8 +67,8 @@ class ProductController {
 
       const newProduct = await ProductService.postProduct(req.body, companyId);
 
-      if (typeof newProduct === "string") {
-        res.status(400).json({ message: newProduct });
+      if (!newProduct) {
+        res.status(400).json({ message: "Product not created" });
         return;
       }
 

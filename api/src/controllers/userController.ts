@@ -63,6 +63,7 @@ class UserController {
   async putUser(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
+console.log(id);
 
       if (!id) {
         res.status(400).json({ message: "User id is required" });
