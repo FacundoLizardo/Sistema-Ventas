@@ -8,10 +8,4 @@ export default async function RootPage() {
   if (!session) {
     redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
   }
-
-  return (
-    <div>
-      <p>Cargando..</p>
-    </div>
-  )
 }
