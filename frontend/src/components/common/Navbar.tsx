@@ -12,9 +12,13 @@ const Navigation = () => {
 
   const handleLogout = async () => {
     try {
-      await logout();
-      router.push("/");
-      router.refresh();
+      const response = await logout();
+      console.log("response", response);
+
+      if (response.success === true) {
+        router.push(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
+        router.refresh();
+      }
     } catch (error) {
       console.error("Error during logout:", error);
     }
@@ -43,7 +47,9 @@ const Navigation = () => {
           <Link href="/about" className="block py-2 px-4 hover:bg-gray-700">
             About
           </Link>
-          <button onClick={() => handleLogout()}>Logout</button>
+          <button type="button" onClick={() => handleLogout()}>
+            Logout
+          </button>
         </div>
       </div>
     </nav>

@@ -1,7 +1,7 @@
 import SalesContainer from "@/components/sales/SalesContainer";
 import ProductsServices from "@/services/products/ProductsServices";
 
-export default async function RootPage({
+export default async function Page({
   params,
 }: {
   params: {

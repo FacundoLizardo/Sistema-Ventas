@@ -8,11 +8,11 @@ export default function Layout({
 }>) {
   return (
     <main>
-        <div className="flex flex-col min-h-screen container bg-background max-w-5xl m-auto">
-          <Header />
-          {children}
-          <Footer />
-        </div>
+      <div className="flex flex-col min-h-screen container bg-background max-w-5xl m-auto">
+        <Header />
+        {children}
+        <Footer />
+      </div>
     </main>
   );
 }
