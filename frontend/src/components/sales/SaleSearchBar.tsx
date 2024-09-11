@@ -19,10 +19,10 @@ export default function SaleSeachBar() {
       >
         <Input
           type="text"
-          className="text-black"
-          placeholder="Buscar pproducto..."
+          placeholder="Buscar producto..."
+          className="bg-transparent border-none text-foreground-dark"
         />
-        <SearchIcon className="text-gray-600 mx-2" />
+        <SearchIcon className="text-foreground-dark mx-2" />
       </div>
       {open && ( 
         <div className="absolute top-10 h-fit w-full bg-card-foreground rounded-b-md ">

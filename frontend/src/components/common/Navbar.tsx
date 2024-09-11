@@ -4,6 +4,7 @@ import Link from "next/link";
 import { logout } from "@/services/auth/AuthServices";
 import { IoMdClose, IoIosMenu } from "react-icons/io";
 import { usePathname, useRouter } from "next/navigation";
+import { GrConfigure } from "react-icons/gr";
 
 const baseURL = process.env.NEXT_PUBLIC_CLIENT_BASE_URL;
 
@@ -65,6 +66,7 @@ const Navigation = ({
   const activeLink = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  console.log(isProfileOpen);
 
   const handleLogout = async () => {
     try {
@@ -132,58 +134,61 @@ const Navigation = ({
         </div>
 
         {/* Menú de Perfil y Notificaciones */}
-        <div className="absolute inset-y-0 right-0 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 hidden md:flex ">
+        <div className="absolute inset-y-0 right-0 items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0 hidden md:flex ">
           {/* Notificaciones */}
           <button
             type="button"
-            className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+            className="relative rounded-full bg-gray-800 p-2 text-gray-400 hover:text-white"
+            onClick={() => setIsProfileOpen(!isProfileOpen)}
           >
-            <span className="absolute -inset-1.5"></span>
-            <span className="sr-only">View notifications</span>
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
-              />
-            </svg>
+            <GrConfigure
+              className={` h-5 w-5 ${isProfileOpen ? "hidden" : "block"}`}
+            />
           </button>
 
           {/* Menú de Perfil */}
-          <div className="relative ml-3">
-            <div>
-              <button
-                type="button"
-                className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                id="user-menu-button"
-                aria-expanded={isProfileOpen}
-                aria-haspopup="true"
-                onClick={() => setIsProfileOpen(!isProfileOpen)}
-              >
-                <span className="absolute -inset-1.5"></span>
-                <span className="sr-only">Open user menu</span>
-              </button>
-            </div>
+          <div
+            className={`absolute top-0 right-0 p-4 z-40 min-w-60 rounded-md bg-white shadow-lg focus:outline-none ${
+              isProfileOpen ? "block" : "hidden"
+            }`}
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="user-menu-button"
+          >
+            <div className="relative top-0">
+              <div className="flex items-center justify-between">
+                <h2 className="block py-4 text-sm text-gray-700">
+                  Configuración
+                </h2>
+                <button
+                  type="button"
+                  className="relative rounded-full p-1 text-foreground-dark"
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                >
+                  <IoMdClose
+                    className={`h-6 w-6 z-50 ${
+                      !isProfileOpen ? "hidden" : "block"
+                    }`}
+                  />
+                </button>
+              </div>
 
-            <div
-              className={`absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${
-                isProfileOpen ? "block" : "hidden"
-              }`}
-              role="menu"
-              aria-orientation="vertical"
-              aria-labelledby="user-menu-button"
-            >
-              {/* aca van los link de configuracion */}
+              <span className="bg-black h-[0.5px] block  justify-center m-auto"></span>
+              {profileLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="block my-4 text-sm text-gray-700"
+                  role="menuitem"
+                  id="user-menu-item-0"
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                >
+                  {link.name}
+                </Link>
+              ))}
               <button
                 onClick={() => handleLogout()}
-                className="block px-4 py-2 text-sm text-gray-700"
+                className="block my-4 text-sm text-gray-700"
                 role="menuitem"
                 id="user-menu-item-2"
               >

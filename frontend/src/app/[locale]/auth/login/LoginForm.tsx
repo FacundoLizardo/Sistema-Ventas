@@ -43,7 +43,7 @@ export default function LoginClient({ locale }: { locale: string }) {
 
       const companyId = response.dataUser.companyId;
 
-      const newURL = `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/${companyId}/sales`;
+      const newURL = `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/${companyId}/`;
 
       window.location.href = newURL;
       form.reset();

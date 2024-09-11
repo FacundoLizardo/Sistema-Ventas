@@ -19,7 +19,7 @@ export default async function Page({
       redirect(
         `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${
           locale || "default"
-        }/${companyId}/sales`
+        }/${companyId}/`
       );
     }  
   }
