@@ -27,6 +27,9 @@ export const getCompanyService = async (id: string): Promise<{
       }
     );
 
+    console.log({response});
+    
+
     if (!response.ok) {
       console.error("Network response was not ok");
       return { sucess: false, company:undefined };

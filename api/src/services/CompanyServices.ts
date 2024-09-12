@@ -1,11 +1,18 @@
-import { Company } from "../db";
+import { Company, User } from "../db";
 import { CompanyInterface } from "../models/company";
 import { serviceError } from "../utils/serviceError";
 
 class CompanyServices {
   async getCompanyById(id: string) {
     try {
-      return await Company.findByPk(id);
+      return await Company.findByPk(id, {
+        include: [
+          {
+            model: User,
+            as: "users",
+          },
+        ],
+      });
     } catch (error) {
       serviceError(error);
     }
@@ -22,7 +29,7 @@ class CompanyServices {
   async postCompany(data: Partial<CompanyInterface>) {
     try {
       const [company, created] = await Company.findOrCreate({
-        where: { name: data.name }, // Assuming 'name' is a unique field
+        where: { name: data.name },
         defaults: data,
       });
       return created ? company : "Company already exists or creation failed.";

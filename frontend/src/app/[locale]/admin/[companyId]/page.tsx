@@ -4,6 +4,9 @@ export default async function Page({params}: {params: { companyId: string}}) {
 
     const comanyId = params.companyId;
 
+    console.log({comanyId});
+    
+
     const {company} = await getCompanyService(comanyId);
     
     console.log({company});

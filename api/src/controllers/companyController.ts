@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { controllerError } from "../utils/controllerError";
-import CompanyServices from "../services/CompanyServices";
 import { CompanyInterface } from "../models/company";
+import CompanyServices from "../services/CompanyServices";
 import UserServices from "../services/UserServices";
+import { controllerError } from "../utils/controllerError";
 
 class CompanyController {
   async getCompany(req: Request, res: Response): Promise<void> {
@@ -10,9 +10,13 @@ class CompanyController {
     try {
       if (!id) throw new Error("Company ID is required.");
       const company = await CompanyServices.getCompanyById(id);
+      console.log({company});
+      
       if (!company) throw new Error("Company not found.");
       res.status(200).json({ success: true, company });
     } catch (error) {
+      console.log(error);
+      
       controllerError(res, error, 404);
     }
   }

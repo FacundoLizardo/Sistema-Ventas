@@ -63,7 +63,7 @@ const formSchema = z.object({
   cuit: z.string().regex(/^[0-9]{11}$/, {
     message: "El CUIT debe contener exactamente 11 dígitos.",
   }),
-  branch: z.string().array(),
+  branches: z.string().array(),
   enabled: z.boolean(),
   role: z.string(),
 });
@@ -79,7 +79,7 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
       address: undefined,
       phoneNumber: undefined,
       cuit: undefined,
-      branch: [],
+      branches: [],
       enabled: true,
       role: "BASIC",
     },
@@ -280,7 +280,7 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
 
             <FormField
               control={form.control}
-              name="branch"
+              name="branches"
               render={({ field }) => {
                 const selectedBranchNames = field.value.length
                   ? field.value

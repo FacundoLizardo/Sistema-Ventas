@@ -1,7 +1,7 @@
 import { User } from "../db";
-import { serviceError } from "../utils/serviceError";
-import { hashPassword } from "../utils/hashPassword";
 import { UserCreationInterface, UserInterface } from "../models/user";
+import { hashPassword } from "../utils/hashPassword";
+import { serviceError } from "../utils/serviceError";
 
 class UserServices {
   async getUser(id: string) {
@@ -29,12 +29,14 @@ class UserServices {
     try {
       const password = await hashPassword(data.password);
 
+      console.log({ data, password });
+      
       const [user, created] = await User.findOrCreate({
         where: { email: data.email },
         defaults: {
           ...data,
           password,
-          companyId
+          companyId,
         },
       });
 

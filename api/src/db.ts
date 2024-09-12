@@ -79,8 +79,8 @@ const {
 
 /* ----- Relationships Setup ----- */
 
-User.belongsTo(Company, { foreignKey: "companyId" });
-Company.hasMany(User, { foreignKey: "companyId" });
+User.belongsTo(Company, { foreignKey: "companyId", as: "company" });
+Company.hasMany(User, { foreignKey: "companyId", as: "users" });
 
 User.hasMany(Branch, { foreignKey: "userId" });
 Branch.belongsTo(User, { foreignKey: "userId" });

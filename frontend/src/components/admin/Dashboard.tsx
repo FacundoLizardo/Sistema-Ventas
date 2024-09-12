@@ -10,12 +10,13 @@ import {
 } from "@/components/ui/table";
 import { CompanyInterface } from "@/types";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 interface DashboardProps {
   companies: CompanyInterface[];
 }
 
-export default function Component({ companies }: DashboardProps) {
+export default function Dashboard({ companies }: DashboardProps) {
   console.log({ companies });
 
   return (
@@ -36,11 +37,17 @@ export default function Component({ companies }: DashboardProps) {
               {companies.map((company) => {
                 return (
                   <TableRow key={company.id}>
-                    <Link href={`admin/${company.id}`}>
-                      <TableCell className="font-medium">
-                        {company.name}
-                      </TableCell>
-                    </Link>
+                    <Button
+                      key={company.id}
+                      variant="ghost"
+                      className="w-full text-left justify-start p-0"
+                    >
+                      <Link href={`admin/${company.id}`}>
+                        <TableCell className="font-medium">
+                          {company.name}
+                        </TableCell>
+                      </Link>
+                    </Button>
                     <TableCell>El carlos</TableCell>
                     <TableCell>{company.branches?.length}</TableCell>
                     <TableCell>{company.createdAt.toString()}</TableCell>
