@@ -21,17 +21,8 @@ export async function authenticateUser(email: string, password: string) {
     }
 
     const data = await response.json();
-    const { token, ...restData } = data;
-    const userId = restData.dataUser.id;
 
     cookieStore.set("session", JSON.stringify(data), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 3600,
-    });
-
-    cookieStore.set("userId", userId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
