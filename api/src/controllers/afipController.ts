@@ -15,15 +15,6 @@ class AfipController {
         afipInvoice = await afipService.issueInvoice({ req });
       }
 
-      /*  
-      if (afipInvoice) {
-        for (const product of products) {
-          const { productId } = product;
-          await editProductStockController({ productId });
-        }
-      } 
-      */
-
       res.status(200).json({ success: true, afipInvoice });
     } catch (error) {
       console.error("Error in postAfip:", error);

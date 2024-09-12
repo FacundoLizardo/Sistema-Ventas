@@ -9,10 +9,14 @@ class CompanyController {
     const { id } = req.params;
     try {
       if (!id) throw new Error("Company ID is required.");
+
       const company = await CompanyServices.getCompanyById(id);
-      console.log({company});
-      
-      if (!company) throw new Error("Company not found.");
+
+      if (!company) {
+        res.status(404).json({ message: "Company not found" });
+        return;
+      }
+
       res.status(200).json({ success: true, company });
     } catch (error) {
       console.log(error);
@@ -35,9 +39,11 @@ class CompanyController {
       const user = await UserServices.getUser(userId);
 
       const companies = await CompanyServices.getAllCompanies();
-      
-      if (user?.role !== "SUPER_ADMIN") throw new Error("You don't have permission.");
-      if (companies.length === 0) throw new Error("No companies found.");
+
+      if (!companies) {
+        res.status(404).json({ message: "Companies not found" });
+        return;
+      }
 
       res.status(200).json({ success: true, companies });
     } catch (error) {

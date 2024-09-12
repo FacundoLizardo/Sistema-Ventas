@@ -21,8 +21,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import AuthServices from "@/services/auth/AuthServices";
 import ButtonWithLoading from "@/components/common/ButtonWithLoading";
+import { login } from "@/services/auth/AuthServices";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Correo electrónico inválido" }),
@@ -42,8 +42,8 @@ export default function LoginClient({ locale }: { locale: string }) {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      const response = await AuthServices.login(data.email, data.password);
-   
+      const response = await login(data.email, data.password);
+
       const companyId = response.dataUser.companyId;
 
       const newURL = `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/${companyId}/sales`;

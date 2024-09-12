@@ -1,10 +1,14 @@
 import { CUIT } from "../../config";
 import Afip from "@afipsdk/afip.js";
-import { ProductInterface } from "../../models/product";
 import QRCode from "qrcode";
-import { serviceError } from "../../utils/serviceError";
 import { Request } from "express";
+import { Sequelize } from "sequelize";
+import { Operation, Product } from "../../db";
 import { generatePDF } from "./generatePDF";
+import { serviceError } from "../../utils/serviceError";
+import { updateProductStock } from "../../utils/updateProductStock";
+import CustumerServices from "../CustomerServices";
+import { format } from "date-fns";
 
 const afip = new Afip({ CUIT: CUIT });
 
@@ -15,34 +19,67 @@ export async function issueInvoice({ req }: { req: Request }) {
     cbteTipo,
     ptoVta,
     concepto,
+    importeGravado,
     importeExentoIva,
     docNro,
     docTipo,
+    iva,
+    isdelivery,
+    comments,
+    deliveryAddress,
+    branchId,
+    userId,
   } = req.body;
+  const { companyId } = req.params;
 
-  const redColor = "\x1b[31m";
-  const resetColor = "\x1b[0m";
-  console.log(redColor + "GENERANDO VOUCHER" + resetColor);
+  const sequelize = Product.sequelize as Sequelize;
+  const transaction = await sequelize.transaction();
 
   try {
-    const lastVoucher = await afip.ElectronicBilling.getLastVoucher(
-      ptoVta,
-      cbteTipo
-    );
-    let numeroFactura = lastVoucher + 1;
-    const fecha = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-      .toISOString()
-      .split("T")[0];
-
-    let importe_gravado = 0;
+    let importe_gravado = importeGravado;
     let importe_exento_iva = importeExentoIva;
-    let importe_iva = 0;
-    let ImpTrib = 0;
+
+    // Aplicar el descuento tanto al importe gravado como al importe exento de IVA
+    const descuento = discount || 0;
+    const importe_gravado_con_descuento =
+      importe_gravado * (1 - descuento / 100);
+    const importe_exento_iva_con_descuento =
+      importe_exento_iva * (1 - descuento / 100);
+
+    // Calcular el importe del IVA
+    const porcentajeIVA = iva; // Porcentaje del IVA
+    const importe_iva = (importe_gravado_con_descuento * porcentajeIVA) / 100;
+
+    // Calcular el importe total
+    const ImpTotConc = 0;
+    const ImpTrib = 0;
+    const ImpTotal =
+      cbteTipo === 11
+        ? importe_gravado_con_descuento + ImpTrib
+        : ImpTotConc +
+          importe_gravado_con_descuento +
+          importe_exento_iva_con_descuento +
+          ImpTrib +
+          importe_iva;
 
     let fecha_servicio_desde = null;
     let fecha_servicio_hasta = null;
     let fecha_vencimiento_pago = null;
 
+    // Actualizar el stock de los productos
+    await updateProductStock(products, transaction);
+
+    const lastVoucher = await afip.ElectronicBilling.getLastVoucher(
+      ptoVta,
+      cbteTipo
+    );
+    console.log("lastVoucher", lastVoucher);
+
+    const numeroFactura = lastVoucher + 1;
+    console.log("numeroFactura", numeroFactura);
+
+    const fecha = format(new Date(), "yyyyMMdd");
+    
     /**
      * Concepto de la factura
      Opciones:
@@ -57,19 +94,6 @@ export async function issueInvoice({ req }: { req: Request }) {
       fecha_vencimiento_pago = 20191213;
     }
 
-    products.forEach((product: ProductInterface) => {
-      importe_gravado +=
-        discount > 0
-          ? Number(product.finalPrice || 0 * discount)
-          : Number(product.finalPrice);
-      const ivaRate = 21;
-      const ivaAmount = (Number(product.finalPrice) * ivaRate) / 100;
-      importe_iva += ivaAmount;
-    });
-
-    let ImpTotal = importe_gravado + importe_iva + importe_exento_iva;
-    let ImpIVA = parseFloat(importe_iva.toFixed(2));
-
     const data = {
       CantReg: 1,
       PtoVta: ptoVta,
@@ -79,34 +103,33 @@ export async function issueInvoice({ req }: { req: Request }) {
       DocNro: docNro,
       CbteDesde: numeroFactura,
       CbteHasta: numeroFactura,
-      CbteFch: parseInt(fecha.replace(/-/g, "")),
+      CbteFch: fecha,
       FchServDesde: fecha_servicio_desde,
       FchServHasta: fecha_servicio_hasta,
       FchVtoPago: fecha_vencimiento_pago,
-      ImpTotal: cbteTipo === 11 ? importe_gravado + ImpTrib : Number(ImpTotal),
-      ImpTotConc: 0,
-      ImpNeto: importe_gravado,
-      ImpOpEx: importe_exento_iva,
-      ImpIVA: cbteTipo === 11 ? "0" : ImpIVA,
+      ImpTotal: ImpTotal,
+      ImpTotConc: ImpTotConc,
+      ImpNeto: importe_gravado_con_descuento,
+      ImpOpEx: importe_exento_iva_con_descuento,
+      ImpIVA: cbteTipo === 11 ? 0 : importe_iva,
+      ImpTrib: 0,
       MonId: "PES",
       MonCotiz: 1,
       ...(cbteTipo !== 11
         ? {
             Iva: [
               {
-                Id: 5, // Id del tipo de IVA (5 = 21%)
-                BaseImp: importe_gravado,
-                Importe: ImpIVA,
+                Id: 5,
+                BaseImp: importe_gravado_con_descuento,
+                Importe: importe_iva,
               },
             ],
           }
         : {}),
 
       products: products,
-      ImpTrib: ImpTrib,
+      importeGravado: importe_gravado,
     };
-
-    console.log("data", data);
 
     const voucherData = await afip.ElectronicBilling.createVoucher(data);
 
@@ -140,8 +163,104 @@ export async function issueInvoice({ req }: { req: Request }) {
       discount,
     });
 
+    // Crear la operacion y la almacenar en la base de datos
+    let customer;
+    if (docTipo === 80) {
+      customer = await CustumerServices.getCustomerByDocument({ cuit: docNro });
+    } else if (docTipo === 96) {
+      customer = await CustumerServices.getCustomerByDocument({ cuil: docNro });
+    } else if (docTipo === 99) {
+      customer = await CustumerServices.getCustomerByDocument({ dni: docNro });
+    } else if (docTipo === 3) {
+      customer = await CustumerServices.getCustomerByDocument({
+        passport: docNro,
+      });
+    }
+
+    let customerName = "";
+    if (customer?.customerType === "person") {
+      customerName = `${customer?.firstName} ${customer?.lastName}`;
+    } else if (customer?.customerType === "company") {
+      customerName = customer?.companyName || "";
+    }
+
+    const customerData = `DNI: ${
+      customer?.dni || customer?.cuit || customer?.passport || customer?.cuil
+    } - ${customerName}`;
+
+    const operationData = {
+      products: products,
+      amount: ImpTotal,
+      discount: discount || 0,
+      extraCharge: 0,
+      debtAmount: 0,
+      branchId: branchId,
+      paymentType: "cash",
+      invoiceNumber: numeroFactura.toString(),
+      state: "completed",
+      isdelivery: isdelivery,
+      deliveryAddress: deliveryAddress,
+      customer: customerData,
+      comments: comments,
+      invoiceLink: "",
+      companyId: companyId,
+      userId: userId,
+      cbteTipo: cbteTipo,
+    };
+
+    await Operation.create(operationData, { transaction });
+    await transaction.commit();
+
+    console.log({
+      cae: voucherData.CAE,
+      vencimiento: voucherData.CAEFchVto,
+    });
+
     return pdfData;
   } catch (error) {
     serviceError(error);
   }
 }
+
+// --------------------------------------------------------------------
+
+/* 
+
+  FACTURA A
+
+   {
+      "products": [
+        {
+          "id": "69d32a36-cbf5-4633-96bd-24844d60ae55",
+          "name": "Vino tinto",
+          "finalPrice": 100
+        },
+        {
+          "id": "3ee851fe-ad37-4066-8237-faf0cef3b0b0",
+          "name": "Vino blanco",
+          "finalPrice": 100
+        }
+      ],
+      "discount": 10,
+      "cbteTipo": 1,
+      "ptoVta": 1,
+      "concepto": 1,
+      "importeGravado": 200,
+      "importeExentoIva": 0,
+      "docNro": 33693450239,
+      "docTipo": 80,
+      "iva": 21,
+      "outputDir": "C:/Users/lucas/Downloads",
+      "paymentType": "cash",
+      "isdelivery": false,
+      "deliveryAddress": "Calle pepito",
+      "comments": "",
+      "branchId": "",
+      "userId": "5592d25d-f0b2-4287-adc4-9bc938f7e87e"
+    }
+
+    FACTURA B
+
+    FACTURA C
+
+*/

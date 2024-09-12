@@ -42,3 +42,12 @@ export class LoginService {
 }
 
 export default new LoginService();
+
+//---------- TESTS ----------
+
+/* 
+    {
+      "email": "ltamburlini@gmail.com",
+      "password": "lucas1234"
+    } 
+*/

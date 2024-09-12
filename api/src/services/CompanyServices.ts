@@ -20,7 +20,11 @@ class CompanyServices {
 
   async getAllCompanies() {
     try {
-      return await Company.findAll();
+      const companies = await Company.findAll();
+
+      return companies.length > 0
+        ? companies.map((company) => company.get({ plain: true }))
+        : [];
     } catch (error) {
       serviceError(error);
     }
@@ -69,7 +73,7 @@ export default new CompanyServices();
 
 /* 
     {
-      "name": "GPI 360.",
+      "name": "GPI 360",
       "address": "Calle 123",
       "country": "Argentina",
       "phoneNumbers": ["+1-234-567-8900", "3442644665"],

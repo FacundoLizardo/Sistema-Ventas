@@ -12,4 +12,11 @@ export const {
   DB_USER,
   DB_PASSWORD,
   DB_HOST,
+
+  // Secret
+  SESSION_SECRET,
+  JWT_SECRET,
+
+  // Other
+  PORT
 } = process.env;

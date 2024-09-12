@@ -19,18 +19,10 @@ interface IproductCreationServiceParams {
 }
 
 export const postProductService = async (
-  params: IproductCreationServiceParams
+  params: IproductCreationServiceParams,
+  token: string
 ) => {
   try {
-    const cookiesInstance = cookies();
-    const token = cookiesInstance.get("token")?.value;
-
-    if (!token) {
-      throw new Error("No token provided");
-    }
-
-    console.log({params});
-    
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products`,
       {

@@ -1,62 +1,79 @@
 import path from "path";
 import fs from "fs";
-import { promises as fsPromises } from "fs"; // Importa fs/promises para trabajar con promesas
+import { promises as fsPromises } from "fs";
 import moment from "moment";
 import puppeteer from "puppeteer";
 import { DOMICILIO_FISCAL, RAZON_SOCIAL } from "../../config";
 import { serviceError } from "../../utils/serviceError";
 import { Request } from "express";
+import { ProductInterface } from "../../models/product";
+import { Product } from "../../db";
+import { Sequelize } from "sequelize";
+import { updateProductStock } from "../../utils/updateProductStock";
 
 export const generateTicket = async ({ req }: { req: Request }) => {
-  const { products, cbteTipo } = req.body;
+  const {
+    products,
+    cbteTipo,
+    outputDir,
+    discount,
+    importeGravado,
+  } = req.body;
+  const sequelize = Product.sequelize as Sequelize;
+  const transaction = await sequelize.transaction();
+  
+  console.log(products);
+  
 
   try {
-    // Ruta del archivo HTML para el ticket
     const htmlPath = cbteTipo === 0 ? path.join(__dirname, "ticket.html") : "";
     let html = fs.readFileSync(htmlPath, "utf8");
 
-    // Función para generar las filas de productos
-    const generateProductRows = (products: any[]) => {
+    await updateProductStock(products, transaction);
+
+    await transaction.commit();
+
+    const generateProductRows = (products: ProductInterface[]) => {
       const productMap = new Map();
 
       products.forEach((product) => {
-        const { productId, name, finalPrice } = product;
-        if (!productMap.has(productId)) {
-          productMap.set(productId, {
+        const { id, name, finalPrice } = product;
+        if (!productMap.has(id)) {
+          productMap.set(id, {
             description: name,
             quantity: 1,
-            unitPrice: parseFloat(finalPrice),
-            totalAmount: parseFloat(finalPrice),
+            unitPrice: finalPrice,
+            totalAmount: finalPrice,
           });
         } else {
-          const existingProduct = productMap.get(productId);
-          productMap.set(productId, {
+          const existingProduct = productMap.get(id);
+          productMap.set(id, {
             description: existingProduct.description,
             quantity: existingProduct.quantity + 1,
             unitPrice: existingProduct.unitPrice,
-            totalAmount: existingProduct.totalAmount + parseFloat(finalPrice),
+            totalAmount: (existingProduct.totalAmount += finalPrice),
           });
         }
       });
 
       const tableHeader = `
-        <tr>
-            <th>Cantidad</th>
-            <th>Descripción</th>
-            <th>Precio Unitario</th>
-            <th>Importe Total</th>
-        </tr>
+          <tr>
+              <th>Cantidad</th>
+              <th>Descripción</th>
+              <th>Precio Unitario</th>
+              <th>Importe Total</th>
+          </tr>
       `;
 
       const tableRows = Array.from(productMap.values())
         .map(
           (product) => `
-        <tr>
-            <td>${product.quantity}</td>
-            <td>${product.description}</td>
-            <td>${product.unitPrice.toFixed(2)}</td>
-            <td>${product.totalAmount.toFixed(2)}</td>
-        </tr>
+          <tr>
+              <td>${product.quantity}</td>
+              <td>${product.description}</td>
+              <td>${product.unitPrice.toFixed(2)}</td>
+              <td>${product.totalAmount.toFixed(2)}</td>
+          </tr>
       `
         )
         .join("");
@@ -69,11 +86,16 @@ export const generateTicket = async ({ req }: { req: Request }) => {
     let domicilio = DOMICILIO_FISCAL;
     let fechaEmision = moment().format("DD-MM-YYYY");
 
+    const ImpTotal = (importeGravado * (1 - discount / 100)).toFixed(2);
+
     const replacedHTML = html
       .replace("{{razonSocial}}", razonSocial || "")
       .replace("{{domicilio}}", domicilio || "")
       .replace("{{productRows}}", productRows || "")
-      .replace("{{fecha}}", fechaEmision);
+      .replace("{{fecha}}", fechaEmision)
+      .replace("{{discount}}", discount.toFixed(2) || "")
+      .replace("{{importeGravado}}", importeGravado || "")
+      .replace("{{ImpTotal}}", ImpTotal || "");
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -82,7 +104,7 @@ export const generateTicket = async ({ req }: { req: Request }) => {
 
     // Construcción de la ruta del archivo PDF
     const pdfFileName = `Ticket-${moment().format("DD.MM.YYYY-HH.mm")}.pdf`;
-    const pdfFilePath = path.join(__dirname, "afipPDFs", pdfFileName);
+    const pdfFilePath = path.join(outputDir, pdfFileName);
 
     // Asegúrate de que el directorio exista
     await fsPromises.mkdir(path.dirname(pdfFilePath), { recursive: true });
@@ -101,9 +123,9 @@ export const generateTicket = async ({ req }: { req: Request }) => {
 
     await browser.close();
 
-    // Lectura del archivo PDF
-    const pdfFile = fs.readFileSync(pdfFilePath);
-    return { pdfFile };
+    console.log("PDF generado y guardado en:", pdfFilePath);
+
+    return { pdfFilePath };
   } catch (error) {
     serviceError(error);
   }
