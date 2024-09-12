@@ -40,6 +40,7 @@ class ProductService {
       serviceError(error);
     }
   }
+  
   async postProduct(
     data: ProductCreationInterface,
     companyId: string

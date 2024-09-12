@@ -1,23 +1,24 @@
 import { accessToken } from "../accessToken";
+import { getBranchesService } from "./getBranchesService";
 
 export interface IBranch {
-    id: string;
-    ptoVta: number;
-    afipId?: string;
-    name: string;
-    location: string;
-    isStorage?: boolean;
-    enable?: boolean;
-    manager?: string[];
-    hours?: string;
-    phoneNumber?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-  }
+  id: string;
+  ptoVta: number;
+  afipId?: string;
+  name: string;
+  location: string;
+  isStorage?: boolean;
+  enable?: boolean;
+  manager?: string[];
+  hours?: string;
+  phoneNumber?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 export interface IBranchCreate extends Omit<IBranch, "id"> {}
 
-class UsersServices {
+class BranchesServices {
   static async getToken() {
     try {
       const token = accessToken();
@@ -31,8 +32,7 @@ class UsersServices {
   static async getAll(companyId: string) {
     try {
       const token = await this.getToken();
-      console.log(token, companyId);
-      
+      return await getBranchesService({ token, companyId });
     } catch (error) {
       console.error("Error getting products:", error);
       throw error;
@@ -40,4 +40,4 @@ class UsersServices {
   }
 }
 
-export default UsersServices;
+export default BranchesServices;

@@ -16,10 +16,20 @@ class BranchController {
     }
   }
 
-  async getBranches(_req: Request, res: Response): Promise<void> {
+  async getBranches(req: Request, res: Response): Promise<void> {
     try {
-      const branches = await BranchServices.getAllBranches();
-      if (branches.length === 0) throw new Error("No branches found.");
+      const companyId = req.query.companyId as string;
+
+      if (!companyId) {
+        res.status(400).json({ message: "Company id is required" });
+      }
+
+      const branches = await BranchServices.getBranches(companyId);
+
+      if (!branches) {
+        res.status(404).json({ message: "Branches not found" });
+      }
+
       res.status(200).json({ success: true, branches });
     } catch (error) {
       controllerError(res, error, 404);

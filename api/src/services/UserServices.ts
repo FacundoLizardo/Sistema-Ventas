@@ -7,7 +7,7 @@ class UserServices {
   async getUser(id: string) {
     try {
       const user = await User.findByPk(id);
-      return user ? (user.get({ plain: true }) as UserInterface) : null;
+      return user 
     } catch (error) {
       serviceError(error);
     }
@@ -54,9 +54,6 @@ class UserServices {
   ): Promise<boolean | string> {
     try {
       const existingUser = await User.findOne({ where: { id } });
-      const branches = data.branches;
-      console.log("branches", branches);
-      
 
       if (!existingUser) {
         return `The user with id: ${id} does not exist`;
@@ -66,10 +63,7 @@ class UserServices {
         data.password = await hashPassword(data.password);
       }
 
-      const currentBranches = existingUser.dataValues.branches || [];
-
-
-      await existingUser.update({ branches: currentBranches, ...data });
+      await existingUser.update(data);
       return true;
     } catch (error) {
       serviceError(error);

@@ -11,9 +11,14 @@ class BranchServices {
     }
   }
 
-  async getAllBranches() {
+  async getBranches(companyId: string) {
     try {
-      return await Branch.findAll();
+      const branches = await Branch.findAll({
+        where: { companyId },
+      });
+      return branches
+        ? branches.map((productObj) => productObj.get({ plain: true }))
+        : [];
     } catch (error) {
       serviceError(error);
     }
