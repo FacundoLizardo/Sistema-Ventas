@@ -22,6 +22,11 @@ export default async function RootPage({
   const userId = sessionData?.dataUser?.id;
   const userBranch = sessionData?.dataUser?.branchId;
   const companyBranches = branchesData.branches;
+  const isAdmin = sessionData && sessionData.dataUser.role === "ADMIN";
+
+  if(isAdmin) {
+    redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/admin`);
+  }
 
   if (!userBranch) {
     return (

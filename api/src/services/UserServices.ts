@@ -100,6 +100,6 @@ export default new UserServices();
       "phoneNumber": "123-456-7890",
       "cuit": "20-12345678-9",
       "enabled": true,
-      "role": "BASIC"
+       "role": "ADMIN"
     }
 */

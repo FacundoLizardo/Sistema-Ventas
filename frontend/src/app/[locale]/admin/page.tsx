@@ -1,43 +1,25 @@
-import CreateCompanyForm from "@/components/admin/companyFroms/CreateCompanyForm";
-import Dashboard from "@/components/admin/Dashboard";
-import CreateUserForm from "@/components/admin/userForms/CreateUserForm";
-import { getCompaniesService } from "@/services/companies/getCompaniesService";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default async function Page({params}: {params: { locale: string}}) {
-  const users = [
-    { id: "123e4567-e89b-12d3-a456-426614174000", name: "Juan Pérez" },
-    { id: "123e4567-e89b-12d3-a456-426614174001", name: "María García" },
-    { id: "123e4567-e89b-12d3-a456-426614174002", name: "Carlos López" },
-    { id: "123e4567-e89b-12d3-a456-426614174003", name: "Ana Martínez" },
-    { id: "123e4567-e89b-12d3-a456-426614174004", name: "Luis Rodríguez" },
-  ];
+export default async function AdminPage({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const cookiesStore = cookies();
+  const session = cookiesStore.get("session")?.value;
 
-  console.log(users);
-  console.log(params.locale);
-  
-  
+  console.log(params);
 
-  const companyId = '0b07e742-d77c-47cf-b080-ffd13786990d'
-
-  try {
-   const {companies} = await getCompaniesService();
-
-   console.log({companies});
-    
-    return (
-      <main> 
-        <Dashboard companies={companies}/>
-        <CreateUserForm companyId={companyId}/>
-        <CreateCompanyForm />
-        {/* <CreateBranchForm companyId={companyId} users={users}/> */}
-      </main>
-    );
-  } catch (error) {
-    console.error(error);
-    return (
-      <main>
-        <p>Hubo un error al cargar las compañías.</p>
-      </main>
-    );
+  if (!session) {
+    redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
   }
+
+  const sessionData = session ? JSON.parse(session) : null;
+  const isAdmin = sessionData && sessionData.dataUser.role === "ADMIN";
+
+  if (!isAdmin) {
+    redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
+  }
+
 }
