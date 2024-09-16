@@ -1,6 +1,5 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
@@ -17,6 +16,7 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import ButtonWithLoading from "@/components/common/ButtonWithLoading";
 import { login } from "@/services/auth/AuthServices";
 import { useEffect, useState } from "react";
+import { z } from "zod";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Correo electrónico no válido" }),

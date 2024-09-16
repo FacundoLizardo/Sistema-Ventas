@@ -13,6 +13,8 @@ export default async function Page({params}: {params: { locale: string}}) {
   ];
 
   console.log(users);
+  console.log(params.locale);
+  
   
 
   const companyId = '0b07e742-d77c-47cf-b080-ffd13786990d'

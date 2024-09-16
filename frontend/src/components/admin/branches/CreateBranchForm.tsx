@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -31,8 +30,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { log } from "console";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 
 const formSchema = z.object({
@@ -234,27 +237,28 @@ export default function CreateBranchForm({
               )}
             />
 
-<FormField
-  control={form.control}
-  name="manager"
-  render={({ field }) => {
-    const selectedManagerNames = field.value.length
-      ? field.value
-          .map(
-            (id: string) => users.find((user) => user.id === id)?.name
-          )
-          .join(", ")
-      : "Seleccione uno o más managers";
+            <FormField
+              control={form.control}
+              name="manager"
+              render={({ field }) => {
+                const selectedManagerNames = field.value.length
+                  ? field.value
+                      .map(
+                        (id: string) =>
+                          users.find((user) => user.id === id)?.name
+                      )
+                      .join(", ")
+                  : "Seleccione uno o más managers";
 
-    return (
-      <FormItem className="flex flex-col justify-between">
-        <Label htmlFor="manager">Managers</Label>
-        <FormControl>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className={`mt-0 bg-white justify-between
+                return (
+                  <FormItem className="flex flex-col justify-between">
+                    <Label htmlFor="manager">Managers</Label>
+                    <FormControl>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={`mt-0 bg-white justify-between
                              ${
                                selectedManagerNames ===
                                "Seleccione uno o más managers"
@@ -262,40 +266,39 @@ export default function CreateBranchForm({
                                  : "text-black"
                              }
                           `}
-              >
-                {selectedManagerNames}
-                <ChevronDown className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              {users.map((user) => (
-                <DropdownMenuCheckboxItem
-                  key={user.id}
-                  checked={field.value?.includes(user.id)}
-                  onCheckedChange={(checked) => {
-                    const currentValue = field.value || [];
-                    if (checked) {
-                      field.onChange([...currentValue, user.id]);
-                    } else {
-                      field.onChange(
-                        currentValue.filter(
-                          (id: string) => id !== user.id
-                        )
-                      );
-                    }
-                  }}
-                >
-                  {user.name}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </FormControl>
-      </FormItem>
-    );
-  }}
-/>
-
+                          >
+                            {selectedManagerNames}
+                            <ChevronDown className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start">
+                          {users.map((user) => (
+                            <DropdownMenuCheckboxItem
+                              key={user.id}
+                              checked={field.value?.includes(user.id)}
+                              onCheckedChange={(checked) => {
+                                const currentValue = field.value || [];
+                                if (checked) {
+                                  field.onChange([...currentValue, user.id]);
+                                } else {
+                                  field.onChange(
+                                    currentValue.filter(
+                                      (id: string) => id !== user.id
+                                    )
+                                  );
+                                }
+                              }}
+                            >
+                              {user.name}
+                            </DropdownMenuCheckboxItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </FormControl>
+                  </FormItem>
+                );
+              }}
+            />
 
             <FormField
               control={form.control}

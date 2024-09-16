@@ -22,7 +22,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { postCompanyService } from "@/services/companies/postCompanyService";
 import { Trash2Icon } from "lucide-react";
 import {
