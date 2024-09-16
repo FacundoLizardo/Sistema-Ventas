@@ -106,6 +106,9 @@ Customer.belongsTo(User, { foreignKey: "userId" });
 Company.hasMany(Branch, { foreignKey: "companyId" });
 Branch.belongsTo(Company, { foreignKey: "companyId" });
 
+Branch.hasMany(User, { foreignKey: "branchId", as: "branch" });
+User.belongsTo(Branch, { foreignKey: "branchId", as: "branch" });
+
 export {
   sequelize,
   Product,

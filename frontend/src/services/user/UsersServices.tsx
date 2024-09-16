@@ -1,4 +1,5 @@
 import { accessToken } from "../accessToken";
+import { IBranch } from "../branches/BranchesServices";
 import { getUserService } from "./getUserService";
 import { putUserService } from "./putUserService";
 export interface IUser {
@@ -10,14 +11,15 @@ export interface IUser {
   address?: string;
   phoneNumber?: string;
   cuit?: string;
-  branch?: string;
   enabled: boolean;
   role: string;
+  branchId?: string;
+  branch?: IBranch;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export interface IUserCreate extends Omit<IUser, "id"> {}
+export interface IUserCreate extends Omit<IUser, "id" | "password"> {}
 
 class UsersServices {
   static async getToken() {

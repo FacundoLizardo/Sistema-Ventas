@@ -28,9 +28,7 @@ export default async function Page({
     ProductsServices.getAll(companyId),
   ]);
 
-const userBranch = userData?.branch
-console.log("userBranch", userBranch);
-  
+  const userBranch = userData?.user?.branch.ptoVta + " - " + userData?.user?.branch.name;
 
   return (
     <main>

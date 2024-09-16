@@ -36,7 +36,7 @@ class LoginController {
         id: user.id,
         email: user.email,
         companyId: user.companyId,
-        branchId: user.branch,
+        branchId: user.branchId,
         token,
       };
 

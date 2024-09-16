@@ -9,7 +9,6 @@ export interface UserInterface {
   address?: string;
   phoneNumber?: string;
   cuit?: string;
-  branch?: string;
   enabled: boolean;
   role: string;
   createdAt?: Date;
@@ -17,19 +16,14 @@ export interface UserInterface {
 }
 
 export interface UserLogin extends UserInterface {
+  branchId?: string;
   companyId: string;
 }
 
 export interface UserCreationInterface
   extends Optional<
     UserInterface,
-    | "id"
-    | "address"
-    | "phoneNumber"
-    | "cuit"
-    | "createdAt"
-    | "updatedAt"
-    | "branch"
+    "id" | "address" | "phoneNumber" | "cuit" | "createdAt" | "updatedAt"
   > {}
 
 class User
@@ -44,7 +38,6 @@ class User
   public address?: string;
   public phoneNumber?: string;
   public cuit?: string;
-  public branch?: string;
   public enabled!: boolean;
   public role!: string;
   public readonly createdAt!: Date;
@@ -107,10 +100,6 @@ export default (sequelize: Sequelize) => {
         validate: {
           len: [0, 50],
         },
-      },
-      branch: {
-        type: DataTypes.STRING,
-        allowNull: true,
       },
       enabled: {
         type: DataTypes.BOOLEAN,

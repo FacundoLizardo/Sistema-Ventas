@@ -1,4 +1,4 @@
-import { User } from "../db";
+import { Branch, User } from "../db";
 import { serviceError } from "../utils/serviceError";
 import { hashPassword } from "../utils/hashPassword";
 import { UserCreationInterface, UserInterface } from "../models/user";
@@ -6,7 +6,9 @@ import { UserCreationInterface, UserInterface } from "../models/user";
 class UserServices {
   async getUser(id: string) {
     try {
-      const user = await User.findByPk(id);
+      const user = await User.findByPk(id, {
+        include: [{ model: Branch, as: "branch" }],
+      });
       return user;
     } catch (error) {
       serviceError(error);
