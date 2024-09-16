@@ -2,6 +2,8 @@ import NoAccess from "@/components/common/NoAccess";
 import SalesContainer from "@/components/sales/SalesContainer";
 import ProductsServices from "@/services/products/ProductsServices";
 import { cookies } from "next/headers";
+import UsersServices from "@/services/user/UsersServices";
+import { redirect } from "next/navigation";
 
 export default async function Page({
   params,
@@ -11,22 +13,29 @@ export default async function Page({
     companyId: string;
   };
 }) {
-  const { companyId } = params;
+  const { companyId, locale } = params;
   const cookiesStore = cookies();
   const session = cookiesStore.get("session")?.value;
-  const locale = params.locale;
 
-  let products = [];
-
-  if (session) {
-    const response = await ProductsServices.getAll(companyId);
-    products = response?.products || [];
+  if (!session) {
+    redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
   }
+
+  const userId = JSON.parse(session)?.dataUser?.id;
+
+  const [userData, products] = await Promise.all([
+    UsersServices.get(userId),
+    ProductsServices.getAll(companyId),
+  ]);
+
+const userBranch = userData?.branch
+console.log("userBranch", userBranch);
+  
 
   return (
     <main>
       {session ? (
-        <SalesContainer products={products} />
+        <SalesContainer products={products} userBranch={userBranch} />
       ) : (
         <NoAccess locale={locale} />
       )}

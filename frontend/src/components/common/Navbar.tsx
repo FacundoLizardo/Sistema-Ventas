@@ -66,7 +66,6 @@ const Navigation = ({
   const activeLink = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  console.log(isProfileOpen);
 
   const handleLogout = async () => {
     try {
@@ -86,7 +85,7 @@ const Navigation = ({
     <nav className="w-full h-16 grid items-center">
       <div className="relative flex items-center justify-between">
         {/* Menú Móvil */}
-        <div className="absolute flex items-center justify-between md:hidden z-50">
+        <div className="absolute flex items-center justify-between md:hidden z-30">
           <button
             type="button"
             className="relative inline-flex items-center justify-center rounded-md p-2 text-foreground bg-card hover:text-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-foreground"

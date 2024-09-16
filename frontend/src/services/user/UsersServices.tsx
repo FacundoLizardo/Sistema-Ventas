@@ -1,5 +1,6 @@
 import { accessToken } from "../accessToken";
 import { getUserService } from "./getUserService";
+import { putUserService } from "./putUserService";
 export interface IUser {
   id: string;
   firstName: string;
@@ -9,7 +10,7 @@ export interface IUser {
   address?: string;
   phoneNumber?: string;
   cuit?: string;
-  branches?: string[];
+  branch?: string;
   enabled: boolean;
   role: string;
   createdAt?: Date;
@@ -33,6 +34,16 @@ class UsersServices {
     try {
       const token = await this.getToken();
       return await getUserService({ token, userId });
+    } catch (error) {
+      console.error("Error getting products:", error);
+      throw error;
+    }
+  }
+
+  static async put(userId: string, data: Partial<IUser>) {
+    try {
+      const token = await this.getToken();
+      return await putUserService({ token, userId, data });
     } catch (error) {
       console.error("Error getting products:", error);
       throw error;

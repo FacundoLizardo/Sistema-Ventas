@@ -3,7 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import mainRouter from "./routes";
-import { orangeText, syncDatabase } from "./db";
+import { greenText, syncDatabase } from "./db";
 import loginRouter from "./routes/login";
 import { authenticateToken } from "./utils/authenticateToken";
 import cookieParser from "cookie-parser";
@@ -58,7 +58,7 @@ app.use(
 syncDatabase()
   .then(() => {
     app.listen(PORT || 3000, () =>
-      console.log(orangeText, `Server running on port ${PORT}`)
+      console.log(greenText, `Server running on port ${PORT}`)
     );
   })
   .catch((error) => {

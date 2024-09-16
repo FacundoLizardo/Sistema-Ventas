@@ -14,7 +14,7 @@ import { NODE_ENV, DB_URL, DB_USER, DB_PASSWORD, DB_HOST } from "./config";
 
 /* ----- Utils ----- */
 export const blueText = "\x1b[34m%s\x1b[0m";
-export const orangeText = "\x1b[33m%s\x1b[0m";
+export const greenText = "\x1b[32m%s\x1b[0m";
 
 if (NODE_ENV === "production" && !DB_URL) {
   throw new Error("DB_URL must be defined in production environment");

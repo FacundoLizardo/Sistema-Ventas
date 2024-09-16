@@ -16,33 +16,22 @@ export default async function RootPage({
   if (!session) {
     redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
   }
-
-  let sessionData;
-  try {
-    sessionData = JSON.parse(session);
-  } catch (error) {
-    console.error("Error parsing session cookie:", error);
-    redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
-    return;
-  }
-
+  
+  const branchesData = await BranchesServices.getAll(companyId);
+  
+  const sessionData = JSON.parse(session);  
   const userId = sessionData?.dataUser?.id;
-
-  const [userData, branchesData] = await Promise.all([
-    UsersServices.get(userId),
-    BranchesServices.getAll(companyId),
-  ]);
-
-  const userBranch = userData.branch;
+  const userBranch = sessionData?.dataUser?.branchId;
   const companyBranches = branchesData.branches;
 
   if (!userBranch) {
     return (
-      <div className="flex absolute bg-background w-full h-screen overflow-hidden top-0 left-0 place-content-center items-center">
+      <div className="flex w-full min-h-screen absolute left-0 z-50">
         <SelectBranch
           companyBranches={companyBranches}
           userBranch={userBranch}
           userId={userId}
+          params={params}
         />
       </div>
     );

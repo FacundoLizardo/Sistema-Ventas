@@ -7,15 +7,15 @@ class UserServices {
   async getUser(id: string) {
     try {
       const user = await User.findByPk(id);
-      return user 
+      return user;
     } catch (error) {
       serviceError(error);
     }
   }
 
-  async getUsers() {
+  async getUsers(companyId: string) {
     try {
-      const users = await User.findAll();
+      const users = await User.findAll({ where: { companyId } });
       return users ? users.map((userObj) => userObj.get({ plain: true })) : [];
     } catch (error) {
       serviceError(error);

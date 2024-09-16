@@ -8,6 +8,7 @@ declare module "express-session" {
       id: string;
       email: string;
       companyId: string;
+      branchId?: string;
       token: string;
     };
   }
@@ -35,6 +36,7 @@ class LoginController {
         id: user.id,
         email: user.email,
         companyId: user.companyId,
+        branchId: user.branch,
         token,
       };
 

@@ -5,7 +5,7 @@ import UserServices from "../services/UserServices";
 class UserController {
   async getUser(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.query.userId as string;
 
       if (!id) {
         res.status(404).json({ message: "User id is required" });
@@ -18,15 +18,18 @@ class UserController {
         return;
       }
 
-      res.status(200).json({ success: true, user });
+      res.status(200).json(user);
     } catch (error) {
       controllerError(res, error, 500);
     }
   }
 
-  async getUsers(_req: Request, res: Response): Promise<void> {
+  async getUsers(req: Request, res: Response): Promise<void> {
     try {
-      const users = await UserServices.getUsers();
+
+      const { companyId } = req.params;
+
+      const users = await UserServices.getUsers(companyId);
 
       if (!users.length) {
         res.status(404).json({ message: "No users found" });
@@ -62,14 +65,14 @@ class UserController {
 
   async putUser(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-console.log(id);
+      const { userId } = req.query as { userId: string };
+      console.log(userId);
 
-      if (!id) {
+      if (!userId) {
         res.status(400).json({ message: "User id is required" });
       }
 
-      const updateResult = await UserServices.putUser(id, req.body);
+      const updateResult = await UserServices.putUser(userId, req.body);
 
       if (updateResult === true) {
         res.status(200).json({ success: true });
