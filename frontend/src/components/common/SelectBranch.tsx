@@ -64,7 +64,7 @@ export default function SelectBranch({
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     if (!userId) return;
     try {
-      const request = UsersServices.put(userId, { branch: data.branch });
+      const request = UsersServices.put(userId, { branchId: data.branch });
 
       toast.promise(request, {
         loading: "Asignando sucursal...",
