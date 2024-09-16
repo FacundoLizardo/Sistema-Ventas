@@ -1,7 +1,9 @@
 import { accessToken } from "../accessToken";
 import { IBranch } from "../branches/BranchesServices";
 import { getUserService } from "./getUserService";
+import { getUserSession } from "./getUserSession";
 import { putUserService } from "./putUserService";
+
 export interface IUser {
   id: string;
   firstName: string;
@@ -36,6 +38,16 @@ class UsersServices {
     try {
       const token = await this.getToken();
       return await getUserService({ token, userId });
+    } catch (error) {
+      console.error("Error getting products:", error);
+      throw error;
+    }
+  }
+
+  static async userSession() {
+    try {
+      const token = await this.getToken();
+      return await getUserSession({ token });
     } catch (error) {
       console.error("Error getting products:", error);
       throw error;

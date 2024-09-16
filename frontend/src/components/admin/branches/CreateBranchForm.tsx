@@ -66,10 +66,11 @@ interface CreateBranchFormProps {
 
 export default function CreateBranchForm({
   companyId,
-  users,
 }: CreateBranchFormProps) {
   const [openingTime, setOpeningTime] = useState("08:00");
   const [closingTime, setClosingTime] = useState("22:00");
+
+  const users = []
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -106,11 +107,11 @@ export default function CreateBranchForm({
   return (
     <Card>
       <Form {...form}>
-        <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="grid w-full gap-2 md:gap-4" onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
             <CardTitle className="text-2xl font-bold">Crear Sucursal</CardTitle>
           </CardHeader>
-          <CardContent className="md:grid-cols-2">
+          <CardContent className="sm:grid-cols-2 md:grid-cols-3">
             <FormField
               control={form.control}
               name="ptoVta"

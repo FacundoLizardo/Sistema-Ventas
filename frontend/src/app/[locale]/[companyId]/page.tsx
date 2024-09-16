@@ -1,6 +1,6 @@
 import SelectBranch from "@/components/common/SelectBranch";
 import BranchesServices from "@/services/branches/BranchesServices";
-import { cookies } from "next/headers";
+import UsersServices from "@/services/user/UsersServices";
 import { redirect } from "next/navigation";
 
 export default async function RootPage({
@@ -9,31 +9,20 @@ export default async function RootPage({
   params: { locale: string; companyId: string };
 }) {
   const { companyId, locale } = params;
-  const cookiesStore = cookies();
-  const session = cookiesStore.get("session")?.value;
+  const { userId, isAdmin, branchId } = await UsersServices.userSession();
 
-  if (!session) {
-    redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
-  }
-  
-  const branchesData = await BranchesServices.getAll(companyId);
-  
-  const sessionData = JSON.parse(session);  
-  const userId = sessionData?.dataUser?.id;
-  const userBranch = sessionData?.dataUser?.branchId;
-  const companyBranches = branchesData.branches;
-  const isAdmin = sessionData && sessionData.dataUser.role === "ADMIN";
+  const { branches } = await BranchesServices.getAll(companyId);
 
-  if(isAdmin) {
+  if (isAdmin) {
     redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/admin`);
   }
 
-  if (!userBranch) {
+  if (!branchId) {
     return (
       <div className="flex w-full min-h-screen absolute left-0 z-50">
         <SelectBranch
-          companyBranches={companyBranches}
-          userBranch={userBranch}
+          branches={branches}
+          branchId={branchId}
           userId={userId}
           params={params}
         />

@@ -33,13 +33,13 @@ const formSchema = z.object({
 });
 
 export default function SelectBranch({
-  companyBranches,
-  userBranch,
+  branches,
+  branchId,
   userId,
   params: { locale, companyId },
 }: {
-  companyBranches: IBranch[];
-  userBranch?: string;
+  branches: IBranch[];
+  branchId?: string;
   userId?: string;
   params: { locale: string; companyId: string };
 }) {
@@ -47,7 +47,7 @@ export default function SelectBranch({
   const [searchTerm, setSearchTerm] = useState("");
 
   const [selectedBranch, setSelectedBranch] = useState<string | null>(
-    userBranch ?? null
+    branchId ?? null
   );
 
   const form = useForm({
@@ -57,7 +57,7 @@ export default function SelectBranch({
     },
   });
 
-  const filteredBranches = companyBranches.filter((branch) =>
+  const filteredBranches = branches.filter((branch) =>
     branch.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -104,14 +104,14 @@ export default function SelectBranch({
             </CardHeader>
             <CardContent>
               <div>
-                {userBranch && !selectedBranch ? (
+                {branchId && !selectedBranch ? (
                   <div className="flex flex-col gap-2">
                     <blockquote className="border-l-2 pl-6 italic">
                       <p>Sucursal actual asignada</p>
                       <p className="font-bold text-xl text-secondary">
                         {
-                          companyBranches.find(
-                            (branch) => branch.id === userBranch
+                          branches.find(
+                            (branch) => branch.id === branchId
                           )?.name
                         }
                       </p>
@@ -123,7 +123,7 @@ export default function SelectBranch({
                       <p>Sucursal seleccionada</p>
                       <p className="font-bold text-xl text-secondary">
                         {
-                          companyBranches.find(
+                          branches.find(
                             (branch) => branch.id === selectedBranch
                           )?.name
                         }
@@ -178,7 +178,7 @@ export default function SelectBranch({
               )}
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
-              {!userBranch && selectedBranch && (
+              {!branchId && selectedBranch && (
                 <ButtonWithLoading
                   loading={isSubmitting}
                   loadingText="Asignando..."
@@ -191,7 +191,7 @@ export default function SelectBranch({
                   Asignar sucursal
                 </ButtonWithLoading>
               )}
-              {userBranch ||
+              {branchId ||
                 (selectedBranch && (
                   <Button
                     variant="accent"

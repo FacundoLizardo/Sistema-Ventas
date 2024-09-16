@@ -116,11 +116,11 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
   return (
     <Card>
       <Form {...form}>
-        <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="grid w-full gap-2 md:gap-4" onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
             <CardTitle className="text-2xl font-bold">Crear Usuario</CardTitle>
           </CardHeader>
-          <CardContent className="md:grid-cols-2">
+          <CardContent className="sm:grid-cols-2 lg:grid-cols-3">
             <FormField
               control={form.control}
               name="firstName"

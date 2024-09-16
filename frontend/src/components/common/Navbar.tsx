@@ -8,14 +8,19 @@ import { GrConfigure } from "react-icons/gr";
 
 const baseURL = process.env.NEXT_PUBLIC_CLIENT_BASE_URL;
 
-const navigationLinks = (locale: string, companyId: string) => [
-  { href: `${baseURL}/${locale}/${companyId}/sales`, name: "Ventas" },
-  { href: `${baseURL}/${locale}/${companyId}/stock`, name: "Control" },
-  {
-    href: `${baseURL}/${locale}/${companyId}/dashboard`,
-    name: "Administración",
-  },
-];
+const navigationLinks = (locale: string, companyId: string, isAdmin: boolean) => {
+  const links = [
+    { href: `${baseURL}/${locale}/${companyId}/sales`, name: "Ventas" },
+    { href: `${baseURL}/${locale}/${companyId}/stock`, name: "Control" },
+    { href: `${baseURL}/${locale}/${companyId}/dashboard`, name: "Administración" },
+  ];
+
+  if (isAdmin) {
+    links.push({ href: `${baseURL}/${locale}/admin`, name: "Admin" });
+  }
+
+  return links;
+};
 
 const configLinks = (locale: string, companyId: string) => [
   { href: `${baseURL}/${locale}/${companyId}/profile`, name: "Tu Perfil" },
@@ -79,7 +84,7 @@ const Navigation = ({
     }
   };
 
-  const links = navigationLinks(params.locale, params.companyId);
+  const links = navigationLinks(params.locale, params.companyId, isAdmin);
   const profileLinks = configLinks(params.locale, params.companyId);
 
   return (
@@ -215,7 +220,7 @@ const Navigation = ({
 
       {/* Menú Móvil */}
       <div
-        className={`sm:hidden ${
+        className={`md:hidden ${
           isOpen ? "block" : "hidden"
         } absolute top-0 left-0 bg-card w-full h-screen z-40 items-center justify-start flex`}
         id="mobile-menu"
