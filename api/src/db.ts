@@ -79,9 +79,6 @@ const {
 
 /* ----- Relationships Setup ----- */
 
-/* Branch.hasMany(User, { foreignKey: "userId" });
-User.belongsTo(Branch, { foreignKey: "userId" }); */
-
 Operation.belongsTo(User, { foreignKey: "userId" });
 User.hasMany(Operation, { foreignKey: "userId" });
 

@@ -1,4 +1,6 @@
+import CreateCompanyForm from "@/components/admin/companyFroms/CreateCompanyForm";
 import Dashboard from "@/components/admin/Dashboard";
+import CreateUserForm from "@/components/admin/userForms/CreateUserForm";
 import { getCompaniesService } from "@/services/companies/getCompaniesService";
 
 export default async function Page({params}: {params: { locale: string}}) {
@@ -10,16 +12,21 @@ export default async function Page({params}: {params: { locale: string}}) {
     { id: "123e4567-e89b-12d3-a456-426614174004", name: "Luis Rodríguez" },
   ];
 
-  try {
-    const {companies} = await getCompaniesService();
+  console.log(users);
+  
 
-    console.log({companies});
+  const companyId = '0b07e742-d77c-47cf-b080-ffd13786990d'
+
+  try {
+   const {companies} = await getCompaniesService();
+
+   console.log({companies});
     
     return (
       <main> 
         <Dashboard companies={companies}/>
-        {/* <CreateUserForm companyId={companyId}/> */}
-        {/* <CreateCompanyForm /> */}
+        <CreateUserForm companyId={companyId}/>
+        <CreateCompanyForm />
         {/* <CreateBranchForm companyId={companyId} users={users}/> */}
       </main>
     );
