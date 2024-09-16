@@ -30,8 +30,6 @@ class UserServices {
   ): Promise<UserInterface | string> {
     try {
       const password = await hashPassword(data.password);
-
-      console.log({ data, password });
       
       const [user, created] = await User.findOrCreate({
         where: { email: data.email },
