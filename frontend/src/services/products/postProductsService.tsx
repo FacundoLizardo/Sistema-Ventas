@@ -1,36 +1,12 @@
-'use server';
-import { cookies } from "next/headers";
+"use server";
 
-interface IproductCreationServiceParams {
-  name: string;
-  stock?: number | undefined; 
-  allowNegativeStock: boolean;
-  trackStock: boolean;
-  minimumStock?: number | undefined;
-  enabled: boolean;
-  notesDescription?: string | undefined;
-  taxes?: number | undefined;
-  barcode?: string | undefined;
-  category?: string | undefined;
-  cost?: number | undefined;
-  finalPrice?: number | undefined;
-  discount?: number | undefined;
-  profitPercentage?: number | undefined;
-}
+import { IProductCreate } from "./ProductsServices";
 
 export const postProductService = async (
-  params: IproductCreationServiceParams
+  params: IProductCreate,
+  token: string
 ) => {
   try {
-    const cookiesInstance = cookies();
-    const token = cookiesInstance.get("token")?.value;
-
-    if (!token) {
-      throw new Error("No token provided");
-    }
-
-    console.log({params});
-    
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products`,
       {

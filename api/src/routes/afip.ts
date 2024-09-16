@@ -3,7 +3,7 @@ import AfipController from "../controllers/afipController";
 
 const router = Router();
 
-router.post("/", AfipController.postAfip);
+router.post("/:companyId", AfipController.postAfip);
 
 module.exports = router;
  

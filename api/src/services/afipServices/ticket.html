@@ -88,8 +88,12 @@
           <div>
             <table>
               <tr>
-                <td>Subtotal</td>
-                <td>{{ImpNeto}}</td>
+                <td>Subtotal sin descuento</td>
+                <td>{{importeGravado}}</td>
+              </tr>
+              <tr>
+                <td>Descuento</td>
+                <td>% {{discount}}</td>
               </tr>
             </table>
           </div>
@@ -100,8 +104,8 @@
           <div>
             <table>
               <tr>
-                <td>TOTAL</td>
-                <td>{{ImpTotal}}</td>
+                <td><strong>TOTAL</strong></td>
+                <td><strong>{{ImpTotal}}</strong></td>
               </tr>
             </table>
           </div>

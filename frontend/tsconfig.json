@@ -1,36 +1,31 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",          
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]       
+      "@/*": ["src/*"]
     },
-    "types": ["node"],       
-    "lib": ["dom", "dom.iterable", "esnext"],  
-    "target": "es6",         
-    "module": "esnext",       
-    "allowJs": true,        
-    "skipLibCheck": true,     
-    "strict": true,           
-    "noEmit": true,      
-    "esModuleInterop": true,  
-    "moduleResolution": "bundler",  
-    "resolveJsonModule": true, 
-    "isolatedModules": true,  
-    "jsx": "preserve",        
-    "incremental": true,      
+    "types": ["node"],
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es6",
+    "module": "esnext",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
     "plugins": [
       {
-        "name": "next"        
+        "name": "next"
       }
-    ]
+    ],
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
-  "include": [
-    "next-env.d.ts",         
-    "**/*.ts",              
-    "**/*.tsx",              
-    ".next/types/**/*.ts"    
-  ],
-  "exclude": [
-    "node_modules"           
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

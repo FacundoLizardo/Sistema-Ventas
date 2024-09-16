@@ -2,38 +2,34 @@ import { Request, Response } from "express";
 import { controllerError } from "../utils/controllerError";
 import CompanyServices from "../services/CompanyServices";
 import { CompanyInterface } from "../models/company";
-import UserServices from "../services/UserServices";
 
 class CompanyController {
   async getCompany(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     try {
       if (!id) throw new Error("Company ID is required.");
+
       const company = await CompanyServices.getCompanyById(id);
-      if (!company) throw new Error("Company not found.");
+
+      if (!company) {
+        res.status(404).json({ message: "Company not found" });
+        return;
+      }
+
       res.status(200).json({ success: true, company });
     } catch (error) {
       controllerError(res, error, 404);
     }
   }
 
-  async getCompanies(req: Request, res: Response): Promise<void> {
+  async getCompanies(_req: Request, res: Response): Promise<void> {
     try {
-      const params = req.params;
-
-      console.log({ params });
-
-      const userId = params.userId;
-      
-      if (!userId) {
-        res.status(400).json({ message: "Missing information." });
-      }
-      const user = await UserServices.getUser(userId);
-
       const companies = await CompanyServices.getAllCompanies();
-      
-      if (user?.role !== "SUPER_ADMIN") throw new Error("You don't have permission.");
-      if (companies.length === 0) throw new Error("No companies found.");
+
+      if (!companies) {
+        res.status(404).json({ message: "Companies not found" });
+        return;
+      }
 
       res.status(200).json({ success: true, companies });
     } catch (error) {

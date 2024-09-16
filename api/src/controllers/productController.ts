@@ -6,11 +6,15 @@ class ProductController {
   async getProduct(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
+
+      if (!id) {
+        res.status(404).json({ message: "Product id is required" });
+      }
+
       const product = await ProductService.getProduct(id);
 
       if (!product) {
         res.status(404).json({ message: "Product not found" });
-        return;
       }
 
       res.status(200).json({ success: true, product });
@@ -19,9 +23,20 @@ class ProductController {
     }
   }
 
-  async getProducts(_req: Request, res: Response): Promise<void> {
+  async getProducts(req: Request, res: Response): Promise<void> {
     try {
-      const products = await ProductService.getProducts();
+      const companyId = req.query.companyId as string;
+
+      if (!companyId) {
+        res.status(400).json({ message: "Company id is required" });
+      }
+
+      const products = await ProductService.getProducts(companyId);
+
+      if (!products) {
+        res.status(404).json({ message: "Products not found" });
+      }
+
       res.status(200).json({ success: true, products });
     } catch (error) {
       controllerError(res, error, 500);
@@ -34,7 +49,6 @@ class ProductController {
 
       if (!categories.length) {
         res.status(404).json({ message: "No categories found" });
-        return;
       }
 
       res.status(200).json({ success: true, categories });
@@ -45,10 +59,16 @@ class ProductController {
 
   async postProduct(req: Request, res: Response): Promise<void> {
     try {
-      const newProduct = await ProductService.postProduct(req.body);
+      const { companyId } = req.params;
 
-      if (typeof newProduct === "string") {
-        res.status(400).json({ message: newProduct });
+      if (!companyId) {
+        res.status(400).json({ message: "Company id is required" });
+      }
+
+      const newProduct = await ProductService.postProduct(req.body, companyId);
+
+      if (!newProduct) {
+        res.status(400).json({ message: "Product not created" });
         return;
       }
 
@@ -76,6 +96,11 @@ class ProductController {
   async deleteProduct(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
+
+      if (!id) {
+        res.status(400).json({ message: "Product id is required" });
+      }
+
       const deleteProduct = await ProductService.deleteProduct(id);
 
       if (deleteProduct !== true) {

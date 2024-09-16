@@ -16,10 +16,20 @@ class BranchController {
     }
   }
 
-  async getBranches(_req: Request, res: Response): Promise<void> {
+  async getBranches(req: Request, res: Response): Promise<void> {
     try {
-      const branches = await BranchServices.getAllBranches();
-      if (branches.length === 0) throw new Error("No branches found.");
+      const companyId = req.query.companyId as string;
+
+      if (!companyId) {
+        res.status(400).json({ message: "Company id is required" });
+      }
+
+      const branches = await BranchServices.getBranches(companyId);
+
+      if (!branches) {
+        res.status(404).json({ message: "Branches not found" });
+      }
+
       res.status(200).json({ success: true, branches });
     } catch (error) {
       controllerError(res, error, 404);
@@ -27,18 +37,20 @@ class BranchController {
   }
 
   async postBranch(req: Request, res: Response): Promise<void> {
-    const data = req.body as BranchInterface;
     try {
-      if (!data.name || !data.location) {
-        res.status(400).json({ message: "Missing information." });
-        return;
+      const { companyId } = req.params;
+
+      if (!companyId) {
+        res.status(400).json({ message: "Company id is required" });
       }
-      const newBranch = await BranchServices.postBranch(data);
-      if (typeof newBranch === "string") {
-        res.status(400).json({ message: newBranch });
-        return;
+
+      const newBranch = await BranchServices.postBranch(req.body, companyId);
+
+      if (!newBranch) {
+        res.status(404).json({ message: "Branch not found" });
       }
-      res.status(201).json(newBranch);
+
+      res.status(200).json({ success: true, newBranch });
     } catch (error) {
       controllerError(res, error, 400);
     }

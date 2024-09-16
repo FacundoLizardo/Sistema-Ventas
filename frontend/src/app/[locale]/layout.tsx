@@ -29,7 +29,7 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body className={inter.className} suppressHydrationWarning={true}>
-        <div className="flex flex-col min-h-screen container bg-background max-w-5xl m-auto">
+        <div className="flex flex-col min-h-screen container bg-background md:max-w-5xl m-auto text-xs md:text-sm">
           <NextIntlClientProvider locale={locale} messages={messages}>
             {children}
           </NextIntlClientProvider>
