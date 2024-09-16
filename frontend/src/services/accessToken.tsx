@@ -1,26 +1,15 @@
 "use server";
 import { cookies } from "next/headers";
 
-export const accessToken = (): string => {
+export const accessToken = () => {
   const cookieStore = cookies();
   const cookieValue = cookieStore.get("session")?.value;
 
-  if (!cookieValue) {
-    throw new Error("No session cookie found");
+  if (cookieValue) {
+    const parsedCookie = JSON.parse(cookieValue);
+
+    const token = parsedCookie.dataUser?.token;
+
+    return token;
   }
-
-  let parsedCookie;
-  try {
-    parsedCookie = JSON.parse(cookieValue);
-  } catch (error) {
-    throw new Error("Failed to parse session cookie value");
-  }
-
-  const token = parsedCookie.dataUser?.token;
-
-  if (!token) {
-    throw new Error("No token found in session cookie");
-  }
-
-  return token;
 };

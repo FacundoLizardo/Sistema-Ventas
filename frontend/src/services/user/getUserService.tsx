@@ -1,21 +1,25 @@
 "use server";
 
-import { IProductCreate } from "./ProductsServices";
-
-export const postProductService = async (
-  params: IProductCreate,
-  token: string
-) => {
+export const getUserService = async ({
+  token,
+  userId,
+}: {
+  token?: string;
+  userId: string;
+}) => {
   try {
+    if (!token) {
+      throw new Error("No token provided");
+    }
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?userId=${userId}`,
       {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(params),
       }
     );
 
@@ -26,7 +30,7 @@ export const postProductService = async (
     const body = await response.json();
     return body;
   } catch (error) {
-    console.error("Error posting product:", error);
+    console.error("Error fetching products:", error);
     throw error;
   }
 };

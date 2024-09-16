@@ -14,7 +14,7 @@ import { NODE_ENV, DB_URL, DB_USER, DB_PASSWORD, DB_HOST } from "./config";
 
 /* ----- Utils ----- */
 export const blueText = "\x1b[34m%s\x1b[0m";
-export const orangeText = "\x1b[33m%s\x1b[0m";
+export const greenText = "\x1b[32m%s\x1b[0m";
 
 if (NODE_ENV === "production" && !DB_URL) {
   throw new Error("DB_URL must be defined in production environment");
@@ -79,8 +79,8 @@ const {
 
 /* ----- Relationships Setup ----- */
 
-User.hasMany(Branch, { foreignKey: "userId" });
-Branch.belongsTo(User, { foreignKey: "userId" });
+/* Branch.hasMany(User, { foreignKey: "userId" });
+User.belongsTo(Branch, { foreignKey: "userId" }); */
 
 Operation.belongsTo(User, { foreignKey: "userId" });
 User.hasMany(Operation, { foreignKey: "userId" });
@@ -102,6 +102,12 @@ Product.belongsTo(User, { foreignKey: "userId" });
 
 User.hasMany(Customer, { foreignKey: "userId" });
 Customer.belongsTo(User, { foreignKey: "userId" }); 
+
+Company.hasMany(Branch, { foreignKey: "companyId" });
+Branch.belongsTo(Company, { foreignKey: "companyId" });
+
+Branch.hasMany(User, { foreignKey: "branchId", as: "branch" });
+User.belongsTo(Branch, { foreignKey: "branchId", as: "branch" });
 
 export {
   sequelize,

@@ -2,12 +2,12 @@
 
 import { cookies } from "next/headers";
 
-export async function authenticateUser(email: string, password: string) {
+export async function loginUser(email: string, password: string) {
   try {
     const cookieStore = cookies();
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -17,7 +17,10 @@ export async function authenticateUser(email: string, password: string) {
     );
 
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      if (response.status === 401) {
+        return { success: false, error: "Correo o contraseña incorrectos." };
+      }
+      return { success: false, error: "Error en la autenticación." };
     }
 
     const data = await response.json();
@@ -32,6 +35,6 @@ export async function authenticateUser(email: string, password: string) {
     return data;
   } catch (error) {
     console.error("Error during authentication:", error);
-    throw error;
+    return { success: false, error: "Error en la autenticación." };
   }
 }

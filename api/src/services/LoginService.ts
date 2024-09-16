@@ -1,4 +1,4 @@
-import {  User } from "../db";
+import { User } from "../db";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UserInterface } from "../models/user";
@@ -6,21 +6,26 @@ import { UserInterface } from "../models/user";
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export class LoginService {
-  async authenticate(email: string, password: string): Promise<UserInterface> {
-    const user = await User.findOne({
+  async authenticate(
+    email: string,
+    password: string
+  ): Promise<UserInterface | null> {
+    const user = (await User.findOne({
       where: { email },
-    }) as UserInterface | null;
+    })) as UserInterface | null;
 
     if (!user) {
-      throw new Error(`User with the email: ${email} not found.`);
+      console.error(`User with the email: ${email} not found.`);
+      return null;
     }
 
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (!validPassword) {
-      throw new Error("Invalid password.");
+      console.error("Invalid password.");
+      return null; 
     }
-  
+
     return user;
   }
 

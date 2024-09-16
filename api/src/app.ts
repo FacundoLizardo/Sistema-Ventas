@@ -3,7 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import mainRouter from "./routes";
-import { orangeText, syncDatabase } from "./db";
+import { greenText, syncDatabase } from "./db";
 import loginRouter from "./routes/login";
 import { authenticateToken } from "./utils/authenticateToken";
 import cookieParser from "cookie-parser";
@@ -26,15 +26,10 @@ app.use(
       httpOnly: true,
       secure: NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 3600000, // 1 hora
+      maxAge: 3600000,
     },
   })
 );
-
-app.use((req, _res, next) => {
-  console.log("Session:", req.session);
-  next();
-});
 
 app.use((_req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -47,17 +42,23 @@ app.use((_req, res, next) => {
   next();
 });
 
-app.use("/api/login", loginRouter);
+app.use("/api/auth/", loginRouter);
 app.use(
   "/api",
-  NODE_ENV === "production" ? authenticateToken : (_req, _res, next) => next(),
+  (req, res, next) => {
+    if (NODE_ENV === "production") {
+      authenticateToken(req, res, next);
+    } else {
+      next();
+    }
+  },
   mainRouter
 );
 
 syncDatabase()
   .then(() => {
     app.listen(PORT || 3000, () =>
-      console.log(orangeText, `Server running on port ${PORT}`)
+      console.log(greenText, `Server running on port ${PORT}`)
     );
   })
   .catch((error) => {

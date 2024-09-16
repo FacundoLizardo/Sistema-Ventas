@@ -1,13 +1,21 @@
 import { CardsContainer } from "@/components/sales/CardsContainer";
 import SaleSeachBar from "@/components/sales/SaleSearchBar";
-import { products } from "@/mockData";
+import { IProduct } from "@/services/products/ProductsServices";
 
-export default function SalesContainer() {
+import SelectedBranch from "../common/SelectedBranch";
+
+export default async function SalesContainer({
+  products,
+  userBranch
+}: {
+  products: IProduct[];
+  userBranch: string;
+}) {
   return (
-    //todo hacer un check para ver si el id del path es un id de una company
     <div className="flex flex-col gap-4">
+      <SelectedBranch branch={userBranch} />
       <SaleSeachBar />
-      <CardsContainer data={products} />
+      <CardsContainer products={products} />
     </div>
   );
 }

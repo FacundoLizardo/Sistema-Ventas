@@ -1,4 +1,4 @@
-import { User } from "../db";
+import { Branch, User } from "../db";
 import { serviceError } from "../utils/serviceError";
 import { hashPassword } from "../utils/hashPassword";
 import { UserCreationInterface, UserInterface } from "../models/user";
@@ -6,16 +6,18 @@ import { UserCreationInterface, UserInterface } from "../models/user";
 class UserServices {
   async getUser(id: string) {
     try {
-      const user = await User.findByPk(id);
-      return user ? (user.get({ plain: true }) as UserInterface) : null;
+      const user = await User.findByPk(id, {
+        include: [{ model: Branch, as: "branch" }],
+      });
+      return user;
     } catch (error) {
       serviceError(error);
     }
   }
 
-  async getUsers() {
+  async getUsers(companyId: string) {
     try {
-      const users = await User.findAll();
+      const users = await User.findAll({ where: { companyId } });
       return users ? users.map((userObj) => userObj.get({ plain: true })) : [];
     } catch (error) {
       serviceError(error);
@@ -34,7 +36,7 @@ class UserServices {
         defaults: {
           ...data,
           password,
-          companyId
+          companyId,
         },
       });
 

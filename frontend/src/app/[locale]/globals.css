@@ -4,31 +4,36 @@
 
 @layer base {
   :root {
-    --background: 265, 17%, 6%;
-    --foreground: 0, 0%, 93%;
+    --background: 265, 17%, 6%; /* Fondo oscuro */
+    --foreground: 0, 0%, 93%; /* Texto principal claro */
+    --foreground-dark: 0, 0%, 20%;
     --card: 255, 26%, 11%;
     --card-foreground: 0, 0%, 93%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 253, 100%, 25%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 30, 100%, 50%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 220, 10%, 69%;
-    --muted-foreground: 220, 10%, 69%;
-    --accent: 0, 0%, 93%;
-    --accent-foreground: 240, 28%, 4%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --popover: 0 0% 100%; /* Fondo del popover (blanco) */
+    --popover-foreground: 222.2 84% 4.9%; /* Texto en el popover (gris oscuro) */
+    --primary: 30, 100%, 50%; /* Color primario (naranja) */
+    --primary-foreground: 210 40% 98%; /* Texto sobre el color primario (blanco) */
+    --secondary: 0, 100%, 50%; /* Color secundario (rojo) */
+    --secondary-foreground: 255, 255%, 255%; /* Texto sobre el color secundario (blanco) */
+    --muted: 220, 10%, 69%; /* Color de fondo atenuado (gris claro) */
+    --muted-foreground: 220, 10%, 69%; /* Texto sobre fondo atenuado (gris oscuro) */
+    --accent: 0, 0%, 93%; /* Color de acento (gris muy claro) */
+    --accent-foreground: 240, 28%, 4%; /* Texto sobre el color de acento (gris oscuro) */
+    --destructive: 0 84.2% 60.2%; /* Color destructivo (rojo brillante) */
+    --destructive-foreground: 210 40% 98%; /* Texto sobre color destructivo (blanco) */
+    --border: 214.3 31.8% 91.4%; /* Color del borde (gris claro) */
+    --input: 0, 0%, 20%; /* Color del texto en los campos de entrada (casi negro) */
+    --ring: 222.2 84% 4.9%; /* Color del anillo (gris oscuro) */
+    --radius: 0.5rem; /* Radio de borde */
+    --chart-1: 12 76% 61%; /* Color de gráfico 1 */
+    --chart-2: 173 58% 39%; /* Color de gráfico 2 */
+    --chart-3: 197 37% 24%; /* Color de gráfico 3 */
+    --chart-4: 43 74% 66%; /* Color de gráfico 4 */
+    --chart-5: 27 87% 67%; /* Color de gráfico 5 */
+
+    --scrollbar-track: #ededed; /* Color del track del scrollbar */
+    --scrollbar-thumb: #555555; /* Color del thumb del scrollbar */
+    --scrollbar-thumb-hover: #555555; /* Color del thumb al pasar el ratón */
   }
 
   .dark {
@@ -65,5 +70,34 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@media screen and (min-width: 512px) {
+  .custom-scrollbar {
+    overflow-y: auto;
+    max-height: 400px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+
+  .custom-scrollbar {
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    scrollbar-width: thin;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover);
   }
 }

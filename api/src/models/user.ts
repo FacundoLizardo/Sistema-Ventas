@@ -1,5 +1,4 @@
 import { Sequelize, DataTypes, Model, Optional } from "sequelize";
-import { BranchInterface } from "./branch";
 
 export interface UserInterface {
   id: string;
@@ -10,7 +9,6 @@ export interface UserInterface {
   address?: string;
   phoneNumber?: string;
   cuit?: string;
-  branches?: BranchInterface[];
   enabled: boolean;
   role: string;
   createdAt?: Date;
@@ -18,19 +16,14 @@ export interface UserInterface {
 }
 
 export interface UserLogin extends UserInterface {
+  branchId?: string;
   companyId: string;
 }
 
 export interface UserCreationInterface
   extends Optional<
     UserInterface,
-    | "id"
-    | "address"
-    | "phoneNumber"
-    | "cuit"
-    | "createdAt"
-    | "updatedAt"
-    | "branches"
+    "id" | "address" | "phoneNumber" | "cuit" | "createdAt" | "updatedAt"
   > {}
 
 class User
@@ -45,7 +38,6 @@ class User
   public address?: string;
   public phoneNumber?: string;
   public cuit?: string;
-  public branches?: BranchInterface[];
   public enabled!: boolean;
   public role!: string;
   public readonly createdAt!: Date;
@@ -108,10 +100,6 @@ export default (sequelize: Sequelize) => {
         validate: {
           len: [0, 50],
         },
-      },
-      branches: {
-        type: DataTypes.ARRAY(DataTypes.UUID),
-        allowNull: true,
       },
       enabled: {
         type: DataTypes.BOOLEAN,

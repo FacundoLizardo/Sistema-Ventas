@@ -1,25 +1,36 @@
 "use server";
 
-export const getProductsService = async ({
+import { IUser } from "./UsersServices";
+
+export const putUserService = async ({
   token,
-  companyId,
+  userId,
+  data,
 }: {
   token?: string;
-  companyId: string;
+  userId: string;
+  data: Partial<IUser>;
 }) => {
+
+console.log(data)
+console.log(userId)
+
   try {
     if (!token) {
       throw new Error("No token provided");
     }
 
+    await new Promise((resolve) => setTimeout(resolve, 500)); 
+    
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products?companyId=${companyId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?userId=${userId}`,
       {
-        method: "GET",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify(data),
       }
     );
 

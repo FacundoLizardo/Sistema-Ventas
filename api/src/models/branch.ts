@@ -11,7 +11,6 @@ export interface BranchInterface {
   manager?: string[];
   hours?: string;
   phoneNumber?: string;
-  companyId: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -35,7 +34,6 @@ class Branch
   public manager?: string[];
   public hours?: string;
   public phoneNumber?: string;
-  public companyId!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -87,14 +85,6 @@ export default (sequelize: Sequelize) => {
       phoneNumber: {
         type: DataTypes.STRING,
         allowNull: true,
-      },
-      companyId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: "Companies",
-          key: "id",
-        },
       },
     },
     {

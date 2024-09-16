@@ -1,9 +1,13 @@
-export default function Header() {
+import Navbar from "./Navbar";
+
+export default function Header({
+  params,
+}: {
+  params: { locale: string; companyId: string };
+}) {
   return (
-    <header className="w-full py-4 md:py-6 h-auto">
-      <nav className="flex items-center justify-between max-w-5xl m-auto">
-       El nav
-      </nav>
+    <header className="w-full">
+      <Navbar params={params} />
     </header>
   );
 }
