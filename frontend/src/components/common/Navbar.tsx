@@ -15,7 +15,6 @@ const navigationLinks = (locale: string, companyId: string) => [
     href: `${baseURL}/${locale}/${companyId}/dashboard`,
     name: "Administración",
   },
-  { href: `${baseURL}/${locale}/admin`, name: "Admin" },
 ];
 
 const configLinks = (locale: string, companyId: string) => [
@@ -59,8 +58,10 @@ const MenuLinks = ({
 
 const Navigation = ({
   params,
+  isAdmin,
 }: {
   params: { locale: string; companyId: string };
+  isAdmin: boolean;
 }) => {
   const router = useRouter();
   const activeLink = usePathname();
@@ -172,7 +173,7 @@ const Navigation = ({
                 </button>
               </div>
 
-              <span className="bg-black h-[0.5px] block  justify-center m-auto"></span>
+              <hr />
               {profileLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -185,6 +186,20 @@ const Navigation = ({
                   {link.name}
                 </Link>
               ))}
+              {isAdmin && (
+                <>
+                  <hr />
+                  <Link
+                    href={`${baseURL}/${params.locale}/admin`}
+                    className="block my-4 text-sm text-gray-700"
+                    role="menuitem"
+                  >
+                    Admin
+                  </Link>
+                  <hr />
+                </>
+              )}
+
               <button
                 onClick={() => handleLogout()}
                 className="block my-4 text-sm text-gray-700"

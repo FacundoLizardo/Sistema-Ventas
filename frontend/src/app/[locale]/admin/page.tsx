@@ -1,15 +1,14 @@
+import { Dashboard } from "@/components/admin/Dashboard";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function AdminPage({
   params,
 }: {
-  params: { locale: string };
+  params: { locale: string, companyId: string };
 }) {
   const cookiesStore = cookies();
   const session = cookiesStore.get("session")?.value;
-
-  console.log(params);
 
   if (!session) {
     redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
@@ -21,5 +20,11 @@ export default async function AdminPage({
   if (!isAdmin) {
     redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
   }
+
+  return (
+    <main>
+       <Dashboard locale={params.locale} sessionData={sessionData.dataUser} />
+    </main>
+  );
 
 }
