@@ -1,6 +1,5 @@
 "use client";
 import ButtonWithLoading from "@/components/common/ButtonWithLoading";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -30,13 +29,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import {
+/* import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react"; */
 
 const formSchema = z.object({
   ptoVta: z.number().min(1, { message: "El punto de venta debe ser válido." }),
@@ -66,7 +65,7 @@ export default function CreateBranchForm({
   const [openingTime, setOpeningTime] = useState("08:00");
   const [closingTime, setClosingTime] = useState("22:00");
 
-  const users: string[] = [""]
+  /* const users: string[] = [""] */
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -234,7 +233,7 @@ export default function CreateBranchForm({
               )}
             />
 
-            <FormField
+           {/*  <FormField
               control={form.control}
               name="manager"
               render={({ field }) => {
@@ -295,7 +294,7 @@ export default function CreateBranchForm({
                   </FormItem>
                 );
               }}
-            />
+            /> */}
 
             <FormField
               control={form.control}

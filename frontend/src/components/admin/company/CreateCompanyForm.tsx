@@ -19,10 +19,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+/* import { toast } from "sonner"; */
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { postCompanyService } from "@/services/companies/postCompanyService";
 import { Trash2Icon } from "lucide-react";
 import {
   Select,
@@ -65,7 +64,9 @@ export default function CreateCompanyForm() {
   console.log(form.watch());
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const request = postCompanyService({ ...data });
+    console.log(data);
+    
+    /* const request = postCompanyService({ ...data });
     toast.promise(request, {
       loading: "Creando la compañía...",
       success: () => {
@@ -73,7 +74,7 @@ export default function CreateCompanyForm() {
         return "Compañía creada exitosamente.";
       },
       error: "Error al crear la compañía.",
-    });
+    }); */
   };
 
   const addPhoneNumber = () => {
