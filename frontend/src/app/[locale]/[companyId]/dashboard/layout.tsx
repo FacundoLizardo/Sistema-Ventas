@@ -1,9 +1,3 @@
-// aca va la side bar 
-
-export default function SideBar() {
-    return (
-      <main>
-        
-      </main>
-    );
-  }
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <main>Acá una nav{children}</main>;
+}

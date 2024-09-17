@@ -36,12 +36,14 @@ export default function SelectBranch({
   branches,
   branchId,
   userId,
-  params: { locale, companyId },
+  locale,
+  companyId
 }: {
   branches: IBranch[];
   branchId?: string;
   userId?: string;
-  params: { locale: string; companyId: string };
+  locale: string;
+  companyId: string;
 }) {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
@@ -89,9 +91,12 @@ export default function SelectBranch({
   const { isDirty, isValid, isSubmitting } = form.formState;
 
   return (
-    <div >
-      <Form {...form} >
-        <form onSubmit={form.handleSubmit(onSubmit)} className="absolute bg-background w-full min-h-screen flex place-content-center items-center">
+    <div>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="absolute bg-background w-full min-h-screen flex place-content-center items-center"
+        >
           <Card className="relative flex max-w-[90%] min-h-80 md:w-full md:max-w-md mx-auto my-10">
             <CardHeader>
               <CardTitle>Punto de venta</CardTitle>
@@ -110,9 +115,8 @@ export default function SelectBranch({
                       <p>Sucursal actual asignada</p>
                       <p className="font-bold text-xl text-secondary">
                         {
-                          branches.find(
-                            (branch) => branch.id === branchId
-                          )?.name
+                          branches.find((branch) => branch.id === branchId)
+                            ?.name
                         }
                       </p>
                     </blockquote>
@@ -143,11 +147,11 @@ export default function SelectBranch({
                     <Input
                       type="text"
                       placeholder="Buscar sucursal..."
-                      className="bg-transparent border-none text-foreground-dark"
+                      className="bg-transparent border-none text-foreground"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <SearchIcon className="text-foreground-dark mx-2" />
+                    <SearchIcon className="text-foreground mx-2" />
                   </div>
                   <div className="flex flex-col gap-2 max-h-80 overflow-y-auto custom-scrollbar">
                     {filteredBranches.map((branch) => (

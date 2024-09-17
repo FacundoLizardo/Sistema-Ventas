@@ -23,11 +23,11 @@ const navigationLinks = (locale: string, companyId: string, isAdmin: boolean) =>
 };
 
 const configLinks = (locale: string, companyId: string) => [
-  { href: `${baseURL}/${locale}/${companyId}/profile`, name: "Tu Perfil" },
-  { href: `${baseURL}/${locale}/${companyId}/settings`, name: "Configuración" },
+  { href: `${baseURL}/${locale}/${companyId}/configuration/profile`, name: "Tu Perfil" },
+  { href: `${baseURL}/${locale}/${companyId}/configuration/settings`, name: "Configuración" },
 ];
 
-const classMenuLinks = "block px-3 py-2 text-base font-medium text-muted";
+const classMenuLinks = "block px-3 py-2 text-base font-medium";
 const activeClassMenuLinks =
   "block px-3 py-2 text-base font-medium text-muted bg-gradient-primary-secondary rounded text-primary-foreground";
 
@@ -100,11 +100,11 @@ const Navigation = ({
             onClick={() => setIsOpen(!isOpen)}
           >
             <IoMdClose
-              className={`block h-6 w-6 ${isOpen ? "block" : "hidden"}`}
+              className={`block size-5 ${isOpen ? "block" : "hidden"}`}
             />
 
             <IoIosMenu
-              className={`block h-6 w-6 ${isOpen ? "hidden" : "block"}`}
+              className={`block size-5 ${isOpen ? "hidden" : "block"}`}
             />
           </button>
         </div>
@@ -147,7 +147,7 @@ const Navigation = ({
             onClick={() => setIsProfileOpen(!isProfileOpen)}
           >
             <GrConfigure
-              className={` h-5 w-5 ${isProfileOpen ? "hidden" : "block"}`}
+              className={` size-5 ${isProfileOpen ? "hidden" : "block"}`}
             />
           </button>
 
@@ -167,11 +167,11 @@ const Navigation = ({
                 </h2>
                 <button
                   type="button"
-                  className="relative rounded-full p-1 text-foreground-dark"
+                  className="relative rounded-full p-1 text-background"
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
                 >
                   <IoMdClose
-                    className={`h-6 w-6 z-50 ${
+                    className={`size-5 z-50 ${
                       !isProfileOpen ? "hidden" : "block"
                     }`}
                   />

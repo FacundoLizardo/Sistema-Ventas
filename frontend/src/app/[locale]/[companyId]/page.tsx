@@ -3,7 +3,7 @@ import BranchesServices from "@/services/branches/BranchesServices";
 import UsersServices from "@/services/user/UsersServices";
 import { redirect } from "next/navigation";
 
-export default async function RootPage({
+export default async function AppPage({
   params,
 }: {
   params: { locale: string; companyId: string };
@@ -18,13 +18,18 @@ export default async function RootPage({
   }
 
   if (!branchId) {
+     `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/${companyId}/configuration/branch`
+  }
+
+  if (!branchId) {
     return (
       <div className="flex w-full min-h-screen absolute left-0 z-50">
         <SelectBranch
           branches={branches}
           branchId={branchId}
           userId={userId}
-          params={params}
+          locale={locale}
+          companyId={companyId}
         />
       </div>
     );

@@ -41,9 +41,9 @@ console.log(companies);
             placeholder="Buscar compañía..."
             value={searchTerm}
             onChange={handleSearchChange}
-            className="bg-transparent border-none text-foreground-dark"
+            className="bg-transparent border-none text-foreground"
           />
-          <SearchIcon className="text-foreground-dark mx-2" />
+          <SearchIcon className="text-foreground mx-2" />
         </div>
       </CardContent>
       <CardFooter>

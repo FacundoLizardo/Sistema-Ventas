@@ -1,9 +1,8 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import UsersServices from "@/services/user/UsersServices";
 
-export default function Layout({
+export default async function AppLayout({
   children,
   params,
 }: Readonly<{
@@ -13,15 +12,7 @@ export default function Layout({
     companyId: string;
   };
 }>) {
-  const cookiesStore = cookies();
-  const session = cookiesStore.get("session")?.value;
-
-  if (!session) {
-    redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
-  }
-  
-  const sessionData = JSON.parse(session);
-  const isAdmin = sessionData && sessionData.dataUser.role === "ADMIN";
+  const { isAdmin } = await UsersServices.userSession();
 
   return (
     <main>
