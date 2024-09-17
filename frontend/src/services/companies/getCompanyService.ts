@@ -1,23 +1,19 @@
 "use server";
 
-import { CompanyInterface } from "@/types";
-import { cookies } from "next/headers";
-
-export const getCompanyService = async (id: string): Promise<{
-    sucess: boolean;
-    company?: CompanyInterface;
-}> => {
+export const getCompanyService = async ({
+  token,
+  companyId,
+}: {
+  token?: string;
+  companyId: string;
+}) => {
   try {
-    const cookiesInstance = cookies();
-    const token = cookiesInstance.get("token")?.value;
-
     if (!token) {
-      console.error("No token provided");
-      return { sucess: false, company:undefined };
+      throw new Error("No token provided");
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/companies/${id}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?companyId=${companyId}`,
       {
         method: "GET",
         headers: {
@@ -27,18 +23,14 @@ export const getCompanyService = async (id: string): Promise<{
       }
     );
 
-    console.log({response});
-    
-
     if (!response.ok) {
-      console.error("Network response was not ok");
-      return { sucess: false, company:undefined };
+      throw new Error("Network response was not ok");
     }
 
-    const company = (await response.json())
-    return company;
+    const body = await response.json();
+    return body;
   } catch (error) {
-    console.error("Error fetching companies:", error);
-    return { sucess: false, company:undefined };
+    console.error("Error fetching products:", error);
+    throw error;
   }
 };

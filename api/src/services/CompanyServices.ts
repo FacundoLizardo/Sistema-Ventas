@@ -78,6 +78,11 @@ export default new CompanyServices();
       "country": "Argentina",
       "phoneNumbers": ["+1-234-567-8900", "3442644665"],
       "cuit": "20-12345678-9",
-      "isActive": true
+      "isActive": true,
+      "razonSocial": "GPI 360 S.A.",
+      "domicilioFiscal": "Tucuman 1234, CABA",
+      "inicioActividad": "20010101",
+      "regimenTributario": "Responsable Inscripto",
+      "iibb": "123456789"
     }
  */

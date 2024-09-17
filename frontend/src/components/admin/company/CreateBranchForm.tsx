@@ -58,10 +58,6 @@ const formSchema = z.object({
 
 interface CreateBranchFormProps {
   companyId: string;
-  users: {
-    id: string;
-    name: string;
-  }[]; // hacer fecth de toda la data de la compañia
 }
 
 export default function CreateBranchForm({
@@ -70,7 +66,7 @@ export default function CreateBranchForm({
   const [openingTime, setOpeningTime] = useState("08:00");
   const [closingTime, setClosingTime] = useState("22:00");
 
-  const users = []
+  const users: string[] = [""]
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

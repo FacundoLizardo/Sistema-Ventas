@@ -1,29 +1,17 @@
 "use server";
 
-import { CompanyInterface } from "@/types";
-import { cookies } from "next/headers";
-
-export const getCompaniesService = async (): Promise<{
-    sucess: boolean;
-    companies: CompanyInterface[];
-}> => {
+export const getCompaniesService = async ({
+  token,
+}: {
+  token?: string;
+}) => {
   try {
-    const cookiesInstance = cookies();
-    const token = cookiesInstance.get("token")?.value;
-
     if (!token) {
-      console.error("No token provided");
-      return { sucess: false, companies: [] };
-    }
-
-    const userId = cookiesInstance.get("userId")?.value;
-    if (!userId) {
-      console.error("No userId provided");
-      return { sucess: false, companies: [] };
+      throw new Error("No token provided");
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/companies/companies/${userId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/companies`,
       {
         method: "GET",
         headers: {
@@ -34,14 +22,13 @@ export const getCompaniesService = async (): Promise<{
     );
 
     if (!response.ok) {
-      console.error("Network response was not ok");
-      return { sucess: false, companies: [] };
+      throw new Error("Network response was not ok");
     }
 
-    const companies = (await response.json())
-    return companies;
+    const body = await response.json();
+    return body;
   } catch (error) {
-    console.error("Error fetching companies:", error);
-    return { sucess: false, companies: [] };
+    console.error("Error fetching products:", error);
+    throw error;
   }
 };
