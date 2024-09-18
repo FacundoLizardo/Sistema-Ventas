@@ -11,7 +11,6 @@ export default async function Page({
   };
 }) {
   const { userId } = await UsersServices.userSession();
-console.log("userId", userId);
 
   const [userData, productsData] = await Promise.all([
     UsersServices.get(userId),

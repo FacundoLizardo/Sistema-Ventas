@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { logout } from "@/services/auth/AuthServices";
 import { IoMdClose, IoIosMenu } from "react-icons/io";
@@ -84,6 +84,27 @@ const Navigation = ({
     }
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [isOpen]);
+
   const links = navigationLinks(params.locale, params.companyId, isAdmin);
   const profileLinks = configLinks(params.locale, params.companyId);
 
@@ -91,7 +112,7 @@ const Navigation = ({
     <nav className="w-full h-16 grid items-center">
       <div className="relative flex items-center justify-between">
         {/* Menú Móvil */}
-        <div className="absolute flex items-center justify-between md:hidden z-30">
+        <div className="absolute flex items-center justify-between md:hidden z-50">
           <button
             type="button"
             className="relative inline-flex items-center justify-center rounded-md p-2 text-foreground bg-card hover:text-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-foreground"
@@ -104,7 +125,7 @@ const Navigation = ({
             />
 
             <IoIosMenu
-              className={`block size-5 ${isOpen ? "hidden" : "block"}`}
+              className={`block size-5 text-white ${isOpen ? "hidden" : "block"}`}
             />
           </button>
         </div>

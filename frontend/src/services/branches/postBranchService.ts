@@ -17,7 +17,6 @@ interface IBranchCreationServiceParams {
 export const postBranchService = async (
   params: IBranchCreationServiceParams
 ) => {
-  console.log({params});
   
   try {
     const cookiesInstance = cookies();

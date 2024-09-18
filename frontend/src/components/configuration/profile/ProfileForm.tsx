@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ImProfile } from "react-icons/im";
 import Link from "next/link";
+import { IUser } from "@/services/user/UsersServices";
 
 const profileFormSchema = z.object({
   username: z
@@ -44,12 +45,15 @@ const defaultValues: Partial<ProfileFormValues> = {
 export default function ProfileForm({
   locale,
   companyId,
+  user,
 }: {
   locale: string;
   companyId: string;
+  user: IUser;
 }) {
-  console.log("locale", locale, "companyId", companyId);
+  console.log(user);
   
+ 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -73,13 +77,13 @@ export default function ProfileForm({
           </AlertDescription>
         </Alert>
 
-    {/*     <div>
+        <div>
           <Link
             href={`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/${companyId}/configuration/branch`}
           >
             Branch
           </Link>
-        </div> */}
+        </div> 
 
         <FormField
           control={form.control}

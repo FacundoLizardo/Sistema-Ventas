@@ -22,35 +22,32 @@ import {
 import { IBranch } from "@/services/branches/BranchesServices";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
-import UsersServices from "@/services/user/UsersServices";
+import UsersServices, { IUser } from "@/services/user/UsersServices";
 import { useRouter } from "next/navigation";
 import { Input } from "../ui/input";
 import { SearchIcon } from "lucide-react";
 
-// Esquema de validación con Zod
 const formSchema = z.object({
   branch: z.string().min(1, { message: "Debe seleccionar una sucursal." }),
 });
 
 export default function SelectBranch({
   branches,
-  branchId,
   userId,
   locale,
-  companyId
+  companyId,
+  user,
 }: {
   branches: IBranch[];
-  branchId?: string;
   userId?: string;
   locale: string;
   companyId: string;
+  user?: IUser;
 }) {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-
-  const [selectedBranch, setSelectedBranch] = useState<string | null>(
-    branchId ?? null
-  );
+  const currentBranch = branches.find((branch) => branch.id === user?.branchId);
+  const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -109,14 +106,15 @@ export default function SelectBranch({
             </CardHeader>
             <CardContent>
               <div>
-                {branchId && !selectedBranch ? (
+                {currentBranch ? (
                   <div className="flex flex-col gap-2">
                     <blockquote className="border-l-2 pl-6 italic">
                       <p>Sucursal actual asignada</p>
                       <p className="font-bold text-xl text-secondary">
                         {
-                          branches.find((branch) => branch.id === branchId)
-                            ?.name
+                          branches.find(
+                            (branch) => branch.id === user?.branchId
+                          )?.name
                         }
                       </p>
                     </blockquote>
@@ -141,8 +139,8 @@ export default function SelectBranch({
                 )}
               </div>
 
-              {!selectedBranch && (
-                <div className="flex flex-col gap-2">
+              {!currentBranch && (
+                <div className="flex flex-col gap-3">
                   <div className="flex flex-row items-center gap-2 px-2 bg-card-foreground rounded-md">
                     <Input
                       type="text"
@@ -151,7 +149,7 @@ export default function SelectBranch({
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <SearchIcon className="text-foreground mx-2" />
+                    <SearchIcon className="text-background mx-2" />
                   </div>
                   <div className="flex flex-col gap-2 max-h-80 overflow-y-auto custom-scrollbar">
                     {filteredBranches.map((branch) => (
@@ -182,7 +180,7 @@ export default function SelectBranch({
               )}
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
-              {!branchId && selectedBranch && (
+              {selectedBranch && (
                 <ButtonWithLoading
                   loading={isSubmitting}
                   loadingText="Asignando..."
@@ -195,16 +193,15 @@ export default function SelectBranch({
                   Asignar sucursal
                 </ButtonWithLoading>
               )}
-              {branchId ||
-                (selectedBranch && (
-                  <Button
-                    variant="accent"
-                    className="w-full"
-                    onClick={() => setSelectedBranch(null)}
-                  >
-                    Cambiar sucursal
-                  </Button>
-                ))}
+              {selectedBranch && currentBranch && (
+                <Button
+                  variant="accent"
+                  className="w-full"
+                  onClick={() => setSelectedBranch(null)}
+                >
+                  Cambiar sucursal
+                </Button>
+              )}
             </CardFooter>
           </Card>
         </form>

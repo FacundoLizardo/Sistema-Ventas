@@ -17,15 +17,12 @@ interface IUserCreationServiceParams {
 export const postUserService = async (
   params: IUserCreationServiceParams
 ) => {
-  console.log({params});
   
   try {
     const cookiesInstance = cookies();
     const token = cookiesInstance.get("token")?.value;
 
     const {companyId, ...userData} = params
-
-    console.log({userData});
     
 
     if (!token) {

@@ -30,7 +30,7 @@ class UserServices {
   ): Promise<UserInterface | string> {
     try {
       const password = await hashPassword(data.password);
-      
+
       const [user, created] = await User.findOrCreate({
         where: { email: data.email },
         defaults: {
@@ -102,4 +102,18 @@ export default new UserServices();
       "enabled": true,
        "role": "ADMIN"
     }
+
+
+    {
+      "firstName": "Test",
+      "lastName": "User",
+      "email": "testuser@example.com",
+      "password": "testpassword",
+      "address": "789 Oak St",
+      "phoneNumber": "555-123-4567",
+      "cuit": "20-11223344-5",
+      "enabled": true,
+      "role": "OWNER"
+    }
+
 */
