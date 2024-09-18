@@ -3,42 +3,52 @@
 import { Input } from "../ui/input";
 import { SearchIcon } from "lucide-react";
 import { useState } from "react";
-import { Separator } from "../ui/separator";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { IProduct } from "@/services/products/ProductsServices";
+import { Badge } from "../ui/badge";
 
-export default function SaleSeachBar() {
+export default function SaleSeachBar({ products }: { products: IProduct[] }) {
   const [open, setOpen] = useState(false);
-  const tags = Array.from({ length: 12 }).map(
-    (_, i, a) => `v1.2.0-beta.${a.length - i}`
-  );
+
   return (
-    <div className={`relative flex flex-col bg-card-foreground ${open? 'rounded-t-md' : 'rounded-md'} text-black`}>
-      <div
-        className="flex flex-row items-center gap-2 px-2"
-        onClick={() => setOpen(!open)}
-      >
+    <div
+      className={`relative flex flex-col bg-card-foreground z-20 rounded-md text-black ${
+        open ? "rounded-b-none" : ""
+      }`}
+    >
+      <div className="flex flex-row items-center gap-2">
         <Input
           type="text"
           placeholder="Buscar producto..."
-          className="bg-transparent border-none text-foreground-dark"
+          className="bg-transparent border-none text-primary"
+          onClick={() => setOpen(!open)}
         />
-        <SearchIcon className="text-foreground-dark mx-2" />
+        <SearchIcon className="text-background size-5 mr-4" />
       </div>
-      {open && ( 
-        <div className="absolute top-10 h-fit w-full bg-card-foreground rounded-b-md ">
-        <ScrollArea className="flex flex-col max-h-[250px] pl-2">
-          <div className="p-4">
-            {tags.map((tag) => (
-              <>
-                <div key={tag} className="text-sm">
-                  {tag}
-                </div>
-                <Separator className="my-2" />
-              </>
-            ))}
-          </div>
-          <ScrollBar/>
-        </ScrollArea>
+
+      {open && (
+        <div className="absolute top-10 h-fit w-full bg-card-foreground rounded-b-md p-2">
+          <ScrollArea className="flex flex-col max-h-[250px]">
+            <ul className="flex flex-col gap-1 cursor-pointer">
+              {products.map((product) => (
+                <li
+                  key={product.id}
+                  className="flex justify-between hover:bg-muted-foreground p-2 gap-2 rounded"
+                >
+                  <p>{product.name}</p>
+                  <p>
+                    {product.stock > 0 ? (
+                      <Badge variant="default">Disponible</Badge>
+                    ) : (
+                      <Badge variant="destructive">Agotado</Badge>
+                    )}
+                  </p>
+                </li>
+              ))}
+            </ul>
+
+            <ScrollBar />
+          </ScrollArea>
         </div>
       )}
     </div>

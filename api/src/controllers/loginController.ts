@@ -5,10 +5,11 @@ import { UserLogin } from "../models/user";
 declare module "express-session" {
   interface SessionData {
     user?: {
-      id: string;
+      userId: string;
       email: string;
       companyId: string;
       branchId?: string;
+      role: string;
       token: string;
     };
   }
@@ -33,10 +34,11 @@ class LoginController {
 
       const token = loginService.generateToken(user);
       req.session.user = {
-        id: user.id,
+        userId: user.id,
         email: user.email,
         companyId: user.companyId,
         branchId: user.branchId,
+        role: user.role,
         token,
       };
 

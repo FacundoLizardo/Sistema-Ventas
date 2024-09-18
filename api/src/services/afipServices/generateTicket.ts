@@ -20,10 +20,7 @@ export const generateTicket = async ({ req }: { req: Request }) => {
     importeGravado,
   } = req.body;
   const sequelize = Product.sequelize as Sequelize;
-  const transaction = await sequelize.transaction();
-  
-  console.log(products);
-  
+  const transaction = await sequelize.transaction();  
 
   try {
     const htmlPath = cbteTipo === 0 ? path.join(__dirname, "ticket.html") : "";

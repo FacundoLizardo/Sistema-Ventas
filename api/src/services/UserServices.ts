@@ -100,6 +100,20 @@ export default new UserServices();
       "phoneNumber": "123-456-7890",
       "cuit": "20-12345678-9",
       "enabled": true,
-      "role": "BASIC"
+       "role": "ADMIN"
     }
+
+
+    {
+      "firstName": "Test",
+      "lastName": "User",
+      "email": "testuser@example.com",
+      "password": "testpassword",
+      "address": "789 Oak St",
+      "phoneNumber": "555-123-4567",
+      "cuit": "20-11223344-5",
+      "enabled": true,
+      "role": "OWNER"
+    }
+
 */

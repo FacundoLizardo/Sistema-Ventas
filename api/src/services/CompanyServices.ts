@@ -1,11 +1,18 @@
-import { Company } from "../db";
+import { Company, User } from "../db";
 import { CompanyInterface } from "../models/company";
 import { serviceError } from "../utils/serviceError";
 
 class CompanyServices {
   async getCompanyById(id: string) {
     try {
-      return await Company.findByPk(id);
+      return await Company.findByPk(id, {
+        include: [
+          {
+            model: User,
+            as: "users",
+          },
+        ],
+      });
     } catch (error) {
       serviceError(error);
     }
@@ -26,7 +33,7 @@ class CompanyServices {
   async postCompany(data: Partial<CompanyInterface>) {
     try {
       const [company, created] = await Company.findOrCreate({
-        where: { name: data.name }, // Assuming 'name' is a unique field
+        where: { name: data.name },
         defaults: data,
       });
       return created ? company : "Company already exists or creation failed.";
@@ -71,6 +78,11 @@ export default new CompanyServices();
       "country": "Argentina",
       "phoneNumbers": ["+1-234-567-8900", "3442644665"],
       "cuit": "20-12345678-9",
-      "isActive": true
+      "isActive": true,
+      "razonSocial": "GPI 360 S.A.",
+      "domicilioFiscal": "Tucuman 1234, CABA",
+      "inicioActividad": "20010101",
+      "regimenTributario": "Responsable Inscripto",
+      "iibb": "123456789"
     }
  */

@@ -8,10 +8,6 @@ export const getUserService = async ({
   userId: string;
 }) => {
   try {
-    if (!token) {
-      throw new Error("No token provided");
-    }
-
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?userId=${userId}`,
       {

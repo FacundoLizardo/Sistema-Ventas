@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { logout } from "@/services/auth/AuthServices";
 import { IoMdClose, IoIosMenu } from "react-icons/io";
@@ -8,22 +8,26 @@ import { GrConfigure } from "react-icons/gr";
 
 const baseURL = process.env.NEXT_PUBLIC_CLIENT_BASE_URL;
 
-const navigationLinks = (locale: string, companyId: string) => [
-  { href: `${baseURL}/${locale}/${companyId}/sales`, name: "Ventas" },
-  { href: `${baseURL}/${locale}/${companyId}/stock`, name: "Control" },
-  {
-    href: `${baseURL}/${locale}/${companyId}/dashboard`,
-    name: "Administración",
-  },
-  { href: `${baseURL}/${locale}/admin`, name: "Admin" },
-];
+const navigationLinks = (locale: string, companyId: string, isAdmin: boolean) => {
+  const links = [
+    { href: `${baseURL}/${locale}/${companyId}/sales`, name: "Ventas" },
+    { href: `${baseURL}/${locale}/${companyId}/stock`, name: "Control" },
+    { href: `${baseURL}/${locale}/${companyId}/dashboard`, name: "Administración" },
+  ];
+
+  if (isAdmin) {
+    links.push({ href: `${baseURL}/${locale}/admin`, name: "Admin" });
+  }
+
+  return links;
+};
 
 const configLinks = (locale: string, companyId: string) => [
-  { href: `${baseURL}/${locale}/${companyId}/profile`, name: "Tu Perfil" },
-  { href: `${baseURL}/${locale}/${companyId}/settings`, name: "Configuración" },
+  { href: `${baseURL}/${locale}/${companyId}/configuration/profile`, name: "Tu Perfil" },
+  { href: `${baseURL}/${locale}/${companyId}/configuration/settings`, name: "Configuración" },
 ];
 
-const classMenuLinks = "block px-3 py-2 text-base font-medium text-muted";
+const classMenuLinks = "block px-3 py-2 text-base font-medium";
 const activeClassMenuLinks =
   "block px-3 py-2 text-base font-medium text-muted bg-gradient-primary-secondary rounded text-primary-foreground";
 
@@ -59,8 +63,10 @@ const MenuLinks = ({
 
 const Navigation = ({
   params,
+  isAdmin,
 }: {
   params: { locale: string; companyId: string };
+  isAdmin: boolean;
 }) => {
   const router = useRouter();
   const activeLink = usePathname();
@@ -78,14 +84,35 @@ const Navigation = ({
     }
   };
 
-  const links = navigationLinks(params.locale, params.companyId);
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [isOpen]);
+
+  const links = navigationLinks(params.locale, params.companyId, isAdmin);
   const profileLinks = configLinks(params.locale, params.companyId);
 
   return (
     <nav className="w-full h-16 grid items-center">
       <div className="relative flex items-center justify-between">
         {/* Menú Móvil */}
-        <div className="absolute flex items-center justify-between md:hidden z-30">
+        <div className="absolute flex items-center justify-between md:hidden z-50">
           <button
             type="button"
             className="relative inline-flex items-center justify-center rounded-md p-2 text-foreground bg-card hover:text-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-foreground"
@@ -94,11 +121,11 @@ const Navigation = ({
             onClick={() => setIsOpen(!isOpen)}
           >
             <IoMdClose
-              className={`block h-6 w-6 ${isOpen ? "block" : "hidden"}`}
+              className={`block size-5 ${isOpen ? "block" : "hidden"}`}
             />
 
             <IoIosMenu
-              className={`block h-6 w-6 ${isOpen ? "hidden" : "block"}`}
+              className={`block size-5 text-white ${isOpen ? "hidden" : "block"}`}
             />
           </button>
         </div>
@@ -141,7 +168,7 @@ const Navigation = ({
             onClick={() => setIsProfileOpen(!isProfileOpen)}
           >
             <GrConfigure
-              className={` h-5 w-5 ${isProfileOpen ? "hidden" : "block"}`}
+              className={` size-5 ${isProfileOpen ? "hidden" : "block"}`}
             />
           </button>
 
@@ -161,18 +188,18 @@ const Navigation = ({
                 </h2>
                 <button
                   type="button"
-                  className="relative rounded-full p-1 text-foreground-dark"
+                  className="relative rounded-full p-1 text-background"
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
                 >
                   <IoMdClose
-                    className={`h-6 w-6 z-50 ${
+                    className={`size-5 z-50 ${
                       !isProfileOpen ? "hidden" : "block"
                     }`}
                   />
                 </button>
               </div>
 
-              <span className="bg-black h-[0.5px] block  justify-center m-auto"></span>
+              <hr />
               {profileLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -185,6 +212,20 @@ const Navigation = ({
                   {link.name}
                 </Link>
               ))}
+              {isAdmin && (
+                <>
+                  <hr />
+                  <Link
+                    href={`${baseURL}/${params.locale}/admin`}
+                    className="block my-4 text-sm text-gray-700"
+                    role="menuitem"
+                  >
+                    Admin
+                  </Link>
+                  <hr />
+                </>
+              )}
+
               <button
                 onClick={() => handleLogout()}
                 className="block my-4 text-sm text-gray-700"
@@ -200,7 +241,7 @@ const Navigation = ({
 
       {/* Menú Móvil */}
       <div
-        className={`sm:hidden ${
+        className={`md:hidden ${
           isOpen ? "block" : "hidden"
         } absolute top-0 left-0 bg-card w-full h-screen z-40 items-center justify-start flex`}
         id="mobile-menu"

@@ -1,43 +1,31 @@
-import NoAccess from "@/components/common/NoAccess";
 import SalesContainer from "@/components/sales/SalesContainer";
 import ProductsServices from "@/services/products/ProductsServices";
-import { cookies } from "next/headers";
 import UsersServices from "@/services/user/UsersServices";
-import { redirect } from "next/navigation";
 
 export default async function Page({
-  params,
+  params: { companyId },
 }: {
   params: {
     locale: string;
     companyId: string;
   };
 }) {
-  const { companyId, locale } = params;
-  const cookiesStore = cookies();
-  const session = cookiesStore.get("session")?.value;
+  const { userId } = await UsersServices.userSession();
 
-  if (!session) {
-    redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
-  }
-
-  const userId = JSON.parse(session)?.dataUser?.id;
-
-  const [userData, products] = await Promise.all([
+  const [userData, productsData] = await Promise.all([
     UsersServices.get(userId),
     ProductsServices.getAll(companyId),
   ]);
 
-  const userBranch = userData?.user?.branch ? 
-    `${userData.user.branch.ptoVta} - ${userData.user.branch.name}` : "";
+  const userBranch = userData?.user?.branch
+    ? `${userData.user.branch.ptoVta} - ${userData.user.branch.name}`
+    : "";
+
+  const products = productsData.products;
 
   return (
     <main>
-      {session ? (
-        <SalesContainer products={products} userBranch={userBranch} />
-      ) : (
-        <NoAccess locale={locale} />
-      )}
+      <SalesContainer products={products} userBranch={userBranch} />
     </main>
   );
 }

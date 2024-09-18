@@ -1,7 +1,8 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import UsersServices from "@/services/user/UsersServices";
 
-export default function Layout({
+export default async function AppLayout({
   children,
   params,
 }: Readonly<{
@@ -11,10 +12,12 @@ export default function Layout({
     companyId: string;
   };
 }>) {
+  const { isAdmin } = await UsersServices.userSession();
+
   return (
     <main>
-      <div className="flex flex-col min-h-screen bg-background max-w-5xl m-auto">
-        <Header params={params} />
+      <div className="flex flex-col min-h-screen bg-background md:max-w-5xl m-auto text-xs md:text-sm">
+        <Header params={params} isAdmin={isAdmin} />
         {children}
         <Footer />
       </div>

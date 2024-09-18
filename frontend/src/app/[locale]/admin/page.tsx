@@ -1,16 +1,20 @@
-import LanguageSelector from "@/components/common/LanguageSelector";
-import { useTranslations } from "next-intl";
+import SelectCompany from "@/components/admin/SelectCompany";
+import CompaniesServices from "@/services/companies/CompaniesServices";
+import UsersServices from "@/services/user/UsersServices";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  const t = useTranslations("Admin");
+export default async function AdminPage() {
+  const { role } = await UsersServices.userSession();
+
+  if (role !== "ADMIN") {
+    redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
+  }
+
+  const { companies } = await CompaniesServices.getAll();
 
   return (
-    // Dashboard del superadmin
-    // Esta vista se va a mostrar si tienes permiso de superadmin
     <main>
-      <h1>{t('title')}</h1>
-      <LanguageSelector />
+      <SelectCompany companies={companies} />
     </main>
   );
 }
-

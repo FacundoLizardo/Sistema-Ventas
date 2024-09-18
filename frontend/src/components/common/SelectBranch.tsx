@@ -22,33 +22,32 @@ import {
 import { IBranch } from "@/services/branches/BranchesServices";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
-import UsersServices from "@/services/user/UsersServices";
+import UsersServices, { IUser } from "@/services/user/UsersServices";
 import { useRouter } from "next/navigation";
 import { Input } from "../ui/input";
 import { SearchIcon } from "lucide-react";
 
-// Esquema de validación con Zod
 const formSchema = z.object({
   branch: z.string().min(1, { message: "Debe seleccionar una sucursal." }),
 });
 
 export default function SelectBranch({
-  companyBranches,
-  userBranch,
+  branches,
   userId,
-  params: { locale, companyId },
+  locale,
+  companyId,
+  user,
 }: {
-  companyBranches: IBranch[];
-  userBranch?: string;
+  branches: IBranch[];
   userId?: string;
-  params: { locale: string; companyId: string };
+  locale: string;
+  companyId: string;
+  user?: IUser;
 }) {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-
-  const [selectedBranch, setSelectedBranch] = useState<string | null>(
-    userBranch ?? null
-  );
+  const currentBranch = branches.find((branch) => branch.id === user?.branchId);
+  const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -57,7 +56,7 @@ export default function SelectBranch({
     },
   });
 
-  const filteredBranches = companyBranches.filter((branch) =>
+  const filteredBranches = branches.filter((branch) =>
     branch.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -89,9 +88,12 @@ export default function SelectBranch({
   const { isDirty, isValid, isSubmitting } = form.formState;
 
   return (
-    <div >
-      <Form {...form} >
-        <form onSubmit={form.handleSubmit(onSubmit)} className="absolute bg-background w-full min-h-screen flex place-content-center items-center">
+    <div>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="absolute bg-background w-full min-h-screen flex place-content-center items-center"
+        >
           <Card className="relative flex max-w-[90%] min-h-80 md:w-full md:max-w-md mx-auto my-10">
             <CardHeader>
               <CardTitle>Punto de venta</CardTitle>
@@ -104,14 +106,14 @@ export default function SelectBranch({
             </CardHeader>
             <CardContent>
               <div>
-                {userBranch && !selectedBranch ? (
+                {currentBranch ? (
                   <div className="flex flex-col gap-2">
                     <blockquote className="border-l-2 pl-6 italic">
                       <p>Sucursal actual asignada</p>
                       <p className="font-bold text-xl text-secondary">
                         {
-                          companyBranches.find(
-                            (branch) => branch.id === userBranch
+                          branches.find(
+                            (branch) => branch.id === user?.branchId
                           )?.name
                         }
                       </p>
@@ -123,7 +125,7 @@ export default function SelectBranch({
                       <p>Sucursal seleccionada</p>
                       <p className="font-bold text-xl text-secondary">
                         {
-                          companyBranches.find(
+                          branches.find(
                             (branch) => branch.id === selectedBranch
                           )?.name
                         }
@@ -137,17 +139,17 @@ export default function SelectBranch({
                 )}
               </div>
 
-              {!selectedBranch && (
-                <div className="flex flex-col gap-2">
+              {!currentBranch && (
+                <div className="flex flex-col gap-3">
                   <div className="flex flex-row items-center gap-2 px-2 bg-card-foreground rounded-md">
                     <Input
                       type="text"
                       placeholder="Buscar sucursal..."
-                      className="bg-transparent border-none text-foreground-dark"
+                      className="bg-transparent border-none text-foreground"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <SearchIcon className="text-foreground-dark mx-2" />
+                    <SearchIcon className="text-background mx-2" />
                   </div>
                   <div className="flex flex-col gap-2 max-h-80 overflow-y-auto custom-scrollbar">
                     {filteredBranches.map((branch) => (
@@ -178,7 +180,7 @@ export default function SelectBranch({
               )}
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
-              {!userBranch && selectedBranch && (
+              {selectedBranch && (
                 <ButtonWithLoading
                   loading={isSubmitting}
                   loadingText="Asignando..."
@@ -191,16 +193,15 @@ export default function SelectBranch({
                   Asignar sucursal
                 </ButtonWithLoading>
               )}
-              {userBranch ||
-                (selectedBranch && (
-                  <Button
-                    variant="accent"
-                    className="w-full"
-                    onClick={() => setSelectedBranch(null)}
-                  >
-                    Cambiar sucursal
-                  </Button>
-                ))}
+              {selectedBranch && currentBranch && (
+                <Button
+                  variant="accent"
+                  className="w-full"
+                  onClick={() => setSelectedBranch(null)}
+                >
+                  Cambiar sucursal
+                </Button>
+              )}
             </CardFooter>
           </Card>
         </form>
