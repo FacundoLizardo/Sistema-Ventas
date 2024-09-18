@@ -187,7 +187,7 @@ export default function ProfileForm({
             )}
           />
 
-<FormField
+          <FormField
             control={form.control}
             name="role"
             defaultValue={user.role}
@@ -200,7 +200,9 @@ export default function ProfileForm({
                       field.onChange(value);
                     }}
                     defaultValue={user.role}
-                    disabled={user.role !== "SUPER_ADMIN" && user.role !== "OWNER" }
+                    disabled={
+                      user.role !== "SUPER_ADMIN" && user.role !== "OWNER"
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecciona un rol" />
@@ -214,7 +216,8 @@ export default function ProfileForm({
                   </Select>
                 </FormControl>
                 <FormDescription>
-                  El rol asignado dentro de la aplicación. Asegúrate de que refleje tus responsabilidades actuales.
+                  El rol asignado dentro de la aplicación. Asegúrate de que
+                  refleje tus responsabilidades actuales.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

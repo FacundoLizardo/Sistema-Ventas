@@ -1,4 +1,5 @@
-import { IProduct } from "@/services/products/ProductsServices";
+"use client";
+
 import {
   Table,
   TableBody,
@@ -9,27 +10,69 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { useSales } from "@/context/salesContext";
+import { Button } from "../ui/button";
 
-export const CardsContainer = ({ products }: { products: IProduct[] }) => {
+export const CardsContainer = () => {
+  const { products, addProduct, removeProduct } = useSales();
+
+  const productCount: { [key: string]: number } = {};
+
+  products.forEach((product) => {
+    if (productCount[product.id]) {
+      productCount[product.id] += 1;
+    } else {
+      productCount[product.id] = 1;
+    }
+  });
+
+  const groupedProducts = Object.keys(productCount).map((id) => {
+    const product = products.find((p) => p.id === id);
+    return {
+      ...product!,
+      quantity: productCount[id],
+    };
+  });
+
   return (
-    <div className="flex flex-col justify-items-center bg-background rounded-md py-2">
-      {products.length > 0 ? (
-        <ScrollArea className="flex flex-col h-[300px]">
-          <Table>
+    <div className="flex flex-col justify-items-center bg-background rounded-md py-2 h-[300px] border">
+      {groupedProducts.length > 0 ? (
+        <ScrollArea className="flex flex-col">
+          <Table className="table">
             <TableCaption>Lista de productos seleccionados</TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead>Nombre</TableHead>
-                <TableHead>Precio</TableHead>
-                <TableHead>Stock</TableHead>
+                <TableHead className="w-1/2">Nombre</TableHead>
+                <TableHead className="w-1/4 text-center">Precio</TableHead>
+                <TableHead className="w-1/4 text-center">Cantidad</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {products.map((product) => (
+              {groupedProducts.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell>{product.finalPrice}</TableCell>
-                  <TableCell>{product.stock}</TableCell>
+                  <TableCell className="w-1/2">{product.name}</TableCell>
+                  <TableCell className="w-1/4 text-center">{product.finalPrice}</TableCell>
+                  <TableCell className="w-1/4 text-center">
+                    <div className="flex justify-center gap-1 md:gap-4">
+                      <Button
+                        onClick={() => removeProduct(product.id)}
+                        size={"sm"}
+                        variant="outline"
+                      >
+                        -
+                      </Button>
+                      <div className="flex items-center justify-center w-4">
+                        {product.quantity}
+                      </div>
+                      <Button
+                        onClick={() => addProduct(product)}
+                        size={"sm"}
+                        variant="outline"
+                      >
+                        +
+                      </Button>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -37,7 +80,9 @@ export const CardsContainer = ({ products }: { products: IProduct[] }) => {
           <ScrollBar className="flex" />
         </ScrollArea>
       ) : (
-        <p>No hay productos seleccionados</p>
+        <div className="flex items-center justify-center bg-background rounded-md py-2 h-[300px] border">
+          <p>No hay productos seleccionados</p>
+        </div>
       )}
     </div>
   );

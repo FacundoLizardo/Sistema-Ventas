@@ -3,6 +3,7 @@ import SaleSeachBar from "@/components/sales/SaleSearchBar";
 import { IProduct } from "@/services/products/ProductsServices";
 
 import SelectedBranch from "../common/SelectedBranch";
+import AfipForm from "./AfipForm";
 
 export default async function SalesContainer({
   products,
@@ -15,7 +16,8 @@ export default async function SalesContainer({
     <div className="flex flex-col gap-4">
       <SelectedBranch branch={userBranch} />
       <SaleSeachBar products={products} />
-      <CardsContainer products={products} />
+      <CardsContainer />
+      <AfipForm />
     </div>
   );
 }

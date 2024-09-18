@@ -22,6 +22,8 @@ export interface IProduct {
 
 export interface IProductCreate extends Omit<IProduct, "id"> {}
 
+export type AfipProducts = Pick<IProduct, 'id' | 'name' | 'finalPrice'>;
+
 class ProductsServices {
   static async getToken() {
     try {
