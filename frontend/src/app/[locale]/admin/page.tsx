@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 export default async function AdminPage() {
   const { role } = await UsersServices.userSession();
 
-  if (role !== "ADMIN") {
+  if (role !== "SUPER_ADMIN") {
     redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
   }
 

@@ -16,7 +16,6 @@ import { Badge } from '../ui/badge';
 export default function SelectCompany({ companies }: { companies: ICompany[] }) {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filteredCompanies, setFilteredCompanies] = useState<ICompany[]>(companies);
-console.log(companies);
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     const searchValue = event.target.value;

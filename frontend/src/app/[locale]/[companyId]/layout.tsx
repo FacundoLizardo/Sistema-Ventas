@@ -19,8 +19,8 @@ export default async function AppLayout({
       <div className="flex flex-col min-h-screen bg-background md:max-w-5xl m-auto text-xs md:text-sm">
         <Header params={params} isAdmin={isAdmin} />
         {children}
-        <Footer />
       </div>
+      <Footer />
     </main>
   );
 }

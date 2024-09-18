@@ -19,7 +19,7 @@ export const getUserSession = async ({ token }: { token: string }) => {
     const { dataUser } = sessionData;
     const { userId, companyId, branchId, role } = dataUser;
 
-    const isAdmin = sessionData && sessionData.dataUser.role === "ADMIN";
+    const isAdmin = sessionData && sessionData.dataUser.role === "SUPER_ADMIN";
 
     return {
       userId,

@@ -20,11 +20,10 @@ export default async function Page({
   const userBranch = userData?.user?.branch
     ? `${userData.user.branch.ptoVta} - ${userData.user.branch.name}`
     : "";
-
   const products = productsData.products;
 
   return (
-    <main>
+    <main className="w-full">
       <SalesContainer products={products} userBranch={userBranch} />
     </main>
   );
