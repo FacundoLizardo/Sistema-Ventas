@@ -50,7 +50,7 @@ const formSchema = z.object({
   docTipo: z.number(),
   iva: z.number().nonnegative(),
   outputDir: z.string(),
-  paymentType: z.enum(["cash", "credit_card", "transfer"]), // Ajusta los valores según tu caso
+  paymentType: z.enum(["cash", "credit_card", "transfer"]),
   isdelivery: z.boolean(),
   deliveryAddress: z.string().optional(),
   comments: z.string().optional(),
@@ -59,17 +59,19 @@ const formSchema = z.object({
 });
 
 export default function AfipForm() {
-  const { getTotalPrice } = useSales();
+  const { getTotalPrice, discount } = useSales();
+
+  const total = getTotalPrice();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       products: [],
-      discount: 0,
+      discount: discount,
       cbteTipo: 1,
       ptoVta: 1,
       concepto: 1,
-      importeGravado: 0,
+      importeGravado: total,
       importeExentoIva: 0,
       docNro: 0,
       docTipo: 0,
@@ -92,10 +94,10 @@ export default function AfipForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Formulario AFIP</CardTitle>
+        <CardTitle>Facturación</CardTitle>
         <CardDescription>
           Completa este formulario para gestionar la información necesaria para
-          AFIP. Asegúrate de revisar cada campo antes de enviar.
+          AFIP y emitir tu comprobante correctamente. Asegúrate de revisar cada campo antes de enviar.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -238,20 +240,6 @@ export default function AfipForm() {
 
             <FormField
               control={form.control}
-              name="discount"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Descuento</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="outputDir"
               render={({ field }) => (
                 <FormItem>
@@ -305,7 +293,7 @@ export default function AfipForm() {
             />
 
             <CardFooter>
-              <ButtonWithLoading type="submit">Enviar</ButtonWithLoading>
+              {/* <ButtonWithLoading type="submit">Enviar</ButtonWithLoading> */}
             </CardFooter>
           </form>
         </Form>

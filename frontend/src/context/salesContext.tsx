@@ -6,44 +6,49 @@ import { toast } from "sonner";
 
 type ContextType = {
   products: AfipProducts[];
+  discount: number;
   addProduct: (product: AfipProducts) => void;
   removeProduct: (productId: string) => void;
   getTotalPrice: () => number;
+  setDiscount: (discount: number) => void;
 };
 
 const SalesContext = createContext<ContextType>({
   products: [],
+  discount: 0,
   addProduct: () => {},
   removeProduct: () => {},
   getTotalPrice: () => 0,
+  setDiscount: () => {},
 });
 
 export const SalesContextProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<AfipProducts[]>([]);
-console.log(products);
+  const [discount, setDiscount] = useState<number>(0);
 
   const addProduct = (product: AfipProducts) => {
     setProducts((prevProducts) => [...prevProducts, product]);
-    toast.success("Producto agregado");
+    toast.success("Producto agregado a la lista");
   };
 
   const removeProduct = (productId: string) => {
     setProducts((prevProducts) => {
-      const indexToRemove = prevProducts.findIndex((product) => product.id === productId);
-  
+      const indexToRemove = prevProducts.findIndex(
+        (product) => product.id === productId
+      );
+
       if (indexToRemove === -1) {
         return prevProducts;
       }
 
       const updatedProducts = [...prevProducts];
-      
+
       updatedProducts.splice(indexToRemove, 1);
-      
+
       return updatedProducts;
     });
-    toast.success("Producto eliminado");
+    toast.success("Producto eliminado correctamente");
   };
-  
 
   const getTotalPrice = () => {
     return products.reduce(
@@ -53,7 +58,16 @@ console.log(products);
   };
 
   return (
-    <SalesContext.Provider value={{ products, addProduct, getTotalPrice, removeProduct }}>
+    <SalesContext.Provider
+      value={{
+        products,
+        discount,
+        addProduct,
+        getTotalPrice,
+        removeProduct,
+        setDiscount,
+      }}
+    >
       {children}
     </SalesContext.Provider>
   );

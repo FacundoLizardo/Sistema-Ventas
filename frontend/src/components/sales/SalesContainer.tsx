@@ -4,6 +4,7 @@ import { IProduct } from "@/services/products/ProductsServices";
 
 import SelectedBranch from "../common/SelectedBranch";
 import AfipForm from "./AfipForm";
+import SalesInfo from "./SalesInfo";
 
 export default async function SalesContainer({
   products,
@@ -17,6 +18,7 @@ export default async function SalesContainer({
       <SelectedBranch branch={userBranch} />
       <SaleSeachBar products={products} />
       <CardsContainer />
+      <SalesInfo />
       <AfipForm />
     </div>
   );
