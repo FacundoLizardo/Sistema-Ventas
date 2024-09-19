@@ -31,13 +31,12 @@ class CustomersServices {
 
   static async get({
     companyId,
-    customerData: { docTipo, docNro },
+    docTipo,
+    docNro,
   }: {
     companyId: string;
-    customerData: {
-      docTipo: string;
-      docNro: string;
-    };
+    docTipo: string;
+    docNro: string;
   }) {
     try {
       const token = await this.getToken();

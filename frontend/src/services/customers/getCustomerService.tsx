@@ -27,10 +27,6 @@ export const getCustomerService = async ({
       }
     );
 
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
     const body = await response.json();
     return body;
   } catch (error) {

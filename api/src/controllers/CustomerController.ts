@@ -5,16 +5,23 @@ import CustomerService from "../services/CustomerServices";
 class CustomerController {
   async getCustomer(req: Request, res: Response): Promise<void> {
     try {
-      const { companyId, customerId } = req.query as { companyId?: string; customerId?: string };
+      const { companyId, docTipo, docNro } = req.query as {
+        companyId?: string;
+        docTipo?: string;
+        docNro?: string;
+      };
 
-      if (!companyId || !customerId) {
-        res.status(400).json({ message: "CustomerId and CompanyId are required" });
+      if (!companyId || !docTipo || !docNro) {
+        res
+          .status(400)
+          .json({ message: "CustomerId and CompanyId are required" });
         return;
       }
-      
+
       const customer = await CustomerService.getCustomer({
         companyId,
-        customerId,
+        docTipo,
+        docNro,
       });
 
       if (!customer) {

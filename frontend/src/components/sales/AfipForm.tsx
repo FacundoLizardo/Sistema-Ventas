@@ -30,10 +30,11 @@ import {
 } from "../ui/select";
 import ButtonWithLoading from "../common/ButtonWithLoading";
 import { useSales } from "@/context/salesContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { ICompany } from "@/services/companies/CompaniesServices";
-import { useCustomer } from "@/context/customerContext";
+import useCustomer from "@/hooks/useCustomer";
+import { Badge } from "../ui/badge";
 
 const formSchema = z.object({
   products: z.array(
@@ -68,7 +69,7 @@ type AfipFormProps = {
 
 export default function AfipForm({ company, companyId }: AfipFormProps) {
   const { getTotalPrice, discount } = useSales();
-  const { setCustomerData, setCompanyId } = useCustomer();
+  const [docNroCompleted, setDocNroCompleted] = useState(false);
 
   const total = getTotalPrice();
 
@@ -105,21 +106,41 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
   });
 
   const cbteTipo = useWatch({ control: form.control, name: "cbteTipo" });
+  const docNro = (
+    useWatch({ control: form.control, name: "docNro" }) || ""
+  ).toString();
+  const docTipo = (
+    useWatch({ control: form.control, name: "docTipo" }) || ""
+  ).toString();
+
+  const { loading, customer } = useCustomer({
+    companyId,
+    docNro,
+    docTipo,
+    docNroCompleted,
+  });
+
+  const customerName =
+    customer?.customerType === "company"
+      ? customer?.companyName || ""
+      : customer?.customerType === "person"
+      ? `${customer?.firstName} ${customer?.lastName}`
+      : "";
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setDocNroCompleted(true);
+    }
+  };
+
+  const handleBlur = () => {
+    setDocNroCompleted(true);
+  };
 
   useEffect(() => {
     const iva = cbteTipo === 1 || cbteTipo === 6 ? 21 : 0;
     form.setValue("iva", iva);
   }, [cbteTipo, form]);
-
-  useEffect(() => {
-    const docTipo = form.getValues().docTipo.toString();
-    const docNro = form.getValues().docNro.toString();
-    setCustomerData({
-      docTipo,
-      docNro,
-    });
-    setCompanyId(companyId);
-  }, [form.getValues().docNro, form.getValues().docTipo, setCustomerData]);
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     console.log(data);
@@ -218,7 +239,16 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                   <FormItem>
                     <FormLabel>Número de Documento</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} />
+                      <Input
+                        type="number"
+                        {...field}
+                        onBlur={handleBlur}
+                        onKeyPress={handleKeyPress}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setDocNroCompleted(false);
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -231,10 +261,26 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                   variant={"outline"}
                   type="button"
                   className="flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background gap-2"
+                  disabled={loading}
                 >
                   <FaEdit />
                   <div className="truncate overflow-hidden whitespace-nowrap w-56">
-                    asdsadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    {docNro.length > 1 ? (
+                      loading ? (
+                        "Cargando cliente..."
+                      ) : customer ? (
+                        customerName
+                      ) : (
+                        <div className="flex justify-center gap-2">
+                          No encontrado{" "}
+                          <Badge variant={"default"}>
+                            Crear
+                          </Badge>
+                        </div>
+                      )
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </Button>
               </FormItem>

@@ -18,8 +18,6 @@ export default async function SalesContainer({
   company: ICompany;
   companyId: string;
 }) {
-  console.log("company", company);
-  
   return (
     <div className="flex flex-col gap-4">
       <SelectedBranch branch={userBranch} />
