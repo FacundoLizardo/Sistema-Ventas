@@ -105,6 +105,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
     },
   });
 
+  const isdelivery = useWatch({ control: form.control, name: "isdelivery" });
   const cbteTipo = useWatch({ control: form.control, name: "cbteTipo" });
   const docNro = (
     useWatch({ control: form.control, name: "docNro" }) || ""
@@ -146,6 +147,9 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
     console.log(data);
     // Aquí puedes hacer una llamada a una API para enviar los datos
   };
+
+  const { isDirty, isValid, isSubmitting } = form.formState;
+  const submitDisabled = !isDirty || !isValid;
 
   return (
     <Card>
@@ -272,14 +276,11 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                         customerName
                       ) : (
                         <div className="flex justify-center gap-2">
-                          No encontrado{" "}
-                          <Badge variant={"default"}>
-                            Crear
-                          </Badge>
+                          No encontrado <Badge variant={"default"}>Crear</Badge>
                         </div>
                       )
                     ) : (
-                      ""
+                      "Ingresa un cliente"
                     )}
                   </div>
                 </Button>
@@ -418,48 +419,54 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
             <div className="pt-4">
               <CardTitle>Información adicional</CardTitle>
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="flex gap-10">
               <FormField
                 control={form.control}
-                name="outputDir"
+                name="isdelivery"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Directorio de Salida</FormLabel>
+                    <FormLabel>¿Con envío?</FormLabel>
                     <FormControl>
-                      <Input type="text" {...field} />
+                      <div className="flex gap-4">
+                        <Button
+                          type="button"
+                          variant={!field.value ? "accent" : "outline"}
+                          className="w-10 h-10"
+                          onClick={() => field.onChange(false)}
+                        >
+                          No
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={field.value ? "accent" : "outline"}
+                          className="w-10 h-10"
+                          onClick={() => field.onChange(true)}
+                        >
+                          Sí
+                        </Button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {/*   <FormField
-              control={form.control}
-              name="isdelivery"
-              render={({ field }) => (
-                <FormItem>
-                <FormLabel>¿Es Entrega?</FormLabel>
-                <FormControl>
-                <Input type="checkbox" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-                )}
-                /> */}
               <FormField
                 control={form.control}
                 name="deliveryAddress"
+                disabled={!isdelivery}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-full">
                     <FormLabel>Dirección de Entrega</FormLabel>
                     <FormControl>
-                      <Input type="text" {...field} />
+                      <Input type="text" className="w-full" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
+
             <FormField
               control={form.control}
               name="comments"
@@ -475,7 +482,16 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
             />
 
             <CardFooter>
-              {/* <ButtonWithLoading type="submit">Enviar</ButtonWithLoading> */}
+            <ButtonWithLoading
+              loading={isSubmitting}
+              loadingText="Emitiendo..."
+              variant="default"
+              size={"default"}
+              type="submit"
+              disabled={submitDisabled || isSubmitting}
+            >
+              Emitir factura
+            </ButtonWithLoading>
             </CardFooter>
           </form>
         </Form>
