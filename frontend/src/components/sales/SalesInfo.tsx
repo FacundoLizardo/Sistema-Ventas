@@ -33,7 +33,7 @@ export default function SalesInfo() {
           automáticamente el total a pagar después de aplicar el descuento.
         </CardDescription>
         <div className="flex gap-4 items-center">
-          <span className="font-semibold">Aplicar descuento</span>
+          <span className="font-semibold">Aplicar descuento %</span>
           <Input
             type="number"
             min="0"

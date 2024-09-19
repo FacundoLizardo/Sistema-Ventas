@@ -5,9 +5,12 @@ import { CompanyInterface } from "../models/company";
 
 class CompanyController {
   async getCompany(req: Request, res: Response): Promise<void> {
-    const { id } = req.params;
     try {
-      if (!id) throw new Error("Company ID is required.");
+      const { id } = req.params;
+
+      if (!id) {
+        res.status(404).json({ message: "Company id is required" });
+      }
 
       const company = await CompanyServices.getCompanyById(id);
 

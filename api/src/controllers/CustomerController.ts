@@ -5,9 +5,17 @@ import CustomerService from "../services/CustomerServices";
 class CustomerController {
   async getCustomer(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { companyId, customerId } = req.query as { companyId?: string; customerId?: string };
 
-      const customer = await CustomerService.getCustomer(id);
+      if (!companyId || !customerId) {
+        res.status(400).json({ message: "CustomerId and CompanyId are required" });
+        return;
+      }
+      
+      const customer = await CustomerService.getCustomer({
+        companyId,
+        customerId,
+      });
 
       if (!customer) {
         res.status(404).json({ message: "Customer not found" });
@@ -22,7 +30,6 @@ class CustomerController {
 
   async getCustomerByDocument(req: Request, res: Response): Promise<void> {
     try {
-
       const customer = await CustomerService.getCustomerByDocument(req.body);
 
       if (!customer) {

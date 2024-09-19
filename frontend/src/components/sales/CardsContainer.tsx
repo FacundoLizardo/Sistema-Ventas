@@ -12,6 +12,7 @@ import {
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { useSales } from "@/context/salesContext";
 import { Button } from "../ui/button";
+import { CiInboxIn } from "react-icons/ci";
 
 export const CardsContainer = () => {
   const { products, addProduct, removeProduct } = useSales();
@@ -33,7 +34,6 @@ export const CardsContainer = () => {
       quantity: productCount[id],
     };
   });
-  
 
   return (
     <div className="flex flex-col justify-items-center bg-background rounded-md h-[300px] border">
@@ -52,7 +52,13 @@ export const CardsContainer = () => {
               {groupedProducts.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell className="w-1/2">{product.name}</TableCell>
-                  <TableCell className="w-1/4 text-center">${(product.finalPrice && product.finalPrice * product.quantity)?.toFixed(2)}</TableCell>
+                  <TableCell className="w-1/4 text-center">
+                    $
+                    {(
+                      product.finalPrice &&
+                      product.finalPrice * product.quantity
+                    )?.toFixed(2)}
+                  </TableCell>
                   <TableCell className="w-1/4 text-center">
                     <div className="flex justify-center gap-1 md:gap-4">
                       <Button
@@ -81,7 +87,10 @@ export const CardsContainer = () => {
           <ScrollBar className="flex" />
         </ScrollArea>
       ) : (
-        <div className="flex items-center justify-center h-full">
+        <div className="flex flex-col items-center justify-center h-full gap-4">
+          <div>
+            <CiInboxIn  size={48} />
+          </div>
           <p>No hay productos seleccionados</p>
         </div>
       )}

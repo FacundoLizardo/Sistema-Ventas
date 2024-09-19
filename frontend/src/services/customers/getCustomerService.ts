@@ -1,11 +1,15 @@
 "use server";
 
-export const getCompanyService = async ({
+export const getCustomerService = async ({
   token,
   companyId,
+  docTipo,
+  docNro
 }: {
   token?: string;
   companyId: string;
+  docTipo: string;
+  docNro: string;
 }) => {
   try {
     if (!token) {
@@ -13,7 +17,7 @@ export const getCompanyService = async ({
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/companies/${companyId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/customers?companyId=${companyId}&docTipo=${docTipo}&docNro=${docNro}`,
       {
         method: "GET",
         headers: {

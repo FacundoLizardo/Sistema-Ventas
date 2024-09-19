@@ -32,6 +32,8 @@ import ButtonWithLoading from "../common/ButtonWithLoading";
 import { useSales } from "@/context/salesContext";
 import { useEffect } from "react";
 import { FaEdit } from "react-icons/fa";
+import { ICompany } from "@/services/companies/CompaniesServices";
+import { useCustomer } from "@/context/customerContext";
 
 const formSchema = z.object({
   products: z.array(
@@ -59,11 +61,17 @@ const formSchema = z.object({
   userId: z.string(),
 });
 
-export default function AfipForm() {
+type AfipFormProps = {
+  company: ICompany;
+  companyId: string;
+};
+
+export default function AfipForm({ company, companyId }: AfipFormProps) {
   const { getTotalPrice, discount } = useSales();
+  const { setCustomerData, setCompanyId } = useCustomer();
 
   const total = getTotalPrice();
-  console.log("Total:", total);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -76,17 +84,21 @@ export default function AfipForm() {
       // Invoice
       cbteTipo: 1,
       concepto: 1,
-
-      // Company
-      ptoVta: 1,
+      paymentType: "cash",
       importeGravado: total,
       importeExentoIva: 0,
       iva: 0,
+
+      // Company
       outputDir: "",
-      paymentType: "cash",
+      ptoVta: 1,
+
+      // Info additional
       isdelivery: false,
       deliveryAddress: "",
       comments: "",
+
+      // User
       branchId: "",
       userId: "",
     },
@@ -99,6 +111,16 @@ export default function AfipForm() {
     form.setValue("iva", iva);
   }, [cbteTipo, form]);
 
+  useEffect(() => {
+    const docTipo = form.getValues().docTipo.toString();
+    const docNro = form.getValues().docNro.toString();
+    setCustomerData({
+      docTipo,
+      docNro,
+    });
+    setCompanyId(companyId);
+  }, [form.getValues().docNro, form.getValues().docTipo, setCustomerData]);
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     console.log(data);
     // Aquí puedes hacer una llamada a una API para enviar los datos
@@ -106,14 +128,56 @@ export default function AfipForm() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Facturación</CardTitle>
-        <CardDescription>
-          Completa este formulario para gestionar la información necesaria para
-          AFIP y emitir tu comprobante correctamente. Asegúrate de revisar cada
-          campo antes de enviar.
-        </CardDescription>
-      </CardHeader>
+      <div className="grid md:grid-cols-2 gap-4">
+        <CardHeader>
+          <CardTitle>Facturación</CardTitle>
+          <CardDescription>
+            Completa este formulario para gestionar la información necesaria
+            para AFIP y emitir tu comprobante correctamente. Asegúrate de
+            revisar cada campo antes de enviar.
+          </CardDescription>
+        </CardHeader>
+        <CardHeader>
+          <div className="text-xs border p-2 rounded text-muted-foreground">
+            <p>
+              Razón Social:{" "}
+              <span className="font-bold text-card-foreground">
+                {company.razonSocial}
+              </span>
+            </p>
+            <p>
+              CUIT:{" "}
+              <span className="font-bold text-card-foreground">
+                {company.cuit}
+              </span>
+            </p>
+            <p>
+              Domicilio Fiscal:{" "}
+              <span className="font-bold text-card-foreground">
+                {company.domicilioFiscal}
+              </span>
+            </p>
+            <p>
+              Inicio de Actividad:{" "}
+              <span className="font-bold text-card-foreground">
+                {company.inicioActividad}
+              </span>
+            </p>
+            <p>
+              Régimen Tributario:{" "}
+              <span className="font-bold text-card-foreground">
+                {company.regimenTributario}
+              </span>
+            </p>
+            <p>
+              IIBB:{" "}
+              <span className="font-bold text-card-foreground">
+                {company.iibb}
+              </span>
+            </p>
+          </div>
+        </CardHeader>
+      </div>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -192,6 +256,7 @@ export default function AfipForm() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="0">Comprobante básico</SelectItem>
                           <SelectItem value="1">Factura A</SelectItem>
                           <SelectItem value="6">Factura B</SelectItem>
                           <SelectItem value="11">Factura C</SelectItem>
@@ -262,45 +327,49 @@ export default function AfipForm() {
                 )}
               />
 
-              <FormItem>
-                <FormLabel>Importe Gravado</FormLabel>
-                <div className="flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background">
-                  <div className="truncate overflow-hidden whitespace-nowrap w-56">
-                    {total}
-                  </div>
-                </div>
-              </FormItem>
-
-              <FormField
-                control={form.control}
-                name="importeExentoIva"
-                render={({ field }) => (
+              {cbteTipo === 1 || cbteTipo === 6 ? (
+                <>
                   <FormItem>
-                    <FormLabel>Importe Exento IVA</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
+                    <FormLabel>Importe Gravado</FormLabel>
+                    <div className="flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background">
+                      <div className="truncate overflow-hidden whitespace-nowrap w-56">
+                        {total}
+                      </div>
+                    </div>
                   </FormItem>
-                )}
-              />
 
-              <FormField
-                control={form.control}
-                name="iva"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>IVA</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <FormField
+                    control={form.control}
+                    name="importeExentoIva"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Importe Exento IVA</FormLabel>
+                        <FormControl>
+                          <Input type="number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="iva"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>IVA</FormLabel>
+                        <FormControl>
+                          <Input type="number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              ) : null}
             </div>
 
-            <div className="py-4">
+            <div className="pt-4">
               <CardTitle>Información adicional</CardTitle>
             </div>
             <div className="grid md:grid-cols-2 gap-4">

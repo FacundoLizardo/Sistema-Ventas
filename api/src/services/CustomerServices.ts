@@ -6,9 +6,18 @@ import {
 import { serviceError } from "../utils/serviceError";
 
 class CustomerService {
-  async getCustomer(id: string): Promise<CustomerInterface | null> {
+  async getCustomer({
+    customerId,
+    companyId,
+  }: {
+    customerId?: string;
+    companyId?: string;
+  }): Promise<CustomerInterface | null> {
     try {
-      const customer = await Customer.findByPk(id);
+      const customer = await Customer.findOne({
+        where: { id: customerId, companyId },
+      });
+
       return customer
         ? (customer.get({ plain: true }) as CustomerInterface)
         : null;

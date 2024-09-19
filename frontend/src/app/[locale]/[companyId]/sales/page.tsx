@@ -1,4 +1,5 @@
 import SalesContainer from "@/components/sales/SalesContainer";
+import CompaniesServices from "@/services/companies/CompaniesServices";
 import ProductsServices from "@/services/products/ProductsServices";
 import UsersServices from "@/services/user/UsersServices";
 
@@ -12,19 +13,26 @@ export default async function Page({
 }) {
   const { userId } = await UsersServices.userSession();
 
-  const [userData, productsData] = await Promise.all([
+  const [userData, productsData, companyData] = await Promise.all([
     UsersServices.get(userId),
     ProductsServices.getAll(companyId),
+    CompaniesServices.get(companyId),
   ]);
 
   const userBranch = userData?.user?.branch
     ? `${userData.user.branch.ptoVta} - ${userData.user.branch.name}`
     : "";
   const products = productsData.products;
+  const company = companyData.company;
 
   return (
     <main className="w-full">
-      <SalesContainer products={products} userBranch={userBranch} />
+      <SalesContainer
+        products={products}
+        userBranch={userBranch}
+        company={company}
+        companyId={companyId}
+      />
     </main>
   );
 }

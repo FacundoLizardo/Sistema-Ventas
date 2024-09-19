@@ -73,10 +73,8 @@ export async function issueInvoice({ req }: { req: Request }) {
       ptoVta,
       cbteTipo
     );
-    console.log("lastVoucher", lastVoucher);
 
     const numeroFactura = lastVoucher + 1;
-    console.log("numeroFactura", numeroFactura);
 
     const fecha = format(new Date(), "yyyyMMdd");
     

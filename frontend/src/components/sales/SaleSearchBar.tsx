@@ -30,7 +30,7 @@ export default function SaleSearchBar({ products }: SaleSearchBarProps) {
       <div className="flex flex-row items-center gap-2">
         <Input
           type="text"
-          placeholder="Buscar producto..."
+          placeholder="Buscar producto o servicio..."
           className="bg-transparent border-none text-primary"
           onClick={() => setOpen(!open)}
         />
