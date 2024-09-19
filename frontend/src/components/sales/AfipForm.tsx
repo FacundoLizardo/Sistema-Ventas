@@ -11,13 +11,12 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -31,6 +30,8 @@ import {
 } from "../ui/select";
 import ButtonWithLoading from "../common/ButtonWithLoading";
 import { useSales } from "@/context/salesContext";
+import { useEffect } from "react";
+import { FaEdit } from "react-icons/fa";
 
 const formSchema = z.object({
   products: z.array(
@@ -62,19 +63,24 @@ export default function AfipForm() {
   const { getTotalPrice, discount } = useSales();
 
   const total = getTotalPrice();
-
+  console.log("Total:", total);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       products: [],
       discount: discount,
+
+      // Client
+      docTipo: 80,
+
+      // Invoice
       cbteTipo: 1,
-      ptoVta: 1,
       concepto: 1,
+
+      // Company
+      ptoVta: 1,
       importeGravado: total,
       importeExentoIva: 0,
-      docNro: 0,
-      docTipo: 0,
       iva: 0,
       outputDir: "",
       paymentType: "cash",
@@ -85,6 +91,13 @@ export default function AfipForm() {
       userId: "",
     },
   });
+
+  const cbteTipo = useWatch({ control: form.control, name: "cbteTipo" });
+
+  useEffect(() => {
+    const iva = cbteTipo === 1 || cbteTipo === 6 ? 21 : 0;
+    form.setValue("iva", iva);
+  }, [cbteTipo, form]);
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     console.log(data);
@@ -97,7 +110,8 @@ export default function AfipForm() {
         <CardTitle>Facturación</CardTitle>
         <CardDescription>
           Completa este formulario para gestionar la información necesaria para
-          AFIP y emitir tu comprobante correctamente. Asegúrate de revisar cada campo antes de enviar.
+          AFIP y emitir tu comprobante correctamente. Asegúrate de revisar cada
+          campo antes de enviar.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -106,56 +120,27 @@ export default function AfipForm() {
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
-                name="paymentType"
+                name="docTipo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tipo de Pago</FormLabel>
+                    <FormLabel>Tipo de Documento</FormLabel>
                     <FormControl>
                       <Select
-                        onValueChange={(value) => field.onChange(value)}
-                        defaultValue={field.value}
+                        onValueChange={(value) =>
+                          field.onChange(parseInt(value, 10))
+                        }
+                        defaultValue={field.value.toString()}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecciona un tipo de pago" />
+                          <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="cash">Efectivo</SelectItem>
-                          <SelectItem value="credit_card">
-                            Tarjeta de Crédito
-                          </SelectItem>
-                          <SelectItem value="transfer">
-                            Transferencia
-                          </SelectItem>
+                          <SelectItem value="80">CUIT</SelectItem>
+                          <SelectItem value="86">CUIL</SelectItem>
+                          <SelectItem value="96">DNI</SelectItem>
+                          <SelectItem value="99">Consumidor Final</SelectItem>
                         </SelectContent>
                       </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="cbteTipo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tipo de Comprobante</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="concepto"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Concepto</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -176,14 +161,101 @@ export default function AfipForm() {
                 )}
               />
 
+              <FormItem>
+                <FormLabel>Datos del cliente</FormLabel>
+                <Button
+                  variant={"outline"}
+                  type="button"
+                  className="flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background gap-2"
+                >
+                  <FaEdit />
+                  <div className="truncate overflow-hidden whitespace-nowrap w-56">
+                    asdsadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                  </div>
+                </Button>
+              </FormItem>
+
               <FormField
                 control={form.control}
-                name="docTipo"
+                name="cbteTipo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tipo de Documento</FormLabel>
+                    <FormLabel>Tipo de Comprobante</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} />
+                      <Select
+                        onValueChange={(value) =>
+                          field.onChange(parseInt(value, 10))
+                        }
+                        defaultValue={field.value.toString()}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">Factura A</SelectItem>
+                          <SelectItem value="6">Factura B</SelectItem>
+                          <SelectItem value="11">Factura C</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="concepto"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Concepto</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={(value) =>
+                          field.onChange(parseInt(value, 10))
+                        }
+                        defaultValue={field.value.toString()}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">Productos</SelectItem>
+                          <SelectItem value="2">Servicios</SelectItem>
+                          <SelectItem value="3">
+                            Productos y Servicios
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="paymentType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tipo de Pago</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={(value) => field.onChange(value)}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="cash">Efectivo</SelectItem>
+                          <SelectItem value="credit_card">
+                            Tarjeta de Crédito
+                          </SelectItem>
+                          <SelectItem value="transfer">
+                            Transferencia
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -191,23 +263,13 @@ export default function AfipForm() {
               />
 
               <FormItem>
-                <FormLabel>Datos del cliente</FormLabel>
-                <div>asdsad</div>
+                <FormLabel>Importe Gravado</FormLabel>
+                <div className="flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background">
+                  <div className="truncate overflow-hidden whitespace-nowrap w-56">
+                    {total}
+                  </div>
+                </div>
               </FormItem>
-
-              <FormField
-                control={form.control}
-                name="importeGravado"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Importe Gravado</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               <FormField
                 control={form.control}
@@ -238,46 +300,51 @@ export default function AfipForm() {
               />
             </div>
 
-            <FormField
-              control={form.control}
-              name="outputDir"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Directorio de Salida</FormLabel>
-                  <FormControl>
-                    <Input type="text" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="py-4">
+              <CardTitle>Información adicional</CardTitle>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="outputDir"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Directorio de Salida</FormLabel>
+                    <FormControl>
+                      <Input type="text" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/*   <FormField
+              {/*   <FormField
               control={form.control}
               name="isdelivery"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>¿Es Entrega?</FormLabel>
-                  <FormControl>
-                    <Input type="checkbox" {...field} />
-                  </FormControl>
-                  <FormMessage />
+                <FormLabel>¿Es Entrega?</FormLabel>
+                <FormControl>
+                <Input type="checkbox" {...field} />
+                </FormControl>
+                <FormMessage />
                 </FormItem>
-              )}
-            /> */}
-            <FormField
-              control={form.control}
-              name="deliveryAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Dirección de Entrega</FormLabel>
-                  <FormControl>
-                    <Input type="text" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                )}
+                /> */}
+              <FormField
+                control={form.control}
+                name="deliveryAddress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Dirección de Entrega</FormLabel>
+                    <FormControl>
+                      <Input type="text" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
               name="comments"
