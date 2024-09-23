@@ -1,6 +1,7 @@
 "use server";
 
 import { IUser } from "./UsersServices";
+import { cookies } from "next/headers";
 
 export const putUserService = async ({
   token,
@@ -34,10 +35,31 @@ export const putUserService = async ({
       throw new Error("Network response was not ok");
     }
 
-    const body = await response.json();
-    return body;
+    const updatedUser = await response.json();
+    const sessionCookie = cookies().get("session")?.value;
+
+    if (sessionCookie) {
+      const sessionData = JSON.parse(sessionCookie);
+      
+      if (sessionData.dataUser.userId === userId) {
+        sessionData.dataUser = {
+          ...sessionData.dataUser,
+          branchId:
+            updatedUser.newUser.branchId || sessionData.dataUser.branchId,
+        };
+
+        cookies().set("session", JSON.stringify(sessionData), {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: 3600,
+        });
+      }
+    }
+
+    return updatedUser;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error actualizando usuario:", error);
     throw error;
   }
 };

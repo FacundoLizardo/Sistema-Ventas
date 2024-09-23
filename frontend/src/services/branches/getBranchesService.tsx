@@ -12,8 +12,14 @@ export const getBranchesService = async ({
       throw new Error("No token provided");
     }
 
+    const queryParams = new URLSearchParams();
+
+    if (companyId) {
+      queryParams.append("companyId", companyId);
+    }
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/branches?companyId=${companyId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/branches?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {

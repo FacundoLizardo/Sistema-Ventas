@@ -3,7 +3,6 @@ import branchController from "../controllers/branchController";
 
 const router = Router();
 
-router.get("/:id", branchController.getBranch);
 router.get("/", branchController.getBranches);
 router.post("/:companyId", branchController.postBranch);
 router.put("/:id", branchController.putBranch);

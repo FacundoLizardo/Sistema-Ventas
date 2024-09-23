@@ -11,11 +11,11 @@ export default async function Page({
     companyId: string;
   };
 }) {
-  const { userId } = await UsersServices.userSession();
+  const { userId, branchId } = await UsersServices.userSession();
 
   const [userData, productsData, companyData] = await Promise.all([
     UsersServices.get(userId),
-    ProductsServices.getAll(companyId),
+    ProductsServices.getAll({companyId, branchId}),
     CompaniesServices.get(companyId),
   ]);
 

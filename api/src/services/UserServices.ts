@@ -50,23 +50,20 @@ class UserServices {
     }
   }
 
-  async putUser(
-    id: string,
-    data: UserCreationInterface
-  ): Promise<boolean | string> {
+  async putUser(id: string, data: UserCreationInterface) {
     try {
       const existingUser = await User.findOne({ where: { id } });
 
       if (!existingUser) {
-        return `The user with id: ${id} does not exist`;
+        throw new Error(`The user with id: ${id} does not exist`);
       }
 
       if (data.password) {
         data.password = await hashPassword(data.password);
       }
 
-      await existingUser.update(data);
-      return true;
+      const newUser = await existingUser.update(data);
+      return newUser;
     } catch (error) {
       serviceError(error);
     }

@@ -3,8 +3,9 @@ import stockController from "../controllers/stockController";
 
 const router = Router();
 
+router.get("/", stockController.getStock);
 router.get("/:companyId", stockController.getStocks);
-router.post("/", stockController.postStock);
+router.post("/:companyId", stockController.postStock);
 router.put("/", () => {});
 router.delete("/", () => {});
 

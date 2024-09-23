@@ -81,12 +81,22 @@ const {
 } = sequelize.models;
 
 /* ----- Relationships Setup ----- */
+// Ordenadas alfabéticamente por el nombre del modelo
 
-Operation.belongsTo(User, { foreignKey: "userId" });
-User.hasMany(Operation, { foreignKey: "userId" });
+Branch.hasMany(Product, { foreignKey: "branchId" });
+Product.belongsTo(Branch, { foreignKey: "branchId" });
 
-Company.hasMany(User, { foreignKey: "companyId" });
-User.belongsTo(Company, { foreignKey: "companyId" });
+Branch.hasMany(Stock, { foreignKey: "branchId" });
+Stock.belongsTo(Branch, { foreignKey: "branchId" });
+
+Branch.hasMany(User, { foreignKey: "branchId", as: "branch" });
+User.belongsTo(Branch, { foreignKey: "branchId", as: "branch" });
+
+Company.hasMany(Branch, { foreignKey: "companyId" });
+Branch.belongsTo(Company, { foreignKey: "companyId" });
+
+Company.hasMany(Customer, { foreignKey: "companyId" });
+Customer.belongsTo(Company, { foreignKey: "companyId" });
 
 Company.hasMany(Operation, { foreignKey: "companyId" });
 Operation.belongsTo(Company, { foreignKey: "companyId" });
@@ -94,32 +104,26 @@ Operation.belongsTo(Company, { foreignKey: "companyId" });
 Company.hasMany(Product, { foreignKey: "companyId" });
 Product.belongsTo(Company, { foreignKey: "companyId" });
 
-Company.hasMany(Customer, { foreignKey: "companyId" });
-Customer.belongsTo(Company, { foreignKey: "companyId" });
+Company.hasMany(Stock, { foreignKey: "companyId" });
+Stock.belongsTo(Company, { foreignKey: "companyId" });
 
-User.hasMany(Product, { foreignKey: "userId" });
-Product.belongsTo(User, { foreignKey: "userId" });
+Company.hasMany(User, { foreignKey: "companyId" });
+User.belongsTo(Company, { foreignKey: "companyId" });
 
 User.hasMany(Customer, { foreignKey: "userId" });
 Customer.belongsTo(User, { foreignKey: "userId" });
 
-Company.hasMany(Branch, { foreignKey: "companyId" });
-Branch.belongsTo(Company, { foreignKey: "companyId" });
+User.hasMany(Operation, { foreignKey: "userId" });
+Operation.belongsTo(User, { foreignKey: "userId" });
 
-Branch.hasMany(User, { foreignKey: "branchId", as: "branch" });
-User.belongsTo(Branch, { foreignKey: "branchId", as: "branch" });
+User.hasMany(Product, { foreignKey: "userId" });
+Product.belongsTo(User, { foreignKey: "userId" });
 
-Product.hasMany(Stock, { foreignKey: "productId" });
-Stock.belongsTo(Product, { foreignKey: "productId" });
+User.hasMany(Stock, { foreignKey: "userId" });
+Stock.belongsTo(User, { foreignKey: "userId" });
 
-Company.hasMany(Stock, { foreignKey: "companyId" });
-Stock.belongsTo(Company, { foreignKey: "companyId" });
-
-Branch.hasMany(Stock, { foreignKey: "branchId" });
-Stock.belongsTo(Branch, { foreignKey: "branchId" });
-
-Branch.hasMany(Product, { foreignKey: "branchId" });
-Product.belongsTo(Branch, { foreignKey: "branchId" });
+Product.hasMany(Stock, { foreignKey: "productId", as: "stock" });
+Stock.belongsTo(Product, { foreignKey: "productId", as: "stock" });
 
 export {
   sequelize,

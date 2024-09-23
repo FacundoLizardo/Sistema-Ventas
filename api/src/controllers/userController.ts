@@ -26,7 +26,6 @@ class UserController {
 
   async getUsers(req: Request, res: Response): Promise<void> {
     try {
-
       const { companyId } = req.params;
 
       const users = await UserServices.getUsers(companyId);
@@ -73,10 +72,10 @@ class UserController {
 
       const updateResult = await UserServices.putUser(userId, req.body);
 
-      if (updateResult === true) {
-        res.status(200).json({ success: true });
-      } else {
+      if (!updateResult) {
         res.status(404).json({ message: updateResult });
+      } else {
+        res.status(200).json({ success: true, newUser: updateResult });
       }
     } catch (error) {
       controllerError(res, error, 500);

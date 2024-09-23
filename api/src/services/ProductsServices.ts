@@ -1,12 +1,19 @@
-import { Product } from "../db";
+import { WhereOptions } from "sequelize";
+import { Product, Stock } from "../db";
 import { ProductInterface, ProductCreationInterface } from "../models/product";
 import { serviceError } from "../utils/serviceError";
 import StockServices from "./StockServices";
 
 class ProductService {
-  async getProduct(id: string) {
+  async getProduct(name: string) {
     try {
-      const product = await Product.findByPk(id);
+      const whereClause: WhereOptions = { name };
+
+      const product = await Product.findOne({
+        where: whereClause,
+        include: [{ model: Stock, as: "stock" }],
+      });
+
       return product
         ? (product.get({ plain: true }) as ProductInterface)
         : null;
@@ -15,11 +22,31 @@ class ProductService {
     }
   }
 
-  async getProducts(companyId: string) {
+  async getProducts({
+    companyId,
+    branchId,
+    name,
+  }: {
+    companyId: string;
+    branchId?: string;
+    name?: string;
+  }) {
     try {
+      const whereClause: WhereOptions = { companyId };
+
+      if (branchId) {
+        whereClause.branchId = branchId;
+      }
+
+      if (name) {
+        whereClause.name = name;
+      }
+
       const products = await Product.findAll({
-        where: { companyId },
+        where: whereClause,
+        include: [{ model: Stock, as: "stock" }],
       });
+
       return products
         ? products.map((productObj) => productObj.get({ plain: true }))
         : [];
@@ -41,28 +68,41 @@ class ProductService {
       serviceError(error);
     }
   }
-  
+
   async postProduct(
     data: Omit<ProductCreationInterface, "stock">,
     companyId: string,
+    branchId: string,
     stock: number
   ): Promise<ProductInterface | string> {
     try {
-      const [product, created] = await Product.findOrCreate({
-        where: { name: data.name },
-        defaults: {
-          ...data,
-          companyId,
+      const existingProduct = await Product.findOne({
+        where: {
+          name: data.name,
+          branchId: branchId,
         },
       });
 
-      if (created) {
-        await StockServices.postStock({
-          branchId: product.getDataValue("branchId"),
-          productId: product.getDataValue("id"),
-          quantity: stock,
-        }, companyId);
-  
+      if (existingProduct) {
+        return "Product already exists in this branch.";
+      }
+
+      const product = await Product.create({
+        ...data,
+        companyId,
+        branchId,
+      });
+
+      if (product) {
+        await StockServices.postStock(
+          {
+            branchId,
+            productId: product.getDataValue("id"),
+            quantity: stock,
+          },
+          companyId
+        );
+
         return product.get({ plain: true }) as ProductInterface;
       } else {
         return "Product not created because it already exists or something is wrong, please try again.";

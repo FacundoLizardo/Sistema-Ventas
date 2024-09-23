@@ -3,30 +3,29 @@ import { controllerError } from "../utils/controllerError";
 import StockServices from "../services/StockServices";
 
 class StockController {
-  /* async getUser(req: Request, res: Response): Promise<void> {
+  async getStock(req: Request, res: Response): Promise<void> {
     try {
-      const id = req.query.userId as string;
+      const { id, branchId } = req.query as { id: string; branchId: string };
 
       if (!id) {
-        res.status(404).json({ message: "User id is required" });
+        res.status(404).json({ message: "Stock id is required" });
       }
 
-      const user = await UserServices.getUser(id);
+      const stock = await StockServices.getStock({ id, branchId });
 
-      if (!user) {
-        res.status(404).json({ message: "User not found" });
+      if (!stock) {
+        res.status(404).json({ message: "Stock not found" });
         return;
       }
 
-      res.status(200).json({ success: true, user });
+      res.status(200).json({ success: true, stock });
     } catch (error) {
       controllerError(res, error, 500);
     }
-  } */
+  }
 
-   async getStocks(req: Request, res: Response): Promise<void> {
+  async getStocks(req: Request, res: Response): Promise<void> {
     try {
-
       const { companyId } = req.params;
 
       const stocks = await StockServices.getStocks(companyId);
@@ -40,7 +39,7 @@ class StockController {
     } catch (error) {
       controllerError(res, error, 500);
     }
-  } 
+  }
 
   async postStock(req: Request, res: Response): Promise<void> {
     try {

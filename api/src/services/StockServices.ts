@@ -1,24 +1,28 @@
-
 import { serviceError } from "../utils/serviceError";
 import { StockCreationInterface, StockInterface } from "../models/stock";
 import { Stock } from "../db";
 
 class StockServices {
-  /* async getUser(id: string) {
-    try {
-      const user = await User.findByPk(id, {
-        include: [{ model: Branch, as: "branch" }],
-      });
-      return user;
-    } catch (error) {
-      serviceError(error);
-    }
-  } */
+    async getStock({ id, branchId }: { id: string; branchId: string }) {
+        try {
+          const user = await Stock.findOne({
+            where: {
+              id: id,
+              branchId: branchId,
+            },
+          });
+          return user;
+        } catch (error) {
+          serviceError(error);
+        }
+      }
 
   async getStocks(companyId: string) {
     try {
       const stocks = await Stock.findAll({ where: { companyId } });
-      return stocks ? stocks.map((userObj) => userObj.get({ plain: true })) : [];
+      return stocks
+        ? stocks.map((userObj) => userObj.get({ plain: true }))
+        : [];
     } catch (error) {
       serviceError(error);
     }
@@ -29,7 +33,6 @@ class StockServices {
     companyId?: string
   ): Promise<StockInterface | string> {
     try {
-      
       const [stock, created] = await Stock.findOrCreate({
         where: { branchId: data.branchId, productId: data.productId },
         defaults: {
@@ -46,7 +49,7 @@ class StockServices {
     } catch (error) {
       serviceError(error);
     }
-  } 
+  }
 
   /* async putUser(
     id: string,

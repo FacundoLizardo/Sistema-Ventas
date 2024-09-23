@@ -4,27 +4,15 @@ import BranchServices from "../services/BranchServices";
 import { BranchInterface } from "../models/branch";
 
 class BranchController {
-  async getBranch(req: Request, res: Response): Promise<void> {
-    const { id } = req.params;
-    try {
-      if (!id) throw new Error("Branch ID is required.");
-      const branch = await BranchServices.getBranchById(id);
-      if (!branch) throw new Error("Branch not found.");
-      res.status(200).json({ success: true, branch });
-    } catch (error) {
-      controllerError(res, error, 404);
-    }
-  }
-
   async getBranches(req: Request, res: Response): Promise<void> {
     try {
-      const companyId = req.query.companyId as string;
+      const { companyId } = req.query as { companyId: string };
 
       if (!companyId) {
         res.status(400).json({ message: "Company id is required" });
       }
 
-      const branches = await BranchServices.getBranches(companyId);
+      const branches = await BranchServices.getBranches({ companyId });
 
       if (!branches) {
         res.status(404).json({ message: "Branches not found" });
