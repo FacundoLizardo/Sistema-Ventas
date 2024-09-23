@@ -1,6 +1,7 @@
 import { Product } from "../db";
 import { ProductInterface, ProductCreationInterface } from "../models/product";
 import { serviceError } from "../utils/serviceError";
+import StockServices from "./StockServices";
 
 class ProductService {
   async getProduct(id: string) {
@@ -42,8 +43,9 @@ class ProductService {
   }
   
   async postProduct(
-    data: ProductCreationInterface,
-    companyId: string
+    data: Omit<ProductCreationInterface, "stock">,
+    companyId: string,
+    stock: number
   ): Promise<ProductInterface | string> {
     try {
       const [product, created] = await Product.findOrCreate({
@@ -55,9 +57,15 @@ class ProductService {
       });
 
       if (created) {
+        await StockServices.postStock({
+          branchId: product.getDataValue("branchId"),
+          productId: product.getDataValue("id"),
+          quantity: stock,
+        }, companyId);
+  
         return product.get({ plain: true }) as ProductInterface;
       } else {
-        return "Product not created because it already exists or something is wrong, please try again";
+        return "Product not created because it already exists or something is wrong, please try again.";
       }
     } catch (error) {
       serviceError(error);
@@ -114,6 +122,7 @@ export default new ProductService();
         "notesDescription": "Descripción de prueba",
         "taxes": 5.00,
         "barcode": "231351655648",
+        "branchId": "57ee18e7-1109-412a-b1b3-711b3832b87c"
         "userId": "57ee18e7-1109-412a-b1b3-711b3832b87c"
     }
 */

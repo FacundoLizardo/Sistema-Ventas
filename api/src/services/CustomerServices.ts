@@ -17,7 +17,11 @@ class CustomerService {
   }): Promise<CustomerInterface | null> {
     try {
       const customer = await Customer.findOne({
-        where: { docTipo: docTipo, docNro: docNro, companyId },
+        where: {
+          docTipo: String(docTipo),
+          docNro: String(docNro),
+          companyId: companyId,
+        },
       });
 
       return customer

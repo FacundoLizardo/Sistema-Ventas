@@ -10,6 +10,7 @@ import OperationModel from "./models/operations";
 import SupplierModel from "./models/suppliers";
 import CashRegisterModel from "./models/cashRegister";
 import CompanyModel from "./models/company";
+import StockModel from "./models/stock";
 import { NODE_ENV, DB_URL, DB_USER, DB_PASSWORD, DB_HOST } from "./config";
 
 /* ----- Utils ----- */
@@ -63,6 +64,7 @@ OperationModel(sequelize);
 SupplierModel(sequelize);
 CashRegisterModel(sequelize);
 CompanyModel(sequelize);
+StockModel(sequelize);
 
 const {
   Product,
@@ -75,6 +77,7 @@ const {
   Supplier,
   CashRegister,
   Company,
+  Stock,
 } = sequelize.models;
 
 /* ----- Relationships Setup ----- */
@@ -98,13 +101,25 @@ User.hasMany(Product, { foreignKey: "userId" });
 Product.belongsTo(User, { foreignKey: "userId" });
 
 User.hasMany(Customer, { foreignKey: "userId" });
-Customer.belongsTo(User, { foreignKey: "userId" }); 
+Customer.belongsTo(User, { foreignKey: "userId" });
 
 Company.hasMany(Branch, { foreignKey: "companyId" });
 Branch.belongsTo(Company, { foreignKey: "companyId" });
 
 Branch.hasMany(User, { foreignKey: "branchId", as: "branch" });
 User.belongsTo(Branch, { foreignKey: "branchId", as: "branch" });
+
+Product.hasMany(Stock, { foreignKey: "productId" });
+Stock.belongsTo(Product, { foreignKey: "productId" });
+
+Company.hasMany(Stock, { foreignKey: "companyId" });
+Stock.belongsTo(Company, { foreignKey: "companyId" });
+
+Branch.hasMany(Stock, { foreignKey: "branchId" });
+Stock.belongsTo(Branch, { foreignKey: "branchId" });
+
+Branch.hasMany(Product, { foreignKey: "branchId" });
+Product.belongsTo(Branch, { foreignKey: "branchId" });
 
 export {
   sequelize,
@@ -118,4 +133,5 @@ export {
   Supplier,
   CashRegister,
   Company,
+  Stock,
 };

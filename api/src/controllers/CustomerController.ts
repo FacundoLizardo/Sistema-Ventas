@@ -35,21 +35,6 @@ class CustomerController {
     }
   }
 
-  async getCustomerByDocument(req: Request, res: Response): Promise<void> {
-    try {
-      const customer = await CustomerService.getCustomerByDocument(req.body);
-
-      if (!customer) {
-        res.status(404).json({ message: "Customer not found" });
-        return;
-      }
-
-      res.status(200).json({ success: true, customer });
-    } catch (error) {
-      controllerError(res, error, 500);
-    }
-  }
-
   async getCustomers(_req: Request, res: Response): Promise<void> {
     try {
       const customers = await CustomerService.getCustomers();

@@ -60,18 +60,24 @@ class ProductController {
   async postProduct(req: Request, res: Response): Promise<void> {
     try {
       const { companyId } = req.params;
-
+      const { stock, ...productData } = req.body;
+  
       if (!companyId) {
         res.status(400).json({ message: "Company id is required" });
+        return; 
       }
-
-      const newProduct = await ProductService.postProduct(req.body, companyId);
-
+  
+      const newProduct = await ProductService.postProduct(
+        productData,
+        companyId,
+        stock
+      );
+  
       if (!newProduct) {
         res.status(400).json({ message: "Product not created" });
         return;
       }
-
+  
       res.status(201).json(newProduct);
     } catch (error) {
       controllerError(res, error, 500);

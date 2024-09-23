@@ -7,8 +7,8 @@ import { Operation, Product } from "../../db";
 import { generatePDF } from "./generatePDF";
 import { serviceError } from "../../utils/serviceError";
 import { updateProductStock } from "../../utils/updateProductStock";
-import CustumerServices from "../CustomerServices";
 import { format } from "date-fns";
+import CustomerService from "../CustomerServices";
 
 const afip = new Afip({ CUIT: CUIT });
 
@@ -161,14 +161,17 @@ export async function issueInvoice({ req }: { req: Request }) {
       discount,
     });
 
-    const customerData = await CustumerServices.getCustomerByDocument({
-      docNro,
+    const customer = await CustomerService.getCustomer({
+      companyId,
       docTipo,
+      docNro,
     });
-    const customerInfo = customerData;
 
-    console.log(customerInfo);
-    
+    const customerInfo = (customer?.docTipo === "80") 
+    ? `CUIT: ${customer.docNro} - Empresa: ${customer.companyName}` 
+    : (customer?.docTipo === "96" 
+        ? `DNI: ${customer.docNro} - Cliente: ${customer.firstName} ${customer.lastName}` 
+        : 'No se encontró información del cliente');
 
     const operationData = {
       products: products,

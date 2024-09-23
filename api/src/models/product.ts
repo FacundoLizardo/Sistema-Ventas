@@ -9,7 +9,6 @@ export interface ProductInterface {
 	finalPrice?: number;
 	discount?: number;
 	profitPercentage?: number;
-	stock: number;
 	allowNegativeStock: boolean;
 	trackStock: boolean;
 	minimumStock: number;
@@ -43,7 +42,6 @@ class Product
 	public finalPrice?: number;
 	public discount?: number;
 	public profitPercentage?: number;
-	public stock!: number;
 	public allowNegativeStock!: boolean;
 	public trackStock!: boolean;
 	public minimumStock!: number;
@@ -117,11 +115,6 @@ export default (sequelize: Sequelize) => {
 				validate: {
 					isPositive: Product.validateDiscount,
 				},
-			},
-			stock: {
-				type: DataTypes.INTEGER,
-				allowNull: false,
-				defaultValue: 0,
 			},
 			allowNegativeStock: {
 				type: DataTypes.BOOLEAN,
