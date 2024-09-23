@@ -6,9 +6,24 @@ import {
 import { serviceError } from "../utils/serviceError";
 
 class CustomerService {
-  async getCustomer(id: string): Promise<CustomerInterface | null> {
+  async getCustomer({
+    companyId,
+    docTipo,
+    docNro,
+  }: {
+    companyId?: string;
+    docTipo?: string;
+    docNro?: string;
+  }): Promise<CustomerInterface | null> {
     try {
-      const customer = await Customer.findByPk(id);
+      const customer = await Customer.findOne({
+        where: {
+          docTipo: String(docTipo),
+          docNro: String(docNro),
+          companyId: companyId,
+        },
+      });
+
       return customer
         ? (customer.get({ plain: true }) as CustomerInterface)
         : null;
@@ -21,21 +36,14 @@ class CustomerService {
     data: Partial<CustomerInterface>
   ): Promise<CustomerInterface | null> {
     try {
-      const { dni, cuil, cuit, passport } = data;
+      const { docNro, docTipo } = data;
 
-      const whereCondition: any = {};
-
-      if (passport) {
-        whereCondition.passport = passport;
-      } else if (cuit) {
-        whereCondition.cuit = cuit;
-      } else if (cuil) {
-        whereCondition.cuil = cuil;
-      } else if (dni) {
-        whereCondition.dni = dni;
-      }
-
-      const customer = await Customer.findOne({ where: whereCondition });
+      const customer = await Customer.findOne({
+        where: {
+          docTipo: docTipo,
+          docNro: docNro,
+        },
+      });
 
       return customer
         ? (customer.get({ plain: true }) as CustomerInterface)
@@ -59,30 +67,8 @@ class CustomerService {
     companyId?: string
   ): Promise<CustomerInterface | string> {
     try {
-      let whereClause: any = {};
-
-      if (data.customerType === "person") {
-        if (data.dni !== undefined) {
-          whereClause.dni = data.dni;
-        } else if (data.cuil !== undefined) {
-          whereClause.cuil = data.cuil;
-        } else if (data.passport !== undefined) {
-          whereClause.passport = data.passport;
-        } else {
-          return "Invalid data: Missing DNI, CUIL, or passport for a person.";
-        }
-      } else if (data.customerType === "company") {
-        if (data.cuit !== undefined) {
-          whereClause.cuit = data.cuit;
-        } else {
-          return "Invalid data: Missing CUIT for a company.";
-        }
-      } else {
-        return "Invalid data: Unknown customer type.";
-      }
-
       const [customer, created] = await Customer.findOrCreate({
-        where: whereClause,
+        where: { docNro: data.docNro, docTipo: data.docTipo },
         defaults: {
           ...data,
           companyId,
@@ -141,20 +127,22 @@ export default new CustomerService();
 
     {
       "customerType": "company",
-      "cuit": 33693450239,
-      "companyName": "Tech Solutions S.A.",
-      "email": "info@techsolutions.com",
-      "address": "456 Industrial Ave, Buenos Aires",
+      "docTipo": "80",
+      "docNro": "33693450239",
+      "companyName": "Tech",
+      "email": "info@techsolutionds.com",
+      "address": "456 Industrial Ave, Buendos Aires",
       "phoneNumber": "011-4567-8900",
       "enableDebt": false,
-      "userId": "57ee18e7-1109-412a-b1b3-711b3832b87c"
+      "userId": "f127bab9-cb24-40f2-a6eb-63ef9180d828"
     }
 
     CLIENTE PERSONA
 
     {
       "customerType": "person",
-      "dni": 33693450,
+      "docTipo": "96",
+      "docNro": "35000222",
       "firstName": "Juan",
       "lastName": "Pérez",
       "email": "juan.perez@example.com",

@@ -1,13 +1,12 @@
 import { Router } from "express";
-import CustomerController from "../controllers/CustomerController"
+import customerController from "../controllers/customerController"
 
 const router = Router();
 
-router.get("/:id", CustomerController.getCustomer);
-router.get("/:companyId", CustomerController.getCustomerByDocument);
-router.get("/", CustomerController.getCustomers);
-router.post("/:companyId", CustomerController.postCustomer);
-router.put("/:id", CustomerController.putCustomer);
-router.delete("/:id", CustomerController.deleteCustomer);
+router.get("/", customerController.getCustomer);
+router.get("/", customerController.getCustomers);
+router.post("/:companyId", customerController.postCustomer);
+router.put("/:id", customerController.putCustomer);
+router.delete("/:id", customerController.deleteCustomer);
 
 module.exports = router;

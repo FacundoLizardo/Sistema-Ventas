@@ -11,7 +11,7 @@ class BranchServices {
     }
   }
 
-  async getBranches(companyId: string) {
+  async getBranches({ companyId }: { companyId: string }) {
     try {
       const branches = await Branch.findAll({
         where: { companyId },

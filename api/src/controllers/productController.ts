@@ -3,35 +3,23 @@ import ProductService from "../services/ProductsServices";
 import { controllerError } from "../utils/controllerError";
 
 class ProductController {
-  async getProduct(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.params;
-
-      if (!id) {
-        res.status(404).json({ message: "Product id is required" });
-      }
-
-      const product = await ProductService.getProduct(id);
-
-      if (!product) {
-        res.status(404).json({ message: "Product not found" });
-      }
-
-      res.status(200).json({ success: true, product });
-    } catch (error) {
-      controllerError(res, error, 500);
-    }
-  }
-
   async getProducts(req: Request, res: Response): Promise<void> {
     try {
-      const companyId = req.query.companyId as string;
+      const { companyId, branchId, name } = req.query as {
+        companyId: string;
+        branchId?: string;
+        name?: string;
+      };
 
       if (!companyId) {
         res.status(400).json({ message: "Company id is required" });
       }
 
-      const products = await ProductService.getProducts(companyId);
+      const products = await ProductService.getProducts({
+        companyId,
+        branchId,
+        name,
+      });
 
       if (!products) {
         res.status(404).json({ message: "Products not found" });
@@ -60,12 +48,21 @@ class ProductController {
   async postProduct(req: Request, res: Response): Promise<void> {
     try {
       const { companyId } = req.params;
+      const { stock, branchId, ...productData } = req.body;
 
-      if (!companyId) {
-        res.status(400).json({ message: "Company id is required" });
+      if (!companyId || !branchId || typeof stock !== "number") {
+        res
+          .status(400)
+          .json({ message: "Company id, branch id, and stock are required." });
+        return;
       }
 
-      const newProduct = await ProductService.postProduct(req.body, companyId);
+      const newProduct = await ProductService.postProduct(
+        productData,
+        companyId,
+        branchId,
+        stock
+      );
 
       if (!newProduct) {
         res.status(400).json({ message: "Product not created" });

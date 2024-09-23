@@ -3,10 +3,8 @@ import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 export interface CustomerInterface {
   id: string;
   customerType: "person" | "company";
-  dni?: number;
-  passport?: string;
-  cuit?: number;
-  cuil?: number;
+  docTipo?: string;
+  docNro?: string;
   firstName?: string;
   lastName?: string;
   companyName?: string;
@@ -21,10 +19,6 @@ export interface CustomerCreationInterface
   extends Optional<
     CustomerInterface,
     | "id"
-    | "dni"
-    | "passport"
-    | "cuit"
-    | "cuil"
     | "companyName"
     | "firstName"
     | "lastName"
@@ -40,10 +34,8 @@ class Customer
 {
   public id!: string;
   public customerType!: "person" | "company";
-  public dni?: number;
-  public passport?: string;
-  public cuit?: number;
-  public cuil?: number;
+  public docTipo?: string;
+  public docNro?: string;
   public firstName?: string;
   public lastName?: string;
   public companyName?: string;
@@ -69,63 +61,18 @@ export default (sequelize: Sequelize) => {
         type: DataTypes.ENUM("person", "company"),
         allowNull: false,
       },
-      dni: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        validate: {
-          isDni(value?: number) {
-            if (
-              value !== undefined &&
-              value !== null &&
-              !Number.isInteger(value)
-            ) {
-              throw new Error("The DNI must be an integer.");
-            }
-          },
-        },
-      },
-      passport: {
+      docTipo: {
         type: DataTypes.STRING,
         allowNull: true,
         validate: {
-          isPassport(value?: string) {
-            const passportRegex = /^[a-zA-Z0-9]+$/;
-            if (
-              value !== undefined &&
-              value !== null &&
-              !passportRegex.test(value)
-            ) {
-              throw new Error("The passport format is invalid.");
-            }
-          },
+          len: [0, 50],
         },
       },
-      cuit: {
-        type: DataTypes.BIGINT,
+      docNro: {
+        type: DataTypes.STRING,
         allowNull: true,
         validate: {
-          isCuit(value?: number) {
-            if (value !== undefined && value !== null) {
-              const cuitLength = value.toString().length;
-              if (cuitLength !== 11) {
-                throw new Error("The CUIT must have exactly 11 digits.");
-              }
-            }
-          },
-        },
-      },
-      cuil: {
-        type: DataTypes.BIGINT,
-        allowNull: true,
-        validate: {
-          isCuil(value?: number) {
-            if (value !== undefined && value !== null) {
-              const cuilLength = value.toString().length;
-              if (cuilLength !== 11) {
-                throw new Error("The CUIL must have exactly 11 digits.");
-              }
-            }
-          },
+          len: [0, 50],
         },
       },
       firstName: {

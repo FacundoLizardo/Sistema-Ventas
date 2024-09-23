@@ -7,8 +7,8 @@ import { Operation, Product } from "../../db";
 import { generatePDF } from "./generatePDF";
 import { serviceError } from "../../utils/serviceError";
 import { updateProductStock } from "../../utils/updateProductStock";
-import CustumerServices from "../CustomerServices";
 import { format } from "date-fns";
+import CustomerService from "../CustomerServices";
 
 const afip = new Afip({ CUIT: CUIT });
 
@@ -73,13 +73,11 @@ export async function issueInvoice({ req }: { req: Request }) {
       ptoVta,
       cbteTipo
     );
-    console.log("lastVoucher", lastVoucher);
 
     const numeroFactura = lastVoucher + 1;
-    console.log("numeroFactura", numeroFactura);
 
     const fecha = format(new Date(), "yyyyMMdd");
-    
+
     /**
      * Concepto de la factura
      Opciones:
@@ -163,30 +161,17 @@ export async function issueInvoice({ req }: { req: Request }) {
       discount,
     });
 
-    // Crear la operacion y la almacenar en la base de datos
-    let customer;
-    if (docTipo === 80) {
-      customer = await CustumerServices.getCustomerByDocument({ cuit: docNro });
-    } else if (docTipo === 96) {
-      customer = await CustumerServices.getCustomerByDocument({ cuil: docNro });
-    } else if (docTipo === 99) {
-      customer = await CustumerServices.getCustomerByDocument({ dni: docNro });
-    } else if (docTipo === 3) {
-      customer = await CustumerServices.getCustomerByDocument({
-        passport: docNro,
-      });
-    }
+    const customer = await CustomerService.getCustomer({
+      companyId,
+      docTipo,
+      docNro,
+    });
 
-    let customerName = "";
-    if (customer?.customerType === "person") {
-      customerName = `${customer?.firstName} ${customer?.lastName}`;
-    } else if (customer?.customerType === "company") {
-      customerName = customer?.companyName || "";
-    }
-
-    const customerData = `DNI: ${
-      customer?.dni || customer?.cuit || customer?.passport || customer?.cuil
-    } - ${customerName}`;
+    const customerInfo = (customer?.docTipo === "80") 
+    ? `CUIT: ${customer.docNro} - Empresa: ${customer.companyName}` 
+    : (customer?.docTipo === "96" 
+        ? `DNI: ${customer.docNro} - Cliente: ${customer.firstName} ${customer.lastName}` 
+        : 'No se encontró información del cliente');
 
     const operationData = {
       products: products,
@@ -200,7 +185,7 @@ export async function issueInvoice({ req }: { req: Request }) {
       state: "completed",
       isdelivery: isdelivery,
       deliveryAddress: deliveryAddress,
-      customer: customerData,
+      customer: customerInfo,
       comments: comments,
       invoiceLink: "",
       companyId: companyId,

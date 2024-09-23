@@ -5,25 +5,24 @@ import CustomerService from "../services/CustomerServices";
 class CustomerController {
   async getCustomer(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { companyId, docTipo, docNro } = req.query as {
+        companyId?: string;
+        docTipo?: string;
+        docNro?: string;
+      };
 
-      const customer = await CustomerService.getCustomer(id);
-
-      if (!customer) {
-        res.status(404).json({ message: "Customer not found" });
+      if (!companyId || !docTipo || !docNro) {
+        res
+          .status(400)
+          .json({ message: "CustomerId and CompanyId are required" });
         return;
       }
 
-      res.status(200).json({ success: true, customer });
-    } catch (error) {
-      controllerError(res, error, 500);
-    }
-  }
-
-  async getCustomerByDocument(req: Request, res: Response): Promise<void> {
-    try {
-
-      const customer = await CustomerService.getCustomerByDocument(req.body);
+      const customer = await CustomerService.getCustomer({
+        companyId,
+        docTipo,
+        docNro,
+      });
 
       if (!customer) {
         res.status(404).json({ message: "Customer not found" });

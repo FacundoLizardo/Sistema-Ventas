@@ -45,8 +45,6 @@ const CardFooter = React.forwardRef<
 ));
 CardFooter.displayName = "CardFooter";
 
-// Esto no es parte de la estructura general de la card, es más bien para ingresar un título y una descripción en cualquiera de las tres partes que conforman la card.
-
 const CardTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>

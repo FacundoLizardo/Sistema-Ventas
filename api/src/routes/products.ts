@@ -3,7 +3,6 @@ import productController from "../controllers/productController";
 
 const router = Router();
 
-router.get("/:id", productController.getProduct);
 router.get("/", productController.getProducts);
 router.get("/categories", productController.getCategories);
 router.post("/:companyId", productController.postProduct);

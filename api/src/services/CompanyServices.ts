@@ -1,18 +1,11 @@
-import { Company, User } from "../db";
+import { Company } from "../db";
 import { CompanyInterface } from "../models/company";
 import { serviceError } from "../utils/serviceError";
 
 class CompanyServices {
   async getCompanyById(id: string) {
     try {
-      return await Company.findByPk(id, {
-        include: [
-          {
-            model: User,
-            as: "users",
-          },
-        ],
-      });
+      return await Company.findByPk(id);
     } catch (error) {
       serviceError(error);
     }

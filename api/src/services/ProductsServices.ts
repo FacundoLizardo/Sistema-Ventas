@@ -1,11 +1,19 @@
-import { Product } from "../db";
+import { WhereOptions } from "sequelize";
+import { Product, Stock } from "../db";
 import { ProductInterface, ProductCreationInterface } from "../models/product";
 import { serviceError } from "../utils/serviceError";
+import StockServices from "./StockServices";
 
 class ProductService {
-  async getProduct(id: string) {
+  async getProduct(name: string) {
     try {
-      const product = await Product.findByPk(id);
+      const whereClause: WhereOptions = { name };
+
+      const product = await Product.findOne({
+        where: whereClause,
+        include: [{ model: Stock, as: "stock" }],
+      });
+
       return product
         ? (product.get({ plain: true }) as ProductInterface)
         : null;
@@ -14,11 +22,31 @@ class ProductService {
     }
   }
 
-  async getProducts(companyId: string) {
+  async getProducts({
+    companyId,
+    branchId,
+    name,
+  }: {
+    companyId: string;
+    branchId?: string;
+    name?: string;
+  }) {
     try {
+      const whereClause: WhereOptions = { companyId };
+
+      if (branchId) {
+        whereClause.branchId = branchId;
+      }
+
+      if (name) {
+        whereClause.name = name;
+      }
+
       const products = await Product.findAll({
-        where: { companyId },
+        where: whereClause,
+        include: [{ model: Stock, as: "stock" }],
       });
+
       return products
         ? products.map((productObj) => productObj.get({ plain: true }))
         : [];
@@ -40,24 +68,44 @@ class ProductService {
       serviceError(error);
     }
   }
-  
+
   async postProduct(
-    data: ProductCreationInterface,
-    companyId: string
+    data: Omit<ProductCreationInterface, "stock">,
+    companyId: string,
+    branchId: string,
+    stock: number
   ): Promise<ProductInterface | string> {
     try {
-      const [product, created] = await Product.findOrCreate({
-        where: { name: data.name },
-        defaults: {
-          ...data,
-          companyId,
+      const existingProduct = await Product.findOne({
+        where: {
+          name: data.name,
+          branchId: branchId,
         },
       });
 
-      if (created) {
+      if (existingProduct) {
+        return "Product already exists in this branch.";
+      }
+
+      const product = await Product.create({
+        ...data,
+        companyId,
+        branchId,
+      });
+
+      if (product) {
+        await StockServices.postStock(
+          {
+            branchId,
+            productId: product.getDataValue("id"),
+            quantity: stock,
+          },
+          companyId
+        );
+
         return product.get({ plain: true }) as ProductInterface;
       } else {
-        return "Product not created because it already exists or something is wrong, please try again";
+        return "Product not created because it already exists or something is wrong, please try again.";
       }
     } catch (error) {
       serviceError(error);
@@ -102,8 +150,8 @@ export default new ProductService();
 //---------- TESTS ----------
 
 /* 
-    {
-        "name": "Vino tinto",
+      {
+        "name": "Tinto",
         "category": "Vinos",
         "cost": 50.00,
         "finalPrice": 75.00,
@@ -114,6 +162,7 @@ export default new ProductService();
         "notesDescription": "Descripción de prueba",
         "taxes": 5.00,
         "barcode": "231351655648",
-        "userId": "57ee18e7-1109-412a-b1b3-711b3832b87c"
+        "branchId": "cb4f49aa-13f0-4b5f-805b-d8242e6987b1",
+        "userId": "b3b10faa-9c9e-425e-acc4-6ec1ad574bda"
     }
 */

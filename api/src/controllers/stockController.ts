@@ -1,47 +1,47 @@
 import { Request, Response } from "express";
 import { controllerError } from "../utils/controllerError";
-import UserServices from "../services/UserServices";
+import StockServices from "../services/StockServices";
 
-class UserController {
-  async getUser(req: Request, res: Response): Promise<void> {
+class StockController {
+  async getStock(req: Request, res: Response): Promise<void> {
     try {
-      const id = req.query.userId as string;
+      const { id, branchId } = req.query as { id: string; branchId: string };
 
       if (!id) {
-        res.status(404).json({ message: "User id is required" });
+        res.status(404).json({ message: "Stock id is required" });
       }
 
-      const user = await UserServices.getUser(id);
+      const stock = await StockServices.getStock({ id, branchId });
 
-      if (!user) {
-        res.status(404).json({ message: "User not found" });
+      if (!stock) {
+        res.status(404).json({ message: "Stock not found" });
         return;
       }
 
-      res.status(200).json({ success: true, user });
+      res.status(200).json({ success: true, stock });
     } catch (error) {
       controllerError(res, error, 500);
     }
   }
 
-  async getUsers(req: Request, res: Response): Promise<void> {
+  async getStocks(req: Request, res: Response): Promise<void> {
     try {
       const { companyId } = req.params;
 
-      const users = await UserServices.getUsers(companyId);
+      const stocks = await StockServices.getStocks(companyId);
 
-      if (!users.length) {
-        res.status(404).json({ message: "No users found" });
+      if (!stocks.length) {
+        res.status(404).json({ message: "No stocks found" });
         return;
       }
 
-      res.status(200).json({ success: true, users });
+      res.status(200).json({ success: true, stocks });
     } catch (error) {
       controllerError(res, error, 500);
     }
   }
 
-  async postUser(req: Request, res: Response): Promise<void> {
+  async postStock(req: Request, res: Response): Promise<void> {
     try {
       const companyId = req.params.companyId;
 
@@ -49,20 +49,20 @@ class UserController {
         res.status(404).json({ message: "Company id is required" });
       }
 
-      const newUser = await UserServices.postUser(req.body, companyId);
+      const newStock = await StockServices.postStock(req.body, companyId);
 
-      if (typeof newUser === "string") {
-        res.status(400).json({ message: newUser });
+      if (!newStock) {
+        res.status(400).json({ message: newStock });
         return;
       }
 
-      res.status(201).json(newUser);
+      res.status(201).json(newStock);
     } catch (error) {
       controllerError(res, error, 500);
     }
   }
 
-  async putUser(req: Request, res: Response): Promise<void> {
+  /* async putUser(req: Request, res: Response): Promise<void> {
     try {
       const { userId } = req.query as { userId: string };
 
@@ -72,17 +72,17 @@ class UserController {
 
       const updateResult = await UserServices.putUser(userId, req.body);
 
-      if (!updateResult) {
-        res.status(404).json({ message: updateResult });
+      if (updateResult === true) {
+        res.status(200).json({ success: true });
       } else {
-        res.status(200).json({ success: true, newUser: updateResult });
+        res.status(404).json({ message: updateResult });
       }
     } catch (error) {
       controllerError(res, error, 500);
     }
-  }
+  } */
 
-  async deleteUser(req: Request, res: Response): Promise<void> {
+  /* async deleteUser(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -100,7 +100,7 @@ class UserController {
     } catch (error) {
       controllerError(res, error, 500);
     }
-  }
+  } */
 }
 
-export default new UserController();
+export default new StockController();

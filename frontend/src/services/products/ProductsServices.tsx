@@ -22,6 +22,8 @@ export interface IProduct {
 
 export interface IProductCreate extends Omit<IProduct, "id"> {}
 
+export type AfipProducts = Pick<IProduct, "id" | "name" | "finalPrice">;
+
 class ProductsServices {
   static async getToken() {
     try {
@@ -33,10 +35,18 @@ class ProductsServices {
     }
   }
 
-  static async getAll(companyId: string) {
+  static async getAll({
+    companyId,
+    branchId,
+    name,
+  }: {
+    companyId: string;
+    branchId?: string;
+    name?: string;
+  }) {
     try {
       const token = await this.getToken();
-      return await getProductsService({ token, companyId });
+      return await getProductsService({ token, companyId, branchId, name });
     } catch (error) {
       console.error("Error getting products:", error);
       throw error;
