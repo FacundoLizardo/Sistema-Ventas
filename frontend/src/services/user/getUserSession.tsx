@@ -18,7 +18,6 @@ export const getUserSession = async ({ token }: { token: string }) => {
     const sessionData = JSON.parse(session);
     const { dataUser } = sessionData;
     const { userId, companyId, branchId, role } = dataUser;
-
     const isAdmin = sessionData && sessionData.dataUser.role === "SUPER_ADMIN";
 
     return {
@@ -26,6 +25,7 @@ export const getUserSession = async ({ token }: { token: string }) => {
       companyId,
       branchId,
       role,
+      token,
       isAdmin,
     };
   } catch (error) {

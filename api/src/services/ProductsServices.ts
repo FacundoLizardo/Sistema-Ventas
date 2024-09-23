@@ -150,8 +150,8 @@ export default new ProductService();
 //---------- TESTS ----------
 
 /* 
-    {
-        "name": "Vino tinto",
+      {
+        "name": "Tinto",
         "category": "Vinos",
         "cost": 50.00,
         "finalPrice": 75.00,
@@ -162,7 +162,7 @@ export default new ProductService();
         "notesDescription": "Descripción de prueba",
         "taxes": 5.00,
         "barcode": "231351655648",
-        "branchId": "57ee18e7-1109-412a-b1b3-711b3832b87c"
-        "userId": "57ee18e7-1109-412a-b1b3-711b3832b87c"
+        "branchId": "cb4f49aa-13f0-4b5f-805b-d8242e6987b1",
+        "userId": "b3b10faa-9c9e-425e-acc4-6ec1ad574bda"
     }
 */
