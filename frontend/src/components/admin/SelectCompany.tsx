@@ -13,6 +13,7 @@ import { Input } from '../ui/input';
 import { ICompany } from '@/services/companies/CompaniesServices';
 import { Badge } from '../ui/badge';
 import { CompanyCardContainer } from './company/CompanyCardContainer';
+import { CreateCompanyDialog } from './company/CreateCompanyDialog';
 
 export default function SelectCompany({ companies }: { companies: ICompany[] }) {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -31,7 +32,9 @@ export default function SelectCompany({ companies }: { companies: ICompany[] }) 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Compañías</CardTitle>
+        <CardTitle className='flex justify-between'>Compañías
+          <CreateCompanyDialog/>
+        </CardTitle>
         <CardDescription>Selecciona una compañía</CardDescription>
       </CardHeader>
       <CardContent>

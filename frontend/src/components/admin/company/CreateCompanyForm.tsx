@@ -93,7 +93,7 @@ export default function CreateCompanyForm() {
   const submitLoading = isSubmitting;
 
   return (
-    <Card>
+    <Card className="border-0">
       <Form {...form}>
         <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
@@ -250,7 +250,7 @@ export default function CreateCompanyForm() {
               </CardContent>
             </Card>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex justify-end">
             <ButtonWithLoading
               loading={submitLoading}
               loadingText="Creando compañía..."
