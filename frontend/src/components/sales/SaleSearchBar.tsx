@@ -55,8 +55,18 @@ export default function SaleSearchBar({ products }: SaleSearchBarProps) {
                 >
                   <p>{product.name}</p>
                   <div>
-                    {product.stock > 0 ? (
-                      <Badge variant="default">Disponible</Badge>
+                    {Array.isArray(product.stock) &&
+                    product.stock.length > 0 ? (
+                      <div className="flex flex-col">
+                        {product.stock.map((stockItem) => (
+                          <Badge key={stockItem.id} variant="default">
+                            {stockItem.quantity}{" "}
+                            {stockItem.quantity !== 1
+                              ? "disponibles"
+                              : "disponible"}
+                          </Badge>
+                        ))}
+                      </div>
                     ) : (
                       <Badge variant="destructive">Agotado</Badge>
                     )}

@@ -1,15 +1,11 @@
 "use server";
 
-export const getCustomerService = async ({
+export const postAfipService = async ({
   token,
   companyId,
-  docTipo,
-  docNro
 }: {
-  token?: string;
+  token: string;
   companyId: string;
-  docTipo: string;
-  docNro: string;
 }) => {
   try {
     if (!token) {
@@ -17,9 +13,9 @@ export const getCustomerService = async ({
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/customers?companyId=${companyId}&docTipo=${docTipo}&docNro=${docNro}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/afip/${companyId}`,
       {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -27,10 +23,14 @@ export const getCustomerService = async ({
       }
     );
 
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
     const body = await response.json();
     return body;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error posting branch:", error);
     throw error;
   }
 };

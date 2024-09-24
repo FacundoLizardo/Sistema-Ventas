@@ -161,17 +161,17 @@ export async function issueInvoice({ req }: { req: Request }) {
       discount,
     });
 
-    const customer = await CustomerService.getCustomer({
-      companyId,
+    const customer = await CustomerService.getCustomerByDocument({
       docTipo,
       docNro,
     });
 
-    const customerInfo = (customer?.docTipo === "80") 
-    ? `CUIT: ${customer.docNro} - Empresa: ${customer.companyName}` 
-    : (customer?.docTipo === "96" 
-        ? `DNI: ${customer.docNro} - Cliente: ${customer.firstName} ${customer.lastName}` 
-        : 'No se encontró información del cliente');
+    const customerInfo =
+      customer?.docTipo === "80"
+        ? `CUIT: ${customer.docNro} - Empresa: ${customer.companyName}`
+        : customer?.docTipo === "96"
+        ? `DNI: ${customer.docNro} - Cliente: ${customer.firstName} ${customer.lastName}`
+        : "No se encontró información del cliente";
 
     const operationData = {
       products: products,

@@ -1,4 +1,5 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
@@ -32,9 +33,20 @@ import ButtonWithLoading from "../common/ButtonWithLoading";
 import { useSales } from "@/context/salesContext";
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import { ICompany } from "@/services/companies/CompaniesServices";
 import useCustomer from "@/hooks/useCustomer";
 import { Badge } from "../ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { ICompany } from "@/services/companies/CompaniesServices";
 
 const formSchema = z.object({
   products: z.array(
@@ -44,17 +56,17 @@ const formSchema = z.object({
       finalPrice: z.number().positive(),
     })
   ),
+  docTipo: z.number(),
+  docNro: z.number(),
   discount: z.number().nonnegative(),
   cbteTipo: z.number(),
   ptoVta: z.number(),
   concepto: z.number(),
   importeGravado: z.number().nonnegative(),
   importeExentoIva: z.number().nonnegative(),
-  docNro: z.number().int(),
-  docTipo: z.number(),
   iva: z.number().nonnegative(),
   outputDir: z.string(),
-  paymentType: z.enum(["cash", "credit_card", "transfer"]),
+  paymentType: z.enum(["credit", "debit", "cash", "mercadoPago"]),
   isdelivery: z.boolean(),
   deliveryAddress: z.string().optional(),
   comments: z.string().optional(),
@@ -68,27 +80,32 @@ type AfipFormProps = {
 };
 
 export default function AfipForm({ company, companyId }: AfipFormProps) {
-  const { getTotalPrice, discount } = useSales();
-  const [docNroCompleted, setDocNroCompleted] = useState(false);
-
-  const total = getTotalPrice();
+  const {
+    products,
+    totalPrice,
+    discount,
+    totalPriceWithDiscount,
+    setDiscount,
+    setProducts,
+  } = useSales();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      products: [],
-      discount: discount,
+      products,
+      discount,
 
       // Client
       docTipo: 80,
+      docNro: 0,
 
       // Invoice
       cbteTipo: 1,
       concepto: 1,
       paymentType: "cash",
-      importeGravado: total,
+      importeGravado: totalPrice(),
       importeExentoIva: 0,
-      iva: 0,
+      iva: 21,
 
       // Company
       outputDir: "",
@@ -98,10 +115,6 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
       isdelivery: false,
       deliveryAddress: "",
       comments: "",
-
-      // User
-      branchId: "",
-      userId: "",
     },
   });
 
@@ -118,7 +131,6 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
     companyId,
     docNro,
     docTipo,
-    docNroCompleted,
   });
 
   const customerName =
@@ -128,24 +140,14 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
       ? `${customer?.firstName} ${customer?.lastName}`
       : "";
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      setDocNroCompleted(true);
-    }
-  };
-
-  const handleBlur = () => {
-    setDocNroCompleted(true);
-  };
-
   useEffect(() => {
     const iva = cbteTipo === 1 || cbteTipo === 6 ? 21 : 0;
     form.setValue("iva", iva);
   }, [cbteTipo, form]);
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
-    // Aquí puedes hacer una llamada a una API para enviar los datos
+    const request = data;
+    console.log("data:", request);
   };
 
   const { isDirty, isValid, isSubmitting } = form.formState;
@@ -218,7 +220,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                         onValueChange={(value) =>
                           field.onChange(parseInt(value, 10))
                         }
-                        defaultValue={field.value.toString()}
+                        value={field.value?.toString()}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -243,16 +245,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                   <FormItem>
                     <FormLabel>Número de Documento</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onBlur={handleBlur}
-                        onKeyPress={handleKeyPress}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          setDocNroCompleted(false);
-                        }}
-                      />
+                      <Input type="number" {...field} value={docNro} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -298,6 +291,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                           field.onChange(parseInt(value, 10))
                         }
                         defaultValue={field.value.toString()}
+                        value={field.value.toString()}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -326,6 +320,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                           field.onChange(parseInt(value, 10))
                         }
                         defaultValue={field.value.toString()}
+                        value={field.value.toString()}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -354,6 +349,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                       <Select
                         onValueChange={(value) => field.onChange(value)}
                         defaultValue={field.value}
+                        value={field.value}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -380,7 +376,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                     <FormLabel>Importe Gravado</FormLabel>
                     <div className="flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background">
                       <div className="truncate overflow-hidden whitespace-nowrap w-56">
-                        {total}
+                        {totalPriceWithDiscount()}
                       </div>
                     </div>
                   </FormItem>
@@ -392,7 +388,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                       <FormItem>
                         <FormLabel>Importe Exento IVA</FormLabel>
                         <FormControl>
-                          <Input type="number" {...field} />
+                          <Input type="number" {...field} value={field.value} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -406,7 +402,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                       <FormItem>
                         <FormLabel>IVA</FormLabel>
                         <FormControl>
-                          <Input type="number" {...field} />
+                          <Input type="number" {...field} value={field.value} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -481,17 +477,46 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
               )}
             />
 
-            <CardFooter>
-            <ButtonWithLoading
-              loading={isSubmitting}
-              loadingText="Emitiendo..."
-              variant="default"
-              size={"default"}
-              type="submit"
-              disabled={submitDisabled || isSubmitting}
-            >
-              Emitir factura
-            </ButtonWithLoading>
+            <CardFooter className="flex justify-end gap-4">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline">Resetear</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      ¿Estás seguro de que quieres resetear?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Esta acción no puede deshacerse. Esto reseteará el
+                      formulario y limpiará todos los campos.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        form.reset();
+                        setDiscount(0);
+                        setProducts([]);
+                      }}
+                    >
+                      Confirmar
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              <ButtonWithLoading
+                loading={isSubmitting}
+                loadingText="Emitiendo..."
+                variant="default"
+                size={"default"}
+                type="submit"
+                disabled={submitDisabled || isSubmitting}
+              >
+                Emitir factura
+              </ButtonWithLoading>
             </CardFooter>
           </form>
         </Form>

@@ -11,10 +11,13 @@ import { useSales } from "@/context/salesContext";
 import { Input } from "../ui/input";
 
 export default function SalesInfo() {
-  const { products, discount, getTotalPrice, setDiscount } = useSales();
-
-  const finalPrice = getTotalPrice();
-  const discountedPrice = finalPrice * (1 - discount / 100);
+  const {
+    products,
+    discount,
+    totalPrice,
+    totalPriceWithDiscount,
+    setDiscount,
+  } = useSales();
 
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
@@ -53,7 +56,7 @@ export default function SalesInfo() {
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Precio Total</span>
-            <span>$ {finalPrice.toFixed(2)}</span>
+            <span>$ {totalPrice()}</span>
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Descuento</span>
@@ -62,7 +65,7 @@ export default function SalesInfo() {
           <div className="flex justify-between border-t py-4 font-bold md:text-xl">
             <span className="text-primary">Total a pagar</span>
             <Badge variant="default" className="md:text-lg">
-              $ {discountedPrice.toFixed(2)}
+              $ {totalPriceWithDiscount()}
             </Badge>
           </div>
         </div>

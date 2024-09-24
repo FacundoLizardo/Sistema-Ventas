@@ -1,3 +1,4 @@
+import { WhereOptions } from "sequelize";
 import { Customer } from "../db";
 import {
   CustomerCreationInterface,
@@ -6,27 +7,45 @@ import {
 import { serviceError } from "../utils/serviceError";
 
 class CustomerService {
-  async getCustomer({
+  async getCustomers({
     companyId,
     docTipo,
     docNro,
+    name,
+    id,
   }: {
     companyId?: string;
     docTipo?: string;
     docNro?: string;
-  }): Promise<CustomerInterface | null> {
+    name?: string;
+    id?: string;
+  }): Promise<CustomerInterface[]> {
     try {
-      const customer = await Customer.findOne({
-        where: {
-          docTipo: String(docTipo),
-          docNro: String(docNro),
-          companyId: companyId,
-        },
+      const whereClause: WhereOptions = { companyId };
+
+      if (name) {
+        whereClause.name = name;
+      }
+
+      if (docNro) {
+        whereClause.docNro = docNro;
+      }
+
+      if (docTipo) {
+        whereClause.docTipo = docTipo;
+      }
+
+      if (id) {
+        whereClause.id = id;
+      }
+
+      const customers = await Customer.findAll({
+        where: whereClause,
       });
 
-      return customer
-        ? (customer.get({ plain: true }) as CustomerInterface)
-        : null;
+      return customers
+        ? customers.map((customerObj) => customerObj.get({ plain: true }))
+        : [];
     } catch (error) {
       serviceError(error);
     }
@@ -48,15 +67,6 @@ class CustomerService {
       return customer
         ? (customer.get({ plain: true }) as CustomerInterface)
         : null;
-    } catch (error) {
-      serviceError(error);
-    }
-  }
-
-  async getCustomers(): Promise<CustomerInterface[]> {
-    try {
-      const customers = await Customer.findAll();
-      return customers.map((customerObj) => customerObj.get({ plain: true }));
     } catch (error) {
       serviceError(error);
     }

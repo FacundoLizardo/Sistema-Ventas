@@ -7,18 +7,22 @@ import { toast } from "sonner";
 type ContextType = {
   products: AfipProducts[];
   discount: number;
+  setProducts: (products: AfipProducts[]) => void;
   addProduct: (product: AfipProducts) => void;
   removeProduct: (productId: string) => void;
-  getTotalPrice: () => number;
+  totalPrice: () => number;
+  totalPriceWithDiscount: () => number;
   setDiscount: (discount: number) => void;
 };
 
 const SalesContext = createContext<ContextType>({
   products: [],
   discount: 0,
+  setProducts: () => {},
   addProduct: () => {},
   removeProduct: () => {},
-  getTotalPrice: () => 0,
+  totalPrice: () => 0,
+  totalPriceWithDiscount: () => 0,
   setDiscount: () => {},
 });
 
@@ -50,11 +54,19 @@ export const SalesContextProvider = ({ children }: { children: ReactNode }) => {
     toast.success("Producto eliminado correctamente");
   };
 
-  const getTotalPrice = () => {
+  const totalPrice = () => {
     return products.reduce(
       (total, product) => total + (product.finalPrice || 0),
       0
     );
+  };
+  
+  const totalPriceWithDiscount = () => {
+    const total = totalPrice();
+  
+    const discountedTotal = total - (total * discount) / 100;
+  
+    return discountedTotal;
   };
 
   return (
@@ -63,7 +75,9 @@ export const SalesContextProvider = ({ children }: { children: ReactNode }) => {
         products,
         discount,
         addProduct,
-        getTotalPrice,
+        setProducts,
+        totalPrice,
+        totalPriceWithDiscount,
         removeProduct,
         setDiscount,
       }}
