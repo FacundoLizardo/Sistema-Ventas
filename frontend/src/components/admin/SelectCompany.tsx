@@ -12,6 +12,7 @@ import {
 import { Input } from '../ui/input';
 import { ICompany } from '@/services/companies/CompaniesServices';
 import { Badge } from '../ui/badge';
+import { CompanyCardContainer } from './company/CompanyCardContainer';
 
 export default function SelectCompany({ companies }: { companies: ICompany[] }) {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -46,7 +47,7 @@ export default function SelectCompany({ companies }: { companies: ICompany[] }) 
         </div>
       </CardContent>
       <CardFooter>
-        {filteredCompanies.length > 0 ? (
+        {/* {filteredCompanies.length > 0 ? (
           <ul>
             {filteredCompanies.map(company => (
               <li key={company.id} className="py-2">
@@ -58,7 +59,8 @@ export default function SelectCompany({ companies }: { companies: ICompany[] }) 
           </ul>
         ) : (
           <p>No se encontraron resultados</p>
-        )}
+        )} */}
+        <CompanyCardContainer companies={filteredCompanies}/>
       </CardFooter>
     </Card>
   );
