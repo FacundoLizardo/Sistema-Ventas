@@ -1,19 +1,18 @@
 "use client";
 
+import { AfipProducts } from "@/services/products/ProductsServices";
 import {
   createContext,
   useContext,
   useState,
   ReactNode,
-  useEffect,
 } from "react";
-import { AfipProducts } from "@/services/products/ProductsServices";
 import { toast } from "sonner";
 
 type ContextType = {
-  products: AfipProducts[];
+  productsSelected: AfipProducts[];
   discount: number;
-  setProducts: (products: AfipProducts[]) => void;
+  setProducts: (productsSelected: AfipProducts[]) => void;
   addProduct: (product: AfipProducts) => void;
   removeProduct: (productId: string) => void;
   totalPrice: () => number;
@@ -22,7 +21,7 @@ type ContextType = {
 };
 
 const SalesContext = createContext<ContextType>({
-  products: [],
+  productsSelected: [],
   discount: 0,
   setProducts: () => {},
   addProduct: () => {},
@@ -33,15 +32,8 @@ const SalesContext = createContext<ContextType>({
 });
 
 export const SalesContextProvider = ({ children }: { children: ReactNode }) => {
-  const [products, setProducts] = useState<AfipProducts[]>(() => {
-    const storedProducts = localStorage.getItem("products");
-    return storedProducts ? JSON.parse(storedProducts) : [];
-  });
-
-  const [discount, setDiscount] = useState<number>(() => {
-    const storedDiscount = localStorage.getItem("discount");
-    return storedDiscount ? parseFloat(storedDiscount) : 0;
-  });
+  const [productsSelected, setProducts] = useState<AfipProducts[]>([]);
+  const [discount, setDiscount] = useState<number>(0);
 
   const addProduct = (product: AfipProducts) => {
     setProducts((prevProducts) => [...prevProducts, product]);
@@ -68,7 +60,7 @@ export const SalesContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const totalPrice = () => {
-    return products.reduce(
+    return productsSelected.reduce(
       (total, product) => total + (product.finalPrice || 0),
       0
     );
@@ -82,18 +74,10 @@ export const SalesContextProvider = ({ children }: { children: ReactNode }) => {
     return discountedTotal;
   };
 
-  useEffect(() => {
-    localStorage.setItem("products", JSON.stringify(products));
-  }, [products]);
-
-  useEffect(() => {
-    localStorage.setItem("discount", discount.toString());
-  }, [discount]);
-
   return (
     <SalesContext.Provider
       value={{
-        products,
+        productsSelected,
         discount,
         addProduct,
         setProducts,

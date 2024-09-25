@@ -30,6 +30,7 @@ export async function issueInvoice({ req }: { req: Request }) {
     branchId,
     userId,
   } = req.body;
+  console.log(" issueInvoice", req.body);
   const { companyId } = req.params;
 
   const sequelize = Product.sequelize as Sequelize;

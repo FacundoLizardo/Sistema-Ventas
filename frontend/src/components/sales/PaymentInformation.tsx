@@ -21,27 +21,26 @@ import {
   AlertDialogDescription,
 } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
-import { useAfip } from "@/context/afipContext";
-import Link from "next/link";
+import { UseFormReturn } from "react-hook-form";
+import { FormValues } from "./SalesContainer";
 
 type SalesInfoProps = {
-  companyId: string;
-  locale: string;
+  form: UseFormReturn<FormValues>;
+  handleView: () => void;
 };
 
 export default function PaymentInformation({
-  locale,
-  companyId,
+  form,
+  handleView,
 }: SalesInfoProps) {
   const {
-    products,
+    productsSelected,
     discount,
     totalPrice,
     totalPriceWithDiscount,
     setDiscount,
     setProducts,
   } = useSales();
-  const { form } = useAfip();
 
   const IVA = form.getValues("iva");
   const totalToPay = IVA
@@ -52,7 +51,7 @@ export default function PaymentInformation({
   const submitDisabled = !isDirty || !isValid;
 
   return (
-    <div className="flex flex-col justify-between gap-4"> 
+    <div className="flex flex-col justify-between gap-4">
       <Card>
         <CardHeader>
           <CardTitle>Información de Pago</CardTitle>
@@ -64,7 +63,7 @@ export default function PaymentInformation({
           <div className="flex flex-col space-y-2">
             <div className="flex justify-between">
               <span className="font-semibold">Cantidad de Productos</span>
-              <span>{products.length}</span>
+              <span>{productsSelected.length}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold">Precio Total</span>
@@ -121,15 +120,13 @@ export default function PaymentInformation({
           </AlertDialogContent>
         </AlertDialog>
 
-        <Button variant="default" type="button" disabled={submitDisabled}>
-          <Link
-            href={{
-              pathname: `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/${companyId}/sales/confirmation`,
-            }}
-            passHref
-          >
-            Siguiente
-          </Link>
+        <Button
+          variant="default"
+          type="button"
+          disabled={submitDisabled}
+          onClick={handleView}
+        >
+          Siguiente
         </Button>
       </CardFooter>
     </div>

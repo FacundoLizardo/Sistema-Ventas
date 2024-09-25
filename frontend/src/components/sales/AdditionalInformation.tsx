@@ -19,11 +19,17 @@ import {
   Form,
 } from "../ui/form";
 import { Textarea } from "../ui/textarea";
-import { useAfip } from "@/context/afipContext";
+import { UseFormReturn } from "react-hook-form";
+import { FormValues } from "./SalesContainer";
 
-export default function AdditionalInformation() {
+type AdditionalInformationProps = {
+  form: UseFormReturn<FormValues>;
+};
+
+export default function AdditionalInformation({
+  form,
+}: AdditionalInformationProps) {
   const { discount, setDiscount } = useSales();
-  const { form } = useAfip();
 
   const isdelivery = form.watch("isdelivery");
 

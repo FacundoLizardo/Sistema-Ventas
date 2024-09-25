@@ -30,26 +30,27 @@ import { Badge } from "../ui/badge";
 import { ICompany } from "@/services/companies/CompaniesServices";
 import useCustomer from "@/hooks/useCustomer";
 import { SearchIcon } from "lucide-react";
-import { useAfip } from "@/context/afipContext";
 import { useSales } from "@/context/salesContext";
+import { UseFormReturn } from "react-hook-form";
+import { FormValues } from "./SalesContainer";
 
 type AfipFormProps = {
+  form: UseFormReturn<FormValues>;
   company: ICompany;
   companyId: string;
 };
 
-export default function AfipForm({ company, companyId }: AfipFormProps) {
+export default function AfipForm({ company, companyId, form }: AfipFormProps) {
   const { loading, customer, error, loadCustomer, setError, setCustomer } =
     useCustomer();
   const { totalPriceWithDiscount } = useSales();
-  const { form } = useAfip();
   const cbteTipo = form.watch("cbteTipo");
   const docNro = (form.watch("docNro") || "").toString();
   const docTipo = (form.watch("docTipo") || "").toString();
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      event.preventDefault(); 
+      event.preventDefault();
       loadCustomer(companyId, docTipo, docNro);
     }
   };
@@ -67,7 +68,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
 
   useEffect(() => {
     if (docTipo) {
-      form.setValue("docNro", 0);
+      form.setValue("docNro", "");
     }
   }, [docTipo, form]);
 
@@ -140,9 +141,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                     <FormLabel>Tipo de Documento</FormLabel>
                     <FormControl>
                       <Select
-                        onValueChange={(value) =>
-                          field.onChange(parseInt(value, 10))
-                        }
+                        onValueChange={field.onChange}
                         value={field.value?.toString()}
                       >
                         <SelectTrigger>
@@ -170,15 +169,15 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                     <FormControl>
                       <div className="relative w-full">
                         <Input
-                          type="number"
+                          type="string"
                           {...field}
                           onChange={(e) => {
-                            const value = Number(e.target.value);
+                            const value = e.target.value;
                             field.onChange(value);
                             setError(null);
                             setCustomer(null);
                           }}
-                          value={field.value === 0 ? "" : field.value}
+                          value={field.value === "0" ? "" : field.value}
                           onKeyDown={handleKeyPress}
                         />
                         <button

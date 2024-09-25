@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { useAfip } from "@/context/afipContext";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
@@ -25,30 +24,40 @@ import {
   TableCell,
   Table,
 } from "../ui/table";
-import { useRouter } from "next/navigation";
 import { Form } from "../ui/form";
+import { UseFormReturn } from "react-hook-form";
+import { FormValues } from "./SalesContainer";
+import { IAfip } from "@/services/afip/AfipServices";
 
 type InvoiceSummaryProps = {
   userBranch: string;
-  userName: string;
+  userName?: string;
+  form: UseFormReturn<FormValues>;
+  onSubmit: (data: IAfip) => void;
+  handleView: () => void;
 };
 
 export default function InvoiceSummary({
   userBranch,
   userName,
+  form,
+  onSubmit,
+  handleView
 }: InvoiceSummaryProps) {
-  const router = useRouter();
   const { totalPrice, totalPriceWithDiscount } = useSales();
 
-  const { form, onSubmit } = useAfip();
-
   const operationData = form.getValues();
-console.log("operationData", operationData);
+  console.log("operationData  ", operationData);
 
   const productCount: { [key: string]: number } = {};
 
-  operationData.products.forEach((product) => {
-    productCount[product.id] = (productCount[product.id] || 0) + 1;
+  const products = operationData.products || [];
+  products?.forEach((product) => {
+    if (productCount[product.id]) {
+      productCount[product.id] += 1;
+    } else {
+      productCount[product.id] = 1;
+    }
   });
 
   const groupedProducts = Object.keys(productCount).map((id) => {
@@ -184,13 +193,13 @@ console.log("operationData", operationData);
                       Tipo de Documento
                     </span>
                     <span>
-                      {docTipo === 80
+                      {docTipo === "80"
                         ? "CUIT"
-                        : docTipo === 86
+                        : docTipo === "86"
                         ? "CUIL"
-                        : docTipo === 96
+                        : docTipo === "96"
                         ? "DNI"
-                        : docTipo === 99
+                        : docTipo === "99"
                         ? "Consumidor Final"
                         : "Desconocido"}
                     </span>
@@ -199,7 +208,7 @@ console.log("operationData", operationData);
                     <span className="text-muted-foreground">
                       Número de Documento
                     </span>
-                    <span>{docNro < 1 ? "No ingresado" : docNro}</span>
+                    <span>{!docNro ? "No ingresado" : docNro}</span>
                   </li>
                 </ul>
                 <Separator className="my-2" />
@@ -347,7 +356,11 @@ console.log("operationData", operationData);
               </div>
             </CardContent>
             <CardFooter className="flex justify-center gap-4 bg-muted/50 px-3 py-2 md:px-6 md:py-3 rounded-md">
-              <Button variant="outline" type="button" onClick={() => router.back()}>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={handleView}
+              >
                 Volver
               </Button>
 

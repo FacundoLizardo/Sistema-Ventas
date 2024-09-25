@@ -7,8 +7,8 @@ export interface IAfip {
   discount?: number;
 
   // Client
-  docTipo: number;
-  docNro: number;
+  docTipo: string;
+  docNro: string;
 
   // Invoice
   cbteTipo: number;

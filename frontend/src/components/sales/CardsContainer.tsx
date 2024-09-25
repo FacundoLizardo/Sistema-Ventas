@@ -15,11 +15,11 @@ import { Button } from "../ui/button";
 import { CiInboxIn } from "react-icons/ci";
 
 export const CardsContainer = () => {
-  const { products, addProduct, removeProduct } = useSales();
+  const { productsSelected, addProduct, removeProduct } = useSales();
 
   const productCount: { [key: string]: number } = {};
 
-  products.forEach((product) => {
+  productsSelected.forEach((product) => {
     if (productCount[product.id]) {
       productCount[product.id] += 1;
     } else {
@@ -28,7 +28,7 @@ export const CardsContainer = () => {
   });
 
   const groupedProducts = Object.keys(productCount).map((id) => {
-    const product = products.find((p) => p.id === id);
+    const product = productsSelected.find((p) => p.id === id);
     return {
       ...product!,
       quantity: productCount[id],

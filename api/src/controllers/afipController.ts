@@ -5,6 +5,7 @@ import afipService from "../services/AfipServices";
 class AfipController {
   postAfip = async (req: Request, res: Response) => {
     const { cbteTipo } = req.body;
+console.log("body", req.body);
 
     try {
       let afipInvoice;
