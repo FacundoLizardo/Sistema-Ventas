@@ -5,7 +5,7 @@ import { IProduct } from "@/services/products/ProductsServices";
 import SelectedBranch from "../common/SelectedBranch";
 import AfipForm from "./AfipForm";
 import SalesInfo from "./SalesInfo";
-import { ICompany } from "@/services/companies/CompaniesServices";
+import { ICompany } from "@/services/companies/companiesServices";
 
 export default async function SalesContainer({
   products,

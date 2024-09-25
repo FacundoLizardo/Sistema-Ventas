@@ -1,4 +1,4 @@
-import { ICompany } from "@/services/companies/CompaniesServices";
+import { ICompany } from "@/services/companies/companiesServices";
 
 export default function CompanyCard({ company: company }: { company: ICompany }) {
   return (
@@ -7,7 +7,6 @@ export default function CompanyCard({ company: company }: { company: ICompany })
           <div className="text-card-foreground font-medium">
             {company.name}
           </div>
-        
       </div>
     </div>
   );

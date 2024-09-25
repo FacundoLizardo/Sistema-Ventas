@@ -1,13 +1,14 @@
 import { accessToken } from "../accessToken";
 import { getCompaniesService } from "./getCompaniesService";
 import { getCompanyService } from "./getCompanyService";
+import { postCompanyService } from "./postCompanyService";
 
 export interface ICompany {
   id: string;
   name: string;
   address?: string;
   country?: string;
-  phoneNumbers?: string;
+  phoneNumbers?: string[];
   isActive: boolean;
 
   // Campos adicionales
@@ -19,7 +20,9 @@ export interface ICompany {
   iibb?: string; // IIBB
 }
 
-class CompaniesServices {
+export interface ICompanyCreate extends Omit<ICompany, "id">{}
+
+class companiesServices {
   static async getToken() {
     try {
       const token = accessToken();
@@ -53,6 +56,20 @@ class CompaniesServices {
       throw error;
     }
   }
+
+  static async post(params: ICompanyCreate) {
+    try {
+      const token = await this.getToken();
+
+      const response = await postCompanyService( params, token );
+      return response;
+    } catch (error) {
+      console.error("Error creating company:", error);
+      throw error;
+    }
+  }
 }
 
-export default CompaniesServices;
+
+
+export default companiesServices;

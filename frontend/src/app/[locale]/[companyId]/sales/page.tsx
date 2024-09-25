@@ -1,5 +1,5 @@
 import SalesContainer from "@/components/sales/SalesContainer";
-import CompaniesServices from "@/services/companies/CompaniesServices";
+import CompaniesServices from "@/services/companies/companiesServices";
 import ProductsServices from "@/services/products/ProductsServices";
 import UsersServices from "@/services/user/UsersServices";
 

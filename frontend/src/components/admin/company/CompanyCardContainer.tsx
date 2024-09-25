@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { ICompany } from "@/services/companies/CompaniesServices"
+import { ICompany } from "@/services/companies/companiesServices"
 import CompanyCard from "./CompanyCard"
 
 export const CompanyCardContainer = ({ companies }: { companies: ICompany[] }) => {

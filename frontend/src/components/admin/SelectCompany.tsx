@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '../ui/card';
 import { Input } from '../ui/input';
-import { ICompany } from '@/services/companies/CompaniesServices';
+import { ICompany } from '@/services/companies/companiesServices';
 import { Badge } from '../ui/badge';
 import { CompanyCardContainer } from './company/CompanyCardContainer';
 import { CreateCompanyDialog } from './company/CreateCompanyDialog';

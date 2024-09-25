@@ -30,6 +30,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import companiesServices from "@/services/companies/companiesServices";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z.string().min(3, { message: "El nombre debe ser más largo." }),
@@ -49,6 +52,9 @@ const formSchema = z.object({
 });
 
 export default function CreateCompanyForm() {
+
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,20 +67,19 @@ export default function CreateCompanyForm() {
     },
   });
 
-  console.log(form.watch());
-
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log(data);
     
-    /* const request = postCompanyService({ ...data });
+     const request = companiesServices.post( data );
     toast.promise(request, {
       loading: "Creando la compañía...",
       success: () => {
         form.reset();
+        router.push(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/es/admin`);
         return "Compañía creada exitosamente.";
       },
       error: "Error al crear la compañía.",
-    }); */
+    }); 
   };
 
   const addPhoneNumber = () => {

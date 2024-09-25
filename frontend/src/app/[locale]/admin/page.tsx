@@ -1,5 +1,5 @@
 import SelectCompany from "@/components/admin/SelectCompany";
-import CompaniesServices from "@/services/companies/CompaniesServices";
+import CompaniesServices from "@/services/companies/companiesServices";
 import UsersServices from "@/services/user/UsersServices";
 import { redirect } from "next/navigation";
 

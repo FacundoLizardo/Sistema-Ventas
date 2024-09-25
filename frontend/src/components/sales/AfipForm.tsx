@@ -32,7 +32,7 @@ import ButtonWithLoading from "../common/ButtonWithLoading";
 import { useSales } from "@/context/salesContext";
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import { ICompany } from "@/services/companies/CompaniesServices";
+import { ICompany } from "@/services/companies/companiesServices";
 import useCustomer from "@/hooks/useCustomer";
 import { Badge } from "../ui/badge";
 
