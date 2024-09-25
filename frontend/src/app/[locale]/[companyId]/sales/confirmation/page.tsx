@@ -1,37 +1,34 @@
-import SalesContainer from "@/components/sales/SalesContainer";
+// /sales/confirmation/page.tsx
+import InvoiceSummary from "@/components/sales/InvoiceSummary";
 import { AfipContextProvider } from "@/context/afipContext";
 import { SalesContextProvider } from "@/context/salesContext";
 import CompaniesServices from "@/services/companies/CompaniesServices";
-import ProductsServices from "@/services/products/ProductsServices";
 import UsersServices from "@/services/user/UsersServices";
 
-export default async function Page({
-  params: { locale, companyId },
+export default async function ConfirmationPage({
+  params: { companyId },
 }: {
   params: {
-    locale: string;
     companyId: string;
   };
 }) {
   const { userId, branchId } = await UsersServices.userSession();
 
-  const [userData, productsData, companyData] = await Promise.all([
+  const [userData, companyData] = await Promise.all([
     UsersServices.get(userId),
-    ProductsServices.getAll({ companyId, branchId }),
     CompaniesServices.get(companyId),
   ]);
 
   const userBranchPtoVta = userData.user.branch.ptoVta;
-  
   const userBranchName = userData.user.branch.name;
   const userBranch = userData?.user?.branch
     ? `${userBranchPtoVta} - ${userBranchName}`
     : "";
-  const products = productsData.products;
   const company = companyData.company;
+  const userName = `${userData.user.firstName} ${userData.user.lastName}`;
 
   return (
-    <main className="w-full">
+    <main>
       <SalesContextProvider>
         <AfipContextProvider
           company={company}
@@ -40,13 +37,7 @@ export default async function Page({
           branchId={branchId}
           companyId={companyId}
         >
-          <SalesContainer
-            products={products}
-            userBranch={userBranch}
-            company={company}
-            companyId={companyId}
-            locale={locale}
-          />
+          <InvoiceSummary userBranch={userBranch} userName={userName} />
         </AfipContextProvider>
       </SalesContextProvider>
     </main>

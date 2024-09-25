@@ -78,17 +78,16 @@ export default new BranchServices();
 
 /* 
     {
-        "afipId": "1234567289",
-        "ptoVta": 213221,
-        "name": "Sucursal Principal",
-        "location": "Ciudad Principal",
-        "isStorage": false,
-        "enable": true,
-        "manager": [
-            "c1d74da3-634a-4d2d-a5a1-72e68d20f0d7",
-            "e3b55df8-871c-4e0b-bf61-9f3a19fd0e99"
-        ],
-        "hours": "9:00 AM - 6:00 PM",
-        "phoneNumber": "+1234567890"
-    }
+    "afipId": "6677889900",
+    "ptoVta": 1,
+    "name": "Sucursal 1",
+    "location": "Zona Rural",
+    "isStorage": true,
+    "enable": false,
+    "manager": [
+      "2a3846d0-60c4-4068-aab1-fe0f6499eef7"
+    ],
+    "hours": "8:00 AM - 4:00 PM",
+    "phoneNumber": "+6677889900"
+  }
  */

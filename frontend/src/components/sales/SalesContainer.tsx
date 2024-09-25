@@ -4,39 +4,33 @@ import { IProduct } from "@/services/products/ProductsServices";
 
 import SelectedBranch from "../common/SelectedBranch";
 import AfipForm from "./AfipForm";
-import SalesInfo from "./SalesInfo";
+import PaymentInformation from "./PaymentInformation";
 import { ICompany } from "@/services/companies/CompaniesServices";
+import AdditionalInformation from "./AdditionalInformation";
 
 export default async function SalesContainer({
   products,
   userBranch,
   company,
   companyId,
-  userId,
-  branchId,
-  userBranchPtoVta,
+  locale,
 }: {
   products: IProduct[];
   userBranch: string;
   company: ICompany;
   companyId: string;
-  userId: string;
-  branchId: string;
-  userBranchPtoVta: string;
+  locale: string;
 }) {
   return (
     <div className="flex flex-col gap-4">
       <SelectedBranch branch={userBranch} />
       <SaleSeachBar products={products} />
       <CardsContainer />
-      <SalesInfo />
-      <AfipForm
-        company={company}
-        companyId={companyId}
-        userId={userId}
-        branchId={branchId}
-        userBranchPtoVta={userBranchPtoVta}
-      />
+      <AfipForm company={company} companyId={companyId} />
+      <div className="grid md:grid-cols-2 gap-4">
+        <AdditionalInformation />
+        <PaymentInformation locale={locale} companyId={companyId} />
+      </div>
     </div>
   );
 }

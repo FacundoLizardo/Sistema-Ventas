@@ -1,11 +1,15 @@
 "use server";
 
+import { IAfip } from "./AfipServices";
+
 export const postAfipService = async ({
   token,
   companyId,
+  params,
 }: {
   token: string;
   companyId: string;
+  params: IAfip;
 }) => {
   try {
     if (!token) {
@@ -20,6 +24,7 @@ export const postAfipService = async ({
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify(params),
       }
     );
 

@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { AfipProducts } from "@/services/products/ProductsServices";
 import { toast } from "sonner";
 
@@ -27,8 +33,15 @@ const SalesContext = createContext<ContextType>({
 });
 
 export const SalesContextProvider = ({ children }: { children: ReactNode }) => {
-  const [products, setProducts] = useState<AfipProducts[]>([]);
-  const [discount, setDiscount] = useState<number>(0);
+  const [products, setProducts] = useState<AfipProducts[]>(() => {
+    const storedProducts = localStorage.getItem("products");
+    return storedProducts ? JSON.parse(storedProducts) : [];
+  });
+
+  const [discount, setDiscount] = useState<number>(() => {
+    const storedDiscount = localStorage.getItem("discount");
+    return storedDiscount ? parseFloat(storedDiscount) : 0;
+  });
 
   const addProduct = (product: AfipProducts) => {
     setProducts((prevProducts) => [...prevProducts, product]);
@@ -60,14 +73,22 @@ export const SalesContextProvider = ({ children }: { children: ReactNode }) => {
       0
     );
   };
-  
+
   const totalPriceWithDiscount = () => {
     const total = totalPrice();
-  
+
     const discountedTotal = total - (total * discount) / 100;
-  
+
     return discountedTotal;
   };
+
+  useEffect(() => {
+    localStorage.setItem("products", JSON.stringify(products));
+  }, [products]);
+
+  useEffect(() => {
+    localStorage.setItem("discount", discount.toString());
+  }, [discount]);
 
   return (
     <SalesContext.Provider

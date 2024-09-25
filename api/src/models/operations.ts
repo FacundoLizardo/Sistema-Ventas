@@ -106,9 +106,9 @@ export default (sequelize: Sequelize) => {
 				allowNull: false,
 				defaultValue: "cash",
 				validate: {
-					isIn: [["credit", "debit", "cash", "mercadoPago"]],
+				  isIn: [["credit", "debit", "cash", "mercadoPago", "transfer"]],
 				},
-			},
+			  },
 			invoiceNumber: {
 				type: DataTypes.STRING,
 				allowNull: true,
