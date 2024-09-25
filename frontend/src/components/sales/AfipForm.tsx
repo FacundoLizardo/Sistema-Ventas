@@ -33,7 +33,6 @@ import ButtonWithLoading from "../common/ButtonWithLoading";
 import { useSales } from "@/context/salesContext";
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import useCustomer from "@/hooks/useCustomer";
 import { Badge } from "../ui/badge";
 import {
   AlertDialog,
@@ -47,6 +46,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ICompany } from "@/services/companies/CompaniesServices";
+import useCustomer from "@/hooks/useCustomer";
+import { SearchIcon } from "lucide-react";
 
 const formSchema = z.object({
   products: z.array(
@@ -56,30 +57,54 @@ const formSchema = z.object({
       finalPrice: z.number().positive(),
     })
   ),
+  discount: z.number().nonnegative().optional(),
+
+  // Client
   docTipo: z.number(),
-  docNro: z.number(),
-  discount: z.number().nonnegative(),
+  docNro: z.number().min(1),
+
+  // Invoice
   cbteTipo: z.number(),
-  ptoVta: z.number(),
   concepto: z.number(),
+  paymentType: z.enum(["credit", "debit", "cash", "mercadoPago"]),
   importeGravado: z.number().nonnegative(),
   importeExentoIva: z.number().nonnegative(),
   iva: z.number().nonnegative(),
-  outputDir: z.string(),
-  paymentType: z.enum(["credit", "debit", "cash", "mercadoPago"]),
-  isdelivery: z.boolean(),
+
+  // Company
+  outputDir: z.string().optional().default("/"),
+  ptoVta: z.number(),
+  razonSocial: z.string(),
+  iibb: z.string(),
+  domicilioFiscal: z.string(),
+  inicioActividad: z.string(),
+  regimenTributario: z.string(),
+
+  // Info additional
+  isdelivery: z.boolean().optional().default(false),
   deliveryAddress: z.string().optional(),
   comments: z.string().optional(),
-  branchId: z.string().optional(),
+
+  // User
+  branchId: z.string(),
   userId: z.string(),
 });
 
 type AfipFormProps = {
   company: ICompany;
   companyId: string;
+  userId: string;
+  branchId: string;
+  userBranchPtoVta: string;
 };
 
-export default function AfipForm({ company, companyId }: AfipFormProps) {
+export default function AfipForm({
+  company,
+  companyId,
+  userId,
+  branchId,
+  userBranchPtoVta,
+}: AfipFormProps) {
   const {
     products,
     totalPrice,
@@ -88,6 +113,9 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
     setDiscount,
     setProducts,
   } = useSales();
+  const { loading, customer, error, loadCustomer, setError, setCustomer } =
+    useCustomer();
+  const [isDialogOpen, setDialogOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -109,14 +137,26 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
 
       // Company
       outputDir: "",
-      ptoVta: 1,
+      ptoVta: Number(userBranchPtoVta),
+      razonSocial: company.razonSocial,
+      iibb: company.iibb,
+      domicilioFiscal: company.domicilioFiscal,
+      inicioActividad: company.inicioActividad,
+      regimenTributario: company.regimenTributario,
 
       // Info additional
       isdelivery: false,
       deliveryAddress: "",
       comments: "",
+
+      // User
+      userId,
+      branchId,
     },
+    mode: "onChange",
   });
+
+  console.log("datos del formulario:", form.getValues());
 
   const isdelivery = useWatch({ control: form.control, name: "isdelivery" });
   const cbteTipo = useWatch({ control: form.control, name: "cbteTipo" });
@@ -127,11 +167,15 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
     useWatch({ control: form.control, name: "docTipo" }) || ""
   ).toString();
 
-  const { loading, customer } = useCustomer({
-    companyId,
-    docNro,
-    docTipo,
-  });
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      loadCustomer(companyId, docTipo, docNro);
+    }
+  };
+
+  const handleClient = () => {
+    loadCustomer(companyId, docTipo, docNro);
+  };
 
   const customerName =
     customer?.customerType === "company"
@@ -141,13 +185,47 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
       : "";
 
   useEffect(() => {
+    if (docTipo) {
+      form.setValue("docNro", 0);
+    }
+  }, [docTipo, form]);
+
+  useEffect(() => {
     const iva = cbteTipo === 1 || cbteTipo === 6 ? 21 : 0;
     form.setValue("iva", iva);
   }, [cbteTipo, form]);
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    const request = data;
-    console.log("data:", request);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    console.log("Datos enviados:", data);
+    const result = formSchema.safeParse(data);
+    console.log("Resultado de validación:", result);
+
+    if (!result.success) {
+      console.error("Errores de validación:", result.error.format());
+      return; // Detener la ejecución si hay errores
+    }
+
+    // Simular un envío con un retraso
+    console.log("Empezando el envío...");
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simula un retraso de 2 segundos
+      console.log("Factura emitida con éxito!"); // Mensaje de éxito
+    } catch (error) {
+      console.error("Error al emitir la factura:", error);
+    } finally {
+      form.reset();
+    }
+  };
+
+  const handleOpenDialog = () => {
+    setDialogOpen(true); 
+  };
+
+  const handleConfirm = () => {
+    form.handleSubmit(onSubmit)();
+    setDialogOpen(false);
+    setDiscount(0);
+    setProducts([]);
   };
 
   const { isDirty, isValid, isSubmitting } = form.formState;
@@ -245,7 +323,27 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                   <FormItem>
                     <FormLabel>Número de Documento</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} value={docNro} />
+                      <div className="relative w-full">
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            field.onChange(value);
+                            setError(null);
+                            setCustomer(null);
+                          }}
+                          value={field.value === 0 ? "" : field.value}
+                          onKeyDown={handleKeyPress}
+                        />
+                        <button
+                          className="absolute inset-y-0 right-0 flex items-center px-2"
+                          type="button"
+                          onClick={handleClient}
+                        >
+                          <SearchIcon className="text-background size-5" />
+                        </button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -262,16 +360,23 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                 >
                   <FaEdit />
                   <div className="truncate overflow-hidden whitespace-nowrap w-56">
-                    {docNro.length > 1 ? (
-                      loading ? (
-                        "Cargando cliente..."
-                      ) : customer ? (
-                        customerName
-                      ) : (
-                        <div className="flex justify-center gap-2">
-                          No encontrado <Badge variant={"default"}>Crear</Badge>
-                        </div>
-                      )
+                    {loading ? (
+                      "Cargando cliente..."
+                    ) : docNro ? (
+                      <>
+                        {!customer ? (
+                          error ? (
+                            <div className="flex justify-center gap-2">
+                              <div>{error}</div>
+                              <Badge variant={"default"}>Crear</Badge>
+                            </div>
+                          ) : (
+                            "Presione Enter o haga clic en la lupa para buscar..."
+                          )
+                        ) : (
+                          customerName
+                        )}
+                      </>
                     ) : (
                       "Ingresa un cliente"
                     )}
@@ -512,11 +617,34 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                 loadingText="Emitiendo..."
                 variant="default"
                 size={"default"}
-                type="submit"
-                disabled={submitDisabled || isSubmitting}
+                type="button" 
+                onClick={handleOpenDialog}
+                disabled={submitDisabled}
               >
                 Emitir factura
               </ButtonWithLoading>
+
+              <AlertDialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      ¿Estás seguro de que quieres emitir la factura?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Esta acción no puede deshacerse. Por favor, confirma que
+                      deseas continuar.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setDialogOpen(false)}>
+                      Cancelar
+                    </AlertDialogCancel>
+                    <AlertDialogAction onClick={handleConfirm}>
+                      Confirmar
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </CardFooter>
           </form>
         </Form>

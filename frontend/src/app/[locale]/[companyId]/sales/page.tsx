@@ -15,12 +15,14 @@ export default async function Page({
 
   const [userData, productsData, companyData] = await Promise.all([
     UsersServices.get(userId),
-    ProductsServices.getAll({companyId, branchId}),
+    ProductsServices.getAll({ companyId, branchId }),
     CompaniesServices.get(companyId),
   ]);
 
+  const userBranchPtoVta = userData.user.branch.ptoVta;
+  const userBranchName = userData.user.branch.name;
   const userBranch = userData?.user?.branch
-    ? `${userData.user.branch.ptoVta} - ${userData.user.branch.name}`
+    ? `${userBranchPtoVta} - ${userBranchName}`
     : "";
   const products = productsData.products;
   const company = companyData.company;
@@ -32,6 +34,9 @@ export default async function Page({
         userBranch={userBranch}
         company={company}
         companyId={companyId}
+        userId={userId}
+        userBranchPtoVta={userBranchPtoVta}
+        branchId={branchId}
       />
     </main>
   );

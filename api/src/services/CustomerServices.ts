@@ -19,7 +19,7 @@ class CustomerService {
     docNro?: string;
     name?: string;
     id?: string;
-  }): Promise<CustomerInterface[]> {
+  }): Promise<CustomerInterface | CustomerInterface[] | null> {
     try {
       const whereClause: WhereOptions = { companyId };
 
@@ -39,13 +39,21 @@ class CustomerService {
         whereClause.id = id;
       }
 
-      const customers = await Customer.findAll({
-        where: whereClause,
-      });
+      if (companyId && docTipo && docNro) {
+        const customer = await Customer.findOne({
+          where: whereClause,
+        });
 
-      return customers
-        ? customers.map((customerObj) => customerObj.get({ plain: true }))
-        : [];
+        return customer ? customer.get({ plain: true }) : null;
+      } else {
+        const customers = await Customer.findAll({
+          where: whereClause,
+        });
+
+        return customers
+          ? customers.map((customerObj) => customerObj.get({ plain: true }))
+          : [];
+      }
     } catch (error) {
       serviceError(error);
     }

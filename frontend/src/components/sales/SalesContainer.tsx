@@ -12,11 +12,17 @@ export default async function SalesContainer({
   userBranch,
   company,
   companyId,
+  userId,
+  branchId,
+  userBranchPtoVta,
 }: {
   products: IProduct[];
   userBranch: string;
   company: ICompany;
   companyId: string;
+  userId: string;
+  branchId: string;
+  userBranchPtoVta: string;
 }) {
   return (
     <div className="flex flex-col gap-4">
@@ -24,7 +30,13 @@ export default async function SalesContainer({
       <SaleSeachBar products={products} />
       <CardsContainer />
       <SalesInfo />
-      <AfipForm company={company} companyId={companyId} />
+      <AfipForm
+        company={company}
+        companyId={companyId}
+        userId={userId}
+        branchId={branchId}
+        userBranchPtoVta={userBranchPtoVta}
+      />
     </div>
   );
 }

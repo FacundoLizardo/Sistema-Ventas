@@ -72,7 +72,7 @@ const BranchTable = ({
           )}
         </TableBody>
       </Table>
-      <ScrollBar className="flex" /> {/* Asegúrate de que ScrollBar esté correctamente estilizado */}
+      <ScrollBar className="flex" />
     </ScrollArea>
   );
 };
