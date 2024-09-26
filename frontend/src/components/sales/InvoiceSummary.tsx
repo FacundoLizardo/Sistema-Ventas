@@ -42,9 +42,9 @@ export default function InvoiceSummary({
   userName,
   form,
   onSubmit,
-  handleView
+  handleView,
 }: InvoiceSummaryProps) {
-  const { totalPrice, totalPriceWithDiscount } = useSales();
+  const { totalPrice, totalPriceWithDiscount, discount } = useSales();
 
   const operationData = form.getValues();
   console.log("operationData  ", operationData);
@@ -75,6 +75,10 @@ export default function InvoiceSummary({
   const paymentType = operationData.paymentType;
   const comments = operationData.comments;
   const isdelivery = operationData.isdelivery;
+  const IVA = form.getValues("iva");
+  const totalToPay = IVA
+    ? totalPriceWithDiscount() * (1 + IVA / 100)
+    : totalPriceWithDiscount();
 
   const { isValid, isSubmitting } = form.formState;
 
@@ -144,19 +148,33 @@ export default function InvoiceSummary({
                 </div>
                 <Separator className="my-2" />
 
-                <div className="flex flex-col space-y-2 font-bold">
+                <div className="flex flex-col gap-1.5">
                   <div className="flex justify-between">
-                    <span>Cantidad de Productos</span>
-                    <span>{operationData.products.length}</span>
+                    <span className="font-semibold">Cantidad de Productos</span>
+                    <span>{groupedProducts.length}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Precio Total</span>
+                    <span className="font-semibold">
+                      Precio Total sin descuento
+                    </span>
                     <span>$ {totalPrice()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Descuento</span>
-                    <span>% {form.getValues().discount}</span>
+                    <span className="font-semibold">Descuento</span>
+                    <span>% {discount}</span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="font-semibold">
+                      Precio Total con descuento
+                    </span>
+                    <span>$ {totalPriceWithDiscount()}</span>
+                  </div>
+                  {IVA ? (
+                    <div className="flex justify-between">
+                      <span className="font-semibold">IVA (%)</span>
+                      <span>%{IVA || 0}</span>
+                    </div>
+                  ): null}
                 </div>
               </div>
             </CardContent>
@@ -166,7 +184,7 @@ export default function InvoiceSummary({
                   Total a pagar
                 </span>
                 <Badge variant="default" className="md:text-lg">
-                  $ {totalPriceWithDiscount().toFixed(2)}
+                  $ {totalToPay}
                 </Badge>
               </div>
             </CardFooter>
@@ -356,11 +374,7 @@ export default function InvoiceSummary({
               </div>
             </CardContent>
             <CardFooter className="flex justify-center gap-4 bg-muted/50 px-3 py-2 md:px-6 md:py-3 rounded-md">
-              <Button
-                variant="outline"
-                type="button"
-                onClick={handleView}
-              >
+              <Button variant="outline" type="button" onClick={handleView}>
                 Volver
               </Button>
 

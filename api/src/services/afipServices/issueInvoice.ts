@@ -30,7 +30,6 @@ export async function issueInvoice({ req }: { req: Request }) {
     branchId,
     userId,
   } = req.body;
-  console.log(" issueInvoice", req.body);
   const { companyId } = req.params;
 
   const sequelize = Product.sequelize as Sequelize;
@@ -68,7 +67,7 @@ export async function issueInvoice({ req }: { req: Request }) {
     let fecha_vencimiento_pago = null;
 
     // Actualizar el stock de los productos
-    await updateProductStock(products, transaction);
+    await updateProductStock(products, branchId, transaction);
 
     const lastVoucher = await afip.ElectronicBilling.getLastVoucher(
       ptoVta,
@@ -106,11 +105,11 @@ export async function issueInvoice({ req }: { req: Request }) {
       FchServDesde: fecha_servicio_desde,
       FchServHasta: fecha_servicio_hasta,
       FchVtoPago: fecha_vencimiento_pago,
-      ImpTotal: ImpTotal,
-      ImpTotConc: ImpTotConc,
-      ImpNeto: importe_gravado_con_descuento,
-      ImpOpEx: importe_exento_iva_con_descuento,
-      ImpIVA: cbteTipo === 11 ? 0 : importe_iva,
+      ImpTotal: ImpTotal.toFixed(2),
+      ImpTotConc: ImpTotConc.toFixed(2),
+      ImpNeto: importe_gravado_con_descuento.toFixed(2),
+      ImpOpEx: importe_exento_iva_con_descuento.toFixed(2),
+      ImpIVA: cbteTipo === 11 ? 0 : importe_iva.toFixed(2),
       ImpTrib: 0,
       MonId: "PES",
       MonCotiz: 1,
@@ -119,16 +118,16 @@ export async function issueInvoice({ req }: { req: Request }) {
             Iva: [
               {
                 Id: 5,
-                BaseImp: importe_gravado_con_descuento,
-                Importe: importe_iva,
+                BaseImp: importe_gravado_con_descuento.toFixed(2),
+                Importe: importe_iva.toFixed(2),
               },
             ],
           }
         : {}),
 
       products: products,
-      importeGravado: importe_gravado,
-    };
+      importeGravado: importeGravado.toFixed(2),
+    };        
 
     const voucherData = await afip.ElectronicBilling.createVoucher(data);
 

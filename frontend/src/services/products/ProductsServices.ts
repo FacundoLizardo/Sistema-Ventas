@@ -10,7 +10,12 @@ export interface IProduct {
   finalPrice?: number;
   discount?: number;
   profitPercentage?: number;
-  stock: number;
+  stock: {
+    id: string;
+    branchId: string;
+    productId: string;
+    quantity: number;
+  }[];
   allowNegativeStock: boolean;
   trackStock: boolean;
   minimumStock: number;

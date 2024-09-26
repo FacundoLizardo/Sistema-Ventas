@@ -81,19 +81,20 @@ export default function SalesContainer({
   userBranchPtoVta,
   userName,
 }: SalesContainerProps) {
-  const { productsSelected, discount , totalPriceWithDiscount} = useSales();
-  const [shoInvoiceSummary, setShoInvoiceSummary] = useState(false);
+  const { productsSelected, discount, totalPriceWithDiscount, totalPrice } = useSales();
+  const [showInvoiceSummary, setShowInvoiceSummary] = useState(false);
+  const { setProducts, setDiscount } = useSales();
   console.log(productsSelected);
 
   const handleView = () => {
-    setShoInvoiceSummary(!shoInvoiceSummary);
+    setShowInvoiceSummary(!showInvoiceSummary);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       products: productsSelected,
-      discount,
+      discount: 0,
 
       // Client
       docTipo: "80",
@@ -103,7 +104,7 @@ export default function SalesContainer({
       cbteTipo: 1,
       concepto: 1,
       paymentType: "cash",
-      importeGravado: totalPriceWithDiscount(),
+      importeGravado: 0,
       importeExentoIva: 0,
       iva: 21,
 
@@ -135,24 +136,46 @@ export default function SalesContainer({
     }));
 
     form.setValue("products", validProducts);
-  }, [productsSelected, form]);
+    form.setValue("importeGravado", totalPrice());
+    form.setValue("discount", discount);
+  }, [productsSelected, totalPriceWithDiscount, discount, form]);
 
   const onSubmit = async (data: IAfip): Promise<void> => {
     try {
-      await AfipServices.post({
+      const request = await AfipServices.post({
         companyId,
         params: data,
       });
-      form.reset();
-      toast.success("Emitido");
+
+      toast.promise(
+        Promise.resolve(request),
+        {
+          loading: "Creando el comprobante...",
+          success: () => {
+            form.reset();
+            setProducts([]);
+            setShowInvoiceSummary(false);
+            setDiscount(0);
+            return "Comprobante creado con éxito.";
+          },
+          error: "Error al crear el Comprobante.",
+        }
+      );
+
+      if (request.success) {
+        const { afipInvoice } = request;
+        if(afipInvoice.file){
+        window.open(afipInvoice.file, "_blank"); }
+      }
     } catch (error) {
+      console.error(error);
       toast.error("Error.");
     }
   };
 
   return (
     <div className="flex flex-col gap-4">
-      {!shoInvoiceSummary ? (
+      {!showInvoiceSummary ? (
         <>
           <SelectedBranch branch={userBranch} />
           <SaleSeachBar products={products} />

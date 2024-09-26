@@ -60,29 +60,33 @@ export default function PaymentInformation({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col space-y-2">
+          <div className="flex flex-col gap-2">
             <div className="flex justify-between">
               <span className="font-semibold">Cantidad de Productos</span>
               <span>{productsSelected.length}</span>
             </div>
             <div className="flex justify-between">
-              <span className="font-semibold">Precio Total</span>
+              <span className="font-semibold">Precio Total sin descuento</span>
               <span>$ {totalPrice()}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold">Descuento</span>
               <span>% {discount}</span>
             </div>
-            {IVA && (
+            <div className="flex justify-between">
+              <span className="font-semibold">Precio Total con descuento</span>
+              <span>$ {totalPriceWithDiscount()}</span>
+            </div>
+            {IVA ? (
               <div className="flex justify-between">
                 <span className="font-semibold">IVA (%)</span>
                 <span>%{IVA || 0}</span>
               </div>
-            )}
+            ) : null}
           </div>
         </CardContent>
         <CardFooter>
-          <div className="flex w-full justify-between border-t py-4 font-bold md:text-xl">
+          <div className="flex w-full justify-between border-t pt-4 font-bold md:text-xl">
             <span className="text-secondary">Total a pagar</span>
             <Badge variant="secondary" className="md:text-lg">
               $ {totalToPay.toFixed(2)}

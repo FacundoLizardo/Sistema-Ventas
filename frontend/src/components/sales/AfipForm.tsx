@@ -201,6 +201,7 @@ export default function AfipForm({ company, companyId, form }: AfipFormProps) {
                   type="button"
                   className="flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background gap-2"
                   disabled={loading}
+                  onClick={handleClient}
                 >
                   <FaEdit />
                   <div className="truncate overflow-hidden whitespace-nowrap w-56">
@@ -215,7 +216,7 @@ export default function AfipForm({ company, companyId, form }: AfipFormProps) {
                               <Badge variant={"default"}>Crear</Badge>
                             </div>
                           ) : (
-                            "Presione Enter o haga clic en la lupa para buscar..."
+                            "Presione Enter o haga click..."
                           )
                         ) : (
                           customerName

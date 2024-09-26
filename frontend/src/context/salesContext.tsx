@@ -69,7 +69,7 @@ export const SalesContextProvider = ({ children }: { children: ReactNode }) => {
   const totalPriceWithDiscount = () => {
     const total = totalPrice();
 
-    const discountedTotal = total - (total * discount) / 100;
+    const discountedTotal = (total - (total * discount) / 100);
 
     return discountedTotal;
   };

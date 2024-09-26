@@ -21,6 +21,13 @@ import {
 import { Textarea } from "../ui/textarea";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "./SalesContainer";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 type AdditionalInformationProps = {
   form: UseFormReturn<FormValues>;
@@ -51,65 +58,60 @@ export default function AdditionalInformation({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <FormItem className="">
-              <FormLabel>Descuento (%)</FormLabel>
-              <Input
-                type="number"
-                min="0"
-                max="100"
-                step="1"
-                value={discount}
-                onChange={handleDiscountChange}
-                className="w-24"
-              />
-            </FormItem>
-            <div className="flex gap-4">
+            <div className="grid sm:grid-cols-2 gap-4">
+              <FormItem className="">
+                <FormLabel>Descuento (%)</FormLabel>
+                <Input
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value={discount}
+                  onChange={handleDiscountChange}
+                />
+              </FormItem>
               <FormField
                 control={form.control}
                 name="isdelivery"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>¿Con envío?</FormLabel>
+                    <FormLabel>¿Es con envío?</FormLabel>
                     <FormControl>
-                      <div className="flex gap-4">
-                        <Button
-                          type="button"
-                          variant={!field.value ? "accent" : "outline"}
-                          className="w-10 h-10"
-                          onClick={() => field.onChange(false)}
-                        >
-                          No
-                        </Button>
-                        <Button
-                          type="button"
-                          variant={field.value ? "accent" : "outline"}
-                          className="w-10 h-10"
-                          onClick={() => field.onChange(true)}
-                        >
-                          Sí
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="deliveryAddress"
-                disabled={!isdelivery}
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Dirección de Entrega</FormLabel>
-                    <FormControl>
-                      <Input type="text" className="w-full" {...field} />
+                      <Select
+                        onValueChange={(value) =>
+                          field.onChange(value === "true")
+                        }
+                        defaultValue={field.value ? "true" : "false"}
+                        value={field.value ? "true" : "false"}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccione" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="false">No</SelectItem>
+                          <SelectItem value="true">Sí</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
+            <FormField
+              control={form.control}
+              name="deliveryAddress"
+              disabled={!isdelivery}
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Dirección de Entrega</FormLabel>
+                  <FormControl>
+                    <Input type="text" className="w-full" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}

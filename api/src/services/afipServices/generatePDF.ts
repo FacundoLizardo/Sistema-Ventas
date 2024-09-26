@@ -110,10 +110,10 @@ export const generatePDF = async ({
 
     let condicionIVA = "";
     switch (data.DocTipo) {
-      case 80: // CUIT
+      case "80": // CUIT
         condicionIVA = "Responsable Inscripto";
         break;
-      case 96: // CUIL
+      case "96": // CUIL
         condicionIVA = "Consumidor Final";
         break;
       // El resto
