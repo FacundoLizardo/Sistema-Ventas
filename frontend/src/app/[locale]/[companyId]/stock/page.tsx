@@ -1,7 +1,9 @@
 import ProductControl from "@/components/stock/ProductControl";
 import ProductForm from "@/components/stock/ProductForm";
 import CompaniesServices from "@/services/companies/CompaniesServices";
-import ProductsServices, { IProduct } from "@/services/products/ProductsServices";
+import ProductsServices, {
+  IProduct,
+} from "@/services/products/ProductsServices";
 import UsersServices from "@/services/user/UsersServices";
 
 export default async function Page({
@@ -20,7 +22,9 @@ export default async function Page({
   ]);
 
   const products = productsData.products;
-  const categories = products.map((product: IProduct) => product.category);
+  const categories = products
+    .map((product: IProduct) => product.category)
+    .sort((a: string, b: string) => a.localeCompare(b));
 
   return (
     <main className="grid gap-4">
@@ -31,7 +35,7 @@ export default async function Page({
         branchId={branchId}
         categories={categories}
       />
-      <ProductForm categories={categories}/>
+      <ProductForm categories={categories} />
     </main>
   );
 }
