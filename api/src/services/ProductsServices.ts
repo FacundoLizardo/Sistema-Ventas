@@ -45,6 +45,7 @@ class ProductService {
       const products = await Product.findAll({
         where: whereClause,
         include: [{ model: Stock, as: "stock" }],
+        order: [["name", "ASC"]],
       });
 
       return products
