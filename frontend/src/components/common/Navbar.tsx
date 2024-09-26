@@ -10,9 +10,9 @@ const baseURL = process.env.NEXT_PUBLIC_CLIENT_BASE_URL;
 
 const navigationLinks = (locale: string, companyId: string, isAdmin: boolean) => {
   const links = [
+    { href: `${baseURL}/${locale}/${companyId}/dashboard`, name: "Control" },
     { href: `${baseURL}/${locale}/${companyId}/sales`, name: "Ventas" },
-    { href: `${baseURL}/${locale}/${companyId}/stock`, name: "Control" },
-    { href: `${baseURL}/${locale}/${companyId}/dashboard`, name: "Administración" },
+    { href: `${baseURL}/${locale}/${companyId}/stock`, name: "Inventario" },
   ];
 
   if (isAdmin) {
