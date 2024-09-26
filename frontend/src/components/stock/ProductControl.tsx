@@ -2,30 +2,33 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { SearchIcon } from "lucide-react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "../ui/card";
-
+import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
 import { IProduct } from "@/services/products/ProductsServices";
 import { Input } from "../ui/input";
-import { useState } from "react";
-import { ScrollArea } from "../ui/scroll-area";
 import BranchesProductsTable from "./BranchesProductsTable";
+import { useState } from "react";
 
 type ProductControlProps = {
   products: IProduct[];
   userId: string;
   companyId: string;
   branchId: string;
+  categories: string[];
 };
 
-export default function ProductControl({ products, branchId }: ProductControlProps) {
-  const [open, setOpen] = useState(false);
+export default function ProductControl({
+  products,
+  branchId,
+}: ProductControlProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  const filteredProducts = products.filter((product) => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    return (
+      product.name.toLowerCase().includes(lowerCaseSearchTerm) || 
+      (product.category && product.category.toLowerCase().includes(lowerCaseSearchTerm))
+    );
+  });
 
   return (
     <div>
@@ -34,35 +37,26 @@ export default function ProductControl({ products, branchId }: ProductControlPro
           <TabsList>
             <TabsTrigger value="branch">Inventario Actual</TabsTrigger>
             <TabsTrigger value="branches">Inventario Sucursales</TabsTrigger>
-            <TabsTrigger value="all">Inventario Total</TabsTrigger>
+            <TabsTrigger value="all" className="hidden sm:block">
+              Inventario Total
+            </TabsTrigger>
           </TabsList>
         </div>
         <TabsContent value="branch">
           <Card className="h-[460px]">
-            <CardHeader className="flex md:flex-row justify-between">
-              <div>
-                <CardTitle className="text-2xl font-bold">
-                  Control de productos
-                </CardTitle>
-                <CardDescription>
-                  Gestiona tu stock de manera eficiente y optimiza tu
-                  inventario.
-                </CardDescription>
-              </div>
-              <div className="flex flex-row items-center gap-2 md:w-[40%] bg-card-foreground rounded-md">
+            <CardHeader className="flex h-12 flex-row items-center justify-between gap-4">
+              <div className="flex border rounded-md bg-background flex-1 items-center gap-2 mt-1.5">
                 <Input
                   type="text"
-                  placeholder="Buscar producto o servicio..."
+                  placeholder="Buscar por nombre o cetegoría de producto o servicio..."
                   className="bg-transparent border-none text-primary"
-                  onClick={() => setOpen(!open)}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <SearchIcon className="text-background size-5 mr-4" />
+                <SearchIcon className="text-muted-foreground size-5 mr-4" />
               </div>
             </CardHeader>
             <CardContent>
-              <ScrollArea className="flex flex-col h-[350px]">
-                <BranchesProductsTable products={products} branchId={branchId} />
-              </ScrollArea>
+              <BranchesProductsTable products={filteredProducts} branchId={branchId} />
             </CardContent>
           </Card>
         </TabsContent>

@@ -55,20 +55,6 @@ class ProductService {
     }
   }
 
-  async getCategories(): Promise<string[]> {
-    try {
-      const categories = await Product.findAll({
-        attributes: ["category"],
-        group: ["category"],
-      });
-      return categories.map((categoryObj) =>
-        categoryObj.getDataValue("category")
-      );
-    } catch (error) {
-      serviceError(error);
-    }
-  }
-
   async postProduct(
     data: Omit<ProductCreationInterface, "stock">,
     companyId: string,

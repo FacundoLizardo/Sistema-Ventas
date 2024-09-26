@@ -36,6 +36,7 @@ const BranchesProductsTable = ({ products, branchId }: BranchesProductsTableProp
             <TableHead className="text-center">Estado</TableHead>
             <TableHead className="text-center">Precio</TableHead>
             <TableHead className="text-center">Cantidad</TableHead>
+            <TableHead className="text-center">Categoría</TableHead>
             <TableHead className="text-center">Acciones</TableHead>
           </UITableRow>
         </TableHeader>
@@ -45,21 +46,24 @@ const BranchesProductsTable = ({ products, branchId }: BranchesProductsTableProp
 
             return (
               <UITableRow key={index}>
-                <TableCell className="px-2 py-0.5 text-center">
+                <TableCell className="px-2 py-0 text-center">
                   {product.name}
                 </TableCell>
-                <TableCell className="px-2 py-0.5 text-center">
+                <TableCell className="px-2 py-0 text-center">
                   <Badge variant="outline">
                     {product.enabled === true ? "Activo" : "Inactivo"}
                   </Badge>
                 </TableCell>
-                <TableCell className="px-2 py-0.5 text-center">
+                <TableCell className="px-2 py-0 text-center">
                   ${product?.finalPrice && product?.finalPrice.toFixed(2)}
                 </TableCell>
-                <TableCell className="px-2 py-0.5 text-center">
+                <TableCell className="px-2 py-0 text-center">
                 {branchStock ? branchStock.quantity : 0}
                 </TableCell>
-                <TableCell className="px-2 py-0.5 text-center">
+                <TableCell className="px-2 py-0 text-center">
+                {product?.category}
+                </TableCell>
+                <TableCell className="px-2 py-0 text-center">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button aria-haspopup="true" size="icon" variant="ghost">

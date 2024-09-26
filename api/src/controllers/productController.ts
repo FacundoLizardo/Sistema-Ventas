@@ -31,20 +31,6 @@ class ProductController {
     }
   }
 
-  async getCategories(_req: Request, res: Response): Promise<void> {
-    try {
-      const categories = await ProductService.getCategories();
-
-      if (!categories.length) {
-        res.status(404).json({ message: "No categories found" });
-      }
-
-      res.status(200).json({ success: true, categories });
-    } catch (error) {
-      controllerError(res, error, 500);
-    }
-  }
-
   async postProduct(req: Request, res: Response): Promise<void> {
     try {
       const { companyId } = req.params;

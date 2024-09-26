@@ -7,29 +7,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import ButtonWithLoading from "../common/ButtonWithLoading";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "../ui/form";
+import { Form } from "../ui/form";
 import ProductsServices from "@/services/products/ProductsServices";
+import AdditionalProductInformation from "./AdditionalProductInformation";
+import BasicProductInformation from "./BasicProductInformation";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@radix-ui/react-alert-dialog";
+import { AlertDialogHeader, AlertDialogFooter } from "../ui/alert-dialog";
+import { Button } from "../ui/button";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "El nombre es requerido." }),
@@ -52,13 +49,22 @@ const formSchema = z.object({
       message: "El porcentaje de ganancia debe ser menor o igual a 100.",
     })
     .optional(),
-  stock: z.number().min(0, { message: "El stock no puede ser negativo." }),
+  stock: z.array(
+    z.object({
+      id: z.string(),
+      branchId: z.string(),
+      productId: z.string(),
+      quantity: z
+        .number()
+        .min(0, { message: "La cantidad no puede ser negativa." }),
+    })
+  ),
   allowNegativeStock: z.boolean(),
   trackStock: z.boolean(),
   minimumStock: z
     .number()
     .min(0, { message: "El stock mínimo no puede ser negativo." })
-    .default(0), // Ensure default value for minimumStock
+    .default(0),
   enabled: z.boolean(),
   notesDescription: z
     .string()
@@ -73,7 +79,13 @@ const formSchema = z.object({
   barcode: z.string().min(1, { message: "El código de barras es requerido." }),
 });
 
-export default function ProductForm() {
+export type ProductFormValues = z.infer<typeof formSchema>;
+
+type ProductFormProps = {
+  categories: string[];
+};
+
+export default function ProductForm({ categories }: ProductFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -83,7 +95,11 @@ export default function ProductForm() {
       finalPrice: undefined,
       discount: undefined,
       profitPercentage: undefined,
-      stock: undefined,
+      stock: [
+        {
+          quantity: 0,
+        },
+      ],
       allowNegativeStock: false,
       trackStock: false,
       minimumStock: undefined,
@@ -109,362 +125,55 @@ export default function ProductForm() {
 
   const { isDirty, isValid, isSubmitting } = form.formState;
   const submitDisabled = !isDirty || !isValid;
-  const submitLoading = isSubmitting;
 
   return (
     <Card>
       <Form {...form}>
         <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
-            <CardTitle>Crear un nuevo producto</CardTitle>
+            <CardTitle>Crear o editar un producto</CardTitle>
             <CardDescription>
-              Complete el formulario para crear un nuevo producto.
+              Rellena el formulario a continuación para añadir un nuevo producto
+              o actualizar uno existente.
             </CardDescription>
           </CardHeader>
-          <CardContent className="md:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="name">Nombre</Label>
-                  <FormControl>
-                    <Input
-                      id="name"
-                      placeholder="Ingrese el nombre del producto"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value === "" ? undefined : e.target.value;
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="category">Categoria</Label>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      {...field}
-                    >
-                      {}
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccione una categoria" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Bebidas sin alcohol">
-                          Bebidas sin alcohol
-                        </SelectItem>
-                        <SelectItem value="Bebidas alcoholicas">
-                          Bebidas alcoholicas
-                        </SelectItem>
-                        <SelectItem value="Kiosco">Kiosco</SelectItem>
-                        <SelectItem value="Cigarrillos">Cigarrillos</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            {/* TODO crear form para categorias */}
-
-            <FormField
-              control={form.control}
-              name="cost"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="cost">Costo</Label>
-                  <FormControl>
-                    <Input
-                      id="cost"
-                      type="number"
-                      placeholder="Ingrese el costo"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value === ""
-                            ? undefined
-                            : Number(e.target.value);
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="discount"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="discount">Descuento</Label>
-                  <FormControl>
-                    <Input
-                      id="discount"
-                      type="number"
-                      placeholder="Ingrese el descuento"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value === ""
-                            ? undefined
-                            : Number(e.target.value);
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="finalPrice"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="finalPrice">Percio final</Label>
-                  <FormControl>
-                    <Input
-                      id="finalPrice"
-                      type="number"
-                      placeholder="Ingrese el percio final"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value === ""
-                            ? undefined
-                            : Number(e.target.value);
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            {/* Hasta ok */}
-
-            <FormField
-              control={form.control}
-              name="profitPercentage"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="profitPercentage">
-                    Porcentaje de ganancia
-                  </Label>
-                  <FormControl>
-                    <Input
-                      id="profitPercentage"
-                      type="number"
-                      placeholder="Ingrese el porcentaje de ganancia"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value === ""
-                            ? undefined
-                            : Number(e.target.value);
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="stock"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="stock">Stock</Label>
-                  <FormControl>
-                    <Input
-                      id="stock"
-                      type="number"
-                      placeholder="Ingrese el stock"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value === "" ? 0 : Number(e.target.value);
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="minimumStock"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="minimumStock">Stock minimo</Label>
-                  <FormControl>
-                    <Input
-                      id="minimumStock"
-                      type="number"
-                      placeholder="Ingrese el stock minimo"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value === ""
-                            ? undefined
-                            : Number(e.target.value);
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="allowNegativeStock"
-              render={({ field }) => (
-                <FormItem className="flex gap-2 items-center">
-                  <FormControl>
-                    <Checkbox
-                      id="allowNegativeStock"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      className="mt-2"
-                    />
-                  </FormControl>
-                  <Label htmlFor="allowNegativeStock">
-                    Permitir stock negativo
-                  </Label>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="trackStock"
-              render={({ field }) => (
-                <FormItem className="flex gap-2 items-center">
-                  <FormControl>
-                    <Checkbox
-                      id="trackStock"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      className="mt-2"
-                    />
-                  </FormControl>
-                  <Label htmlFor="trackStock">Seguimiento de stock</Label>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="enabled"
-              render={({ field }) => (
-                <FormItem className="flex gap-2 items-center">
-                  <FormControl>
-                    <Checkbox
-                      id="enabled"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      className="mt-2"
-                    />
-                  </FormControl>
-                  <Label htmlFor="enabled">Habilitado para la venta</Label>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="notesDescription"
-              render={({ field }) => (
-                <FormItem className="col-span-2 w-full">
-                  <Label htmlFor="notesDescription">
-                    Anotaciones / descripcion
-                  </Label>
-                  <FormControl>
-                    <Input
-                      id="notesDescription"
-                      placeholder="Escriba las anotaciones necesarias"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value === "" ? undefined : e.target.value;
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="taxes"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="taxes">Impuestos</Label>
-                  <FormControl>
-                    <Input
-                      id="taxes"
-                      type="number"
-                      placeholder="Ingrese el porcentaje de impuestos"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value === ""
-                            ? undefined
-                            : Number(e.target.value);
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="barcode"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="barcode">Codigo de barras</Label>
-                  <FormControl>
-                    <Input
-                      id="barcode"
-                      placeholder="Ingrese el codigo de barras"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value === "" ? undefined : e.target.value;
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <CardContent className="grid md:grid-cols-[1fr_35%]">
+            <BasicProductInformation form={form} categories={categories} />
+            <AdditionalProductInformation form={form} />
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex justify-center gap-4 bg-muted/50 px-3 py-2 md:px-6 md:py-4 rounded-md">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline">Resetear</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    ¿Estás seguro de que quieres resetear?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta acción no puede deshacerse. Esto reseteará el
+                    formulario y limpiará todos los campos.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      form.reset();
+                    }}
+                  >
+                    Confirmar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
             <ButtonWithLoading
-              loading={submitLoading}
-              loadingText="Creando producto..."
-              variant="default"
-              className="flex flex-row items-center"
+              loading={isSubmitting}
+              loadingText="Emitiendo comprobante..."
+              variant="gradient"
+              size="default"
               type="submit"
               disabled={submitDisabled}
             >

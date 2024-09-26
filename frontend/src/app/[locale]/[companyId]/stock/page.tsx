@@ -1,7 +1,7 @@
 import ProductControl from "@/components/stock/ProductControl";
 import ProductForm from "@/components/stock/ProductForm";
 import CompaniesServices from "@/services/companies/CompaniesServices";
-import ProductsServices from "@/services/products/ProductsServices";
+import ProductsServices, { IProduct } from "@/services/products/ProductsServices";
 import UsersServices from "@/services/user/UsersServices";
 
 export default async function Page({
@@ -20,6 +20,7 @@ export default async function Page({
   ]);
 
   const products = productsData.products;
+  const categories = products.map((product: IProduct) => product.category);
 
   return (
     <main className="grid gap-4">
@@ -28,8 +29,9 @@ export default async function Page({
         userId={userId}
         companyId={companyId}
         branchId={branchId}
+        categories={categories}
       />
-      <ProductForm />
+      <ProductForm categories={categories}/>
     </main>
   );
 }
