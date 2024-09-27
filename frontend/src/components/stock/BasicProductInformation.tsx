@@ -14,12 +14,15 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Alert, AlertDescription } from "../ui/alert";
 import { OctagonAlert } from "lucide-react";
 
 type BasicProductInformationProps = {
   form: UseFormReturn<ProductFormValues>;
-  categories: string[];
+  categories: {
+    id: string;
+    name: string;
+  }[];
 };
 
 export default function BasicProductInformation({
@@ -69,11 +72,12 @@ export default function BasicProductInformation({
                     <SelectValue placeholder="Seleccione una categoria" />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories.map((category, index) => (
-                      <SelectItem key={index} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
+                    {categories &&
+                      categories.map((category, index) => (
+                        <SelectItem key={index} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </FormControl>

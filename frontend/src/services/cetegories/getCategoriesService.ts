@@ -1,14 +1,12 @@
 "use server";
 
-export const getProductsService = async ({
+export const getCategoryService = async ({
   token,
   companyId,
-  branchId,
   name,
 }: {
   token: string;
   companyId: string;
-  branchId?: string;
   name?: string;
 }) => {
   try {
@@ -22,16 +20,12 @@ export const getProductsService = async ({
       queryParams.append("companyId", companyId);
     }
 
-    if (branchId) {
-      queryParams.append("branchId", branchId);
-    }
-
     if (name) {
       queryParams.append("name", name);
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products?${queryParams.toString()}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/categories?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {

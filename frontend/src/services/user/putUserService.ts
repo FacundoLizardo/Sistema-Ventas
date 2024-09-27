@@ -8,7 +8,7 @@ export const putUserService = async ({
   userId,
   data,
 }: {
-  token?: string;
+  token: string;
   userId: string;
   data: Partial<IUser>;
 }) => {

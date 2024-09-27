@@ -4,7 +4,7 @@ export const getUserService = async ({
   token,
   userId,
 }: {
-  token?: string;
+  token: string;
   userId: string;
 }) => {
   try {

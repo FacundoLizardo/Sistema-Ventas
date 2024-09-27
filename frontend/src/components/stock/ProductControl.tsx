@@ -2,21 +2,11 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { SearchIcon } from "lucide-react";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-} from "../ui/card";
+import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
 import { IProduct } from "@/services/products/ProductsServices";
 import { Input } from "../ui/input";
 import BranchesProductsTable from "./BranchesProductsTable";
 import { useState } from "react";
-import CategoriesForm from "./CategoriesForm";
-import { Switch } from "../ui/switch";
-import SubCategoriesForm from "./SubCategoriesForm";
 
 type ProductControlProps = {
   products: IProduct[];
@@ -29,9 +19,10 @@ type ProductControlProps = {
 export default function ProductControl({
   products,
   branchId,
+  companyId,
 }: ProductControlProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isCategoryFormActive, setIsCategoryFormActive] = useState(true);
+  console.log(companyId);
 
   const filteredProducts = products.filter((product) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
@@ -51,9 +42,6 @@ export default function ProductControl({
             <TabsTrigger value="branches">Inventario Sucursales</TabsTrigger>
             <TabsTrigger value="all" className="hidden sm:block">
               Inventario Total
-            </TabsTrigger>
-            <TabsTrigger value="categories" className="hidden sm:block">
-              Categorías
             </TabsTrigger>
           </TabsList>
         </div>
@@ -90,62 +78,6 @@ export default function ProductControl({
             <CardHeader className="flex md:flex-row justify-between"></CardHeader>
             <CardContent></CardContent>
             <CardFooter></CardFooter>
-          </Card>
-        </TabsContent>
-        <TabsContent value="categories">
-          <Card>
-            <CardHeader>
-              <CardTitle>Gestión de Categorías y Subcategorías</CardTitle>
-              <CardDescription>
-                Facilita la organización de tus productos creando y gestionando
-                categorías y subcategorías de manera eficiente. Las categorías
-                te permiten agrupar productos similares, mientras que las
-                subcategorías te ofrecen un nivel adicional de organización,
-                asegurando que tu inventario esté perfectamente estructurado.
-              </CardDescription>
-            </CardHeader>
-            <CardContent >
-              <div className="flex items-center justify-evenly gap-4 bg-muted/50 px-3 py-2 md:px-6 md:py-4 rounded-md mt-2">
-                <span className="text-lg font-semibold">Categorías</span>
-                <Switch
-                  checked={isCategoryFormActive}
-                  onCheckedChange={() =>
-                    setIsCategoryFormActive(!isCategoryFormActive)
-                  }
-                  aria-label={
-                    isCategoryFormActive
-                      ? "Activar Subcategorías"
-                      : "Activar Categorías"
-                  }
-                />
-                <span className="text-lg font-semibold">Subcategorías</span>
-              </div>
-              <div className="grid md:grid-cols-2 gap-4">
-                {/* Formulario de Categorías */}
-                <div className="relative">
-                  <CategoriesForm />
-                  {!isCategoryFormActive && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center pointer-events-none">
-                      <span className="text-white text-lg">
-                        Formulario bloqueado
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Formulario de Subcategorías */}
-                <div className="relative mt-4">
-                  <SubCategoriesForm />
-                  {isCategoryFormActive && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center pointer-events-none">
-                      <span className="text-white text-lg">
-                        Formulario bloqueado
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </CardContent>
           </Card>
         </TabsContent>
       </Tabs>

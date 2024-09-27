@@ -1,9 +1,8 @@
 import ProductControl from "@/components/stock/ProductControl";
 import ProductForm from "@/components/stock/ProductForm";
+import CategoriesServices from "@/services/cetegories/CategoriesServices";
 import CompaniesServices from "@/services/companies/CompaniesServices";
-import ProductsServices, {
-  IProduct,
-} from "@/services/products/ProductsServices";
+import ProductsServices from "@/services/products/ProductsServices";
 import UsersServices from "@/services/user/UsersServices";
 
 export default async function Page({
@@ -16,15 +15,19 @@ export default async function Page({
 }) {
   const { userId, branchId } = await UsersServices.userSession();
 
-  const [productsData] = await Promise.all([
+  const [productsData, categoriesData] = await Promise.all([
     ProductsServices.getAll({ companyId, branchId }),
+    CategoriesServices.get({ companyId }),
     CompaniesServices.get(companyId),
   ]);
 
   const products = productsData.products;
-  const categories = products
-    .map((product: IProduct) => product.category)
-    .sort((a: string, b: string) => a.localeCompare(b));
+  const categories = categoriesData.categories.map(
+    (category: { name: string; id: string }) => ({
+      name: category.name,
+      id: category.id,
+    })
+  );
 
   return (
     <main className="grid gap-4">

@@ -9,19 +9,13 @@ import {
 class CategoryService {
   async getCategories({
     companyId,
-    branchId,
     name,
   }: {
     companyId: string;
-    branchId?: string;
     name?: string;
   }) {
     try {
       const whereCondition: WhereOptions = { companyId };
-
-      if (branchId) {
-        whereCondition.branchId = branchId;
-      }
 
       if (name) {
         whereCondition.name = name;
@@ -45,9 +39,10 @@ class CategoryService {
     companyId: string
   ): Promise<CategoryInterface | string> {
     try {
+      console.log(data);
       const existingCategory = await Category.findOne({
         where: {
-          name: data.name,
+          name: data.name.toLowerCase(),
         },
       });
 

@@ -84,7 +84,6 @@ export default function SalesContainer({
   const { productsSelected, discount, totalPrice } = useSales();
   const [showInvoiceSummary, setShowInvoiceSummary] = useState(false);
   const { setProducts, setDiscount } = useSales();
-  console.log(productsSelected);
 
   const handleView = () => {
     setShowInvoiceSummary(!showInvoiceSummary);

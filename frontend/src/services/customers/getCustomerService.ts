@@ -6,7 +6,7 @@ export const getCustomerService = async ({
   docTipo,
   docNro
 }: {
-  token?: string;
+  token: string;
   companyId: string;
   docTipo: string;
   docNro: string;

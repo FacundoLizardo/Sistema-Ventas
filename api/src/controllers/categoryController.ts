@@ -5,9 +5,8 @@ import CategoryServices from "../services/CategoryServices";
 class CategoryController {
   async getCategories(req: Request, res: Response): Promise<void> {
     try {
-      const { companyId, branchId, name } = req.query as {
+      const { companyId, name } = req.query as {
         companyId: string;
-        branchId?: string;
         name?: string;
       };
 
@@ -17,7 +16,6 @@ class CategoryController {
 
       const categories = await CategoryServices.getCategories({
         companyId,
-        branchId,
         name,
       });
 
@@ -48,6 +46,9 @@ class CategoryController {
         res.status(400).json({ message: "Category not created" });
         return;
       }
+
+      console.log(newCategory);
+      
 
       res.status(201).json(newCategory);
     } catch (error) {

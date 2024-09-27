@@ -83,7 +83,10 @@ const formSchema = z.object({
 export type ProductFormValues = z.infer<typeof formSchema>;
 
 type ProductFormProps = {
-  categories: string[];
+  categories: {
+    id: string;
+    name: string;
+  }[];
 };
 
 export default function ProductForm({ categories }: ProductFormProps) {
