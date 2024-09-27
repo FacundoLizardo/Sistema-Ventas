@@ -7,10 +7,10 @@ import StockServices from "./StockServices";
 class ProductService {
   async getProduct(name: string) {
     try {
-      const whereClause: WhereOptions = { name };
+      const whereCondition: WhereOptions = { name };
 
       const product = await Product.findOne({
-        where: whereClause,
+        where: whereCondition,
         include: [{ model: Stock, as: "stock" }],
       });
 
@@ -32,18 +32,18 @@ class ProductService {
     name?: string;
   }) {
     try {
-      const whereClause: WhereOptions = { companyId };
+      const whereCondition: WhereOptions = { companyId };
 
       if (branchId) {
-        whereClause.branchId = branchId;
+        whereCondition.branchId = branchId;
       }
 
       if (name) {
-        whereClause.name = name;
+        whereCondition.name = name;
       }
 
       const products = await Product.findAll({
-        where: whereClause,
+        where: whereCondition,
         include: [{ model: Stock, as: "stock" }],
         order: [["name", "ASC"]],
       });

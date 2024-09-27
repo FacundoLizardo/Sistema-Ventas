@@ -5,36 +5,29 @@ import OperationServices from "../services/OperationServices";
 class OperationController {
   async getOperation(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const { companyId, startDate, endDate } = req.query as {
+        companyId: string;
+        startDate: string;
+        endDate?: string;
+      };
 
-      if (!id) {
-        res.status(404).json({ message: "Operation id is required" });
+      if (!companyId) {
+        return res.status(404).json({ message: "CompanyId is required" });
       }
 
-      const operation = await OperationServices.getOperation(id);
+      const operations = await OperationServices.getOperations({
+        startDate,
+        endDate,
+        companyId,
+      });
 
-      if (!operation) {
-        res.status(404).json({ message: "Operation not found" });
+      if (!operations || operations.length === 0) {
+        return res.status(404).json({ message: "Operation not found" });
       }
 
-      res.status(200).json({ success: true, operation });
+      return res.status(200).json({ success: true, operations });
     } catch (error) {
-      controllerError(res, error, 500);
-    }
-  }
-
-  async getOperations(_req: Request, res: Response) {
-    try {
-      const operations = await OperationServices.getOperations();
-
-      if (!operations) {
-        res.status(404).json({ message: "Operations not found" });
-        return;
-      }
-
-      res.status(200).json({ success: true, operations });
-    } catch (error) {
-      controllerError(res, error, 500);
+      return controllerError(res, error, 500);
     }
   }
 
@@ -104,7 +97,6 @@ class OperationController {
       } else {
         res.status(204).json({ success: true });
       }
-      
     } catch (error) {
       controllerError(res, error, 500);
     }
