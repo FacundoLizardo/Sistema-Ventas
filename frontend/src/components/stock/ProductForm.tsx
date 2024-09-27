@@ -27,6 +27,7 @@ import {
 } from "@radix-ui/react-alert-dialog";
 import { AlertDialogHeader, AlertDialogFooter } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "El nombre es requerido." }),
@@ -93,7 +94,7 @@ export default function ProductForm({ categories }: ProductFormProps) {
       category: "",
       cost: undefined,
       finalPrice: undefined,
-      discount: undefined,
+      discount: 0,
       profitPercentage: undefined,
       stock: [
         {
@@ -102,13 +103,38 @@ export default function ProductForm({ categories }: ProductFormProps) {
       ],
       allowNegativeStock: false,
       trackStock: false,
-      minimumStock: undefined,
-      enabled: false,
+      minimumStock: 0,
+      enabled: true,
       notesDescription: "",
       taxes: undefined,
       barcode: "",
     },
   });
+
+  const cost = form.watch("cost");
+  const taxes = form.watch("taxes");
+  const discount = form.watch("discount");
+  const profitPercentage = form.watch("profitPercentage");
+
+  useEffect(() => {
+    if (cost !== undefined) {
+      let finalPrice = cost;
+
+      if (taxes) {
+        finalPrice += (finalPrice * taxes) / 100;
+      }
+
+      if (discount) {
+        finalPrice -= (finalPrice * discount) / 100;
+      }
+
+      if (profitPercentage) {
+        finalPrice += (finalPrice * profitPercentage) / 100;
+      }
+
+      form.setValue("finalPrice", finalPrice);
+    }
+  }, [cost, taxes, discount, profitPercentage, form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const request = ProductsServices.post(data);
@@ -125,6 +151,14 @@ export default function ProductForm({ categories }: ProductFormProps) {
 
   const { isDirty, isValid, isSubmitting } = form.formState;
   const submitDisabled = !isDirty || !isValid;
+
+  console.log("data", form.getValues());
+  console.log("errors", form.formState.errors);
+
+  console.log("isDirty", isDirty);
+  console.log("isValid", isValid);
+  console.log("isSubmitting", isSubmitting);
+  console.log("submitDisabled", submitDisabled);
 
   return (
     <Card>
@@ -175,7 +209,6 @@ export default function ProductForm({ categories }: ProductFormProps) {
               variant="gradient"
               size="default"
               type="submit"
-              disabled={submitDisabled}
             >
               Crear producto
             </ButtonWithLoading>

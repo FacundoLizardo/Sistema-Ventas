@@ -81,7 +81,7 @@ export default function SalesContainer({
   userBranchPtoVta,
   userName,
 }: SalesContainerProps) {
-  const { productsSelected, discount, totalPriceWithDiscount, totalPrice } = useSales();
+  const { productsSelected, discount, totalPrice } = useSales();
   const [showInvoiceSummary, setShowInvoiceSummary] = useState(false);
   const { setProducts, setDiscount } = useSales();
   console.log(productsSelected);
@@ -138,7 +138,7 @@ export default function SalesContainer({
     form.setValue("products", validProducts);
     form.setValue("importeGravado", totalPrice());
     form.setValue("discount", discount);
-  }, [productsSelected, totalPriceWithDiscount, discount, form]);
+  }, [productsSelected, totalPrice, discount, form]);
 
   const onSubmit = async (data: IAfip): Promise<void> => {
     try {

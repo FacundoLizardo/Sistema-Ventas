@@ -20,8 +20,8 @@ export default async function Page({
     CompaniesServices.get(companyId),
   ]);
 
-  const userBranchPtoVta = userData.user.branch.ptoVta;
-  const userBranchName = userData.user.branch.name;
+  const userBranchPtoVta = userData.user?.branch?.ptoVta;
+  const userBranchName = userData.user?.branch?.name;
   const userBranch = userData?.user?.branch
     ? `${userBranchPtoVta} - ${userBranchName}`
     : "";

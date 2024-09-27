@@ -14,6 +14,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { OctagonAlert } from "lucide-react";
 
 type BasicProductInformationProps = {
   form: UseFormReturn<ProductFormValues>;
@@ -105,6 +107,29 @@ export default function BasicProductInformation({
 
         <FormField
           control={form.control}
+          name="stock.0.quantity"
+          render={({ field }) => (
+            <FormItem>
+              <Label htmlFor="stock">Stock en sucursal</Label>
+              <FormControl>
+                <Input
+                  id="stock"
+                  type="number"
+                  placeholder="Ingrese el stock"
+                  value={field.value}
+                  onChange={(e) => {
+                    const value =
+                      e.target.value === "" ? 0 : Number(e.target.value);
+                    field.onChange(value);
+                  }}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="cost"
           render={({ field }) => (
             <FormItem>
@@ -133,11 +158,12 @@ export default function BasicProductInformation({
           name="taxes"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="taxes">Impuestos</Label>
+              <Label htmlFor="taxes">Impuestos (%)</Label>
               <FormControl>
                 <Input
                   id="taxes"
                   type="number"
+                  min={0}
                   placeholder="Ingrese el porcentaje de impuestos"
                   value={field.value ?? ""}
                   onChange={(e) => {
@@ -180,31 +206,6 @@ export default function BasicProductInformation({
 
         <FormField
           control={form.control}
-          name="finalPrice"
-          render={({ field }) => (
-            <FormItem>
-              <Label htmlFor="finalPrice">Percio final</Label>
-              <FormControl>
-                <Input
-                  id="finalPrice"
-                  type="number"
-                  placeholder="Ingrese el percio final"
-                  value={field.value ?? ""}
-                  onChange={(e) => {
-                    const value =
-                      e.target.value === ""
-                        ? undefined
-                        : Number(e.target.value);
-                    field.onChange(value);
-                  }}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="profitPercentage"
           render={({ field }) => (
             <FormItem>
@@ -227,41 +228,27 @@ export default function BasicProductInformation({
             </FormItem>
           )}
         />
+      </div>
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Alert>
+          <OctagonAlert size={16} />
+          <AlertDescription>
+            El precio final se calcula automáticamente, pero puedes ajustarlo
+            manualmente.
+          </AlertDescription>
+        </Alert>
 
         <FormField
           control={form.control}
-          name="stock.0.quantity"
+          name="finalPrice"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="stock">Stock en sucursal</Label>
+              <Label htmlFor="finalPrice">Percio final</Label>
               <FormControl>
                 <Input
-                  id="stock"
+                  id="finalPrice"
                   type="number"
-                  placeholder="Ingrese el stock"
-                  value={field.value}
-                  onChange={(e) => {
-                    const value =
-                      e.target.value === "" ? 0 : Number(e.target.value);
-                    field.onChange(value);
-                  }}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="minimumStock"
-          render={({ field }) => (
-            <FormItem>
-              <Label htmlFor="minimumStock">Stock mínimo</Label>
-              <FormControl>
-                <Input
-                  id="minimumStock"
-                  type="number"
-                  placeholder="Ingrese el stock minimo"
+                  placeholder="Ingrese el percio final"
                   value={field.value ?? ""}
                   onChange={(e) => {
                     const value =
@@ -276,7 +263,6 @@ export default function BasicProductInformation({
           )}
         />
       </div>
-
       <FormField
         control={form.control}
         name="notesDescription"

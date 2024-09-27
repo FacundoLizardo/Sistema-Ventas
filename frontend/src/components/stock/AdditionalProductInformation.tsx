@@ -11,6 +11,7 @@ import { FormControl, FormField, FormItem } from "../ui/form";
 import { UseFormReturn } from "react-hook-form";
 import { ProductFormValues } from "./ProductForm";
 import { Switch } from "../ui/switch";
+import { Input } from "../ui/input";
 
 type AdditionalProductInformationProps = {
   form: UseFormReturn<ProductFormValues>;
@@ -27,7 +28,7 @@ export default function AdditionalProductInformation({
           Configure las opciones adicionales para el producto.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col justify-between h-full py-8">
+      <CardContent className="flex flex-col justify-between h-full">
         <FormField
           control={form.control}
           name="allowNegativeStock"
@@ -60,14 +61,38 @@ export default function AdditionalProductInformation({
               <div>
                 <Label htmlFor="trackStock">Activar seguimiento de stock</Label>
                 <CardDescription className="text-xs">
-                  Si está activado, se llevará un seguimiento del stock
-                  disponible.
+                  Si está activado, se avisará si el stock disponible está por
+                  debajo del stock mínimo.
                 </CardDescription>
               </div>
               <FormControl>
                 <Switch
                   checked={field.value}
                   onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="minimumStock"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  id="minimumStock"
+                  type="number"
+                  placeholder="Ingrese el stock minimo"
+                  value={field.value ?? ""}
+                  onChange={(e) => {
+                    const value =
+                      e.target.value === ""
+                        ? undefined
+                        : Number(e.target.value);
+                    field.onChange(value);
+                  }}
                 />
               </FormControl>
             </FormItem>

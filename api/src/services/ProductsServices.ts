@@ -1,27 +1,10 @@
 import { WhereOptions } from "sequelize";
-import { Product, Stock } from "../db";
+import { Product, Stock, Category, SubCategory } from "../db";
 import { ProductInterface, ProductCreationInterface } from "../models/product";
 import { serviceError } from "../utils/serviceError";
 import StockServices from "./StockServices";
 
 class ProductService {
-  async getProduct(name: string) {
-    try {
-      const whereCondition: WhereOptions = { name };
-
-      const product = await Product.findOne({
-        where: whereCondition,
-        include: [{ model: Stock, as: "stock" }],
-      });
-
-      return product
-        ? (product.get({ plain: true }) as ProductInterface)
-        : null;
-    } catch (error) {
-      serviceError(error);
-    }
-  }
-
   async getProducts({
     companyId,
     branchId,
@@ -44,7 +27,11 @@ class ProductService {
 
       const products = await Product.findAll({
         where: whereCondition,
-        include: [{ model: Stock, as: "stock" }],
+        include: [
+          { model: Stock, as: "stock" },
+          { model: Category, as: "category" },
+          { model: SubCategory, as: "subCategory" },
+        ],
         order: [["name", "ASC"]],
       });
 

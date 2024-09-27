@@ -1,0 +1,110 @@
+import { WhereOptions } from "sequelize";
+import { serviceError } from "../utils/serviceError";
+import { Category } from "../db";
+import {
+  CategoryCreationInterface,
+  CategoryInterface,
+} from "../models/category";
+
+class CategoryService {
+  async getCategories({
+    companyId,
+    branchId,
+    name,
+  }: {
+    companyId: string;
+    branchId?: string;
+    name?: string;
+  }) {
+    try {
+      const whereCondition: WhereOptions = { companyId };
+
+      if (branchId) {
+        whereCondition.branchId = branchId;
+      }
+
+      if (name) {
+        whereCondition.name = name;
+      }
+
+      const categories = await Category.findAll({
+        where: whereCondition,
+        order: [["name", "ASC"]],
+      });
+
+      return categories
+        ? categories.map((productObj) => productObj.get({ plain: true }))
+        : [];
+    } catch (error) {
+      serviceError(error);
+    }
+  }
+
+  async postCategory(
+    data: Omit<CategoryCreationInterface, "stock">,
+    companyId: string
+  ): Promise<CategoryInterface | string> {
+    try {
+      const existingCategory = await Category.findOne({
+        where: {
+          name: data.name,
+        },
+      });
+
+      if (existingCategory) {
+        return "Category already exists in this branch.";
+      }
+
+      const category = await Category.create({
+        ...data,
+        companyId,
+      });
+
+      return category ? category.get({ plain: true }) : "";
+    } catch (error) {
+      serviceError(error);
+    }
+  }
+
+  async putCategory(
+    id: string,
+    data: CategoryCreationInterface
+  ): Promise<boolean | string> {
+    try {
+      const existingCategory = await Category.findOne({ where: { id } });
+
+      if (!existingCategory) {
+        return `The product with id: ${id} does not exist`;
+      }
+
+      await existingCategory.update(data);
+      return true;
+    } catch (error) {
+      serviceError(error);
+    }
+  }
+
+  async deleteCategory(id: string): Promise<boolean> {
+    try {
+      const deletedCount = await Category.destroy({ where: { id } });
+
+      if (deletedCount === 0) {
+        throw new Error("Category not found");
+      }
+
+      return true;
+    } catch (error) {
+      serviceError(error);
+    }
+  }
+}
+
+export default new CategoryService();
+
+//---------- TESTS ----------
+
+/* 
+      {
+        "name": "Tinto",
+     }
+*/
