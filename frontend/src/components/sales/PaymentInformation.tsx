@@ -128,7 +128,10 @@ export default function PaymentInformation({
           variant="default"
           type="button"
           disabled={submitDisabled}
-          onClick={handleView}
+          onClick={() => {
+            handleView();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
         >
           Siguiente
         </Button>
