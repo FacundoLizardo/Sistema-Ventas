@@ -66,7 +66,7 @@ const BranchesProductsTable = ({ products, branchId }: BranchesProductsTableProp
                 <TableCell className="px-2 py-0 text-center">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button aria-haspopup="true" size="icon" variant="ghost">
+                      <Button aria-haspopup="true" size="icon" variant="ghost" className="my-1">
                         <MoreHorizontal className="h-4 w-4" />
                         <span className="sr-only">Toggle menu</span>
                       </Button>
