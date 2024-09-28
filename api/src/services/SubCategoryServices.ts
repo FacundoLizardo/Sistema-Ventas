@@ -1,33 +1,37 @@
 import { WhereOptions } from "sequelize";
 import { serviceError } from "../utils/serviceError";
-import { Category } from "../db";
+import { SubCategory } from "../db";
 import {
-  CategoryCreationInterface,
-  CategoryInterface,
-} from "../models/category";
+  SubCategoryCreationInterface,
+  SubCategoryInterface,
+} from "../models/subCategory";
 
-class CategoryService {
-  async getCategories({
-    companyId,
+class SubCategoryService {
+  async getSubCategories({
     name,
+    categoryId,
   }: {
-    companyId: string;
+    categoryId?: string;
     name?: string;
   }) {
     try {
-      const whereCondition: WhereOptions = { companyId };
+      const whereCondition: WhereOptions = {};
+
+      if (categoryId) {
+        whereCondition.categoryId = categoryId;
+      }
 
       if (name) {
         whereCondition.name = name;
       }
 
-      const categories = await Category.findAll({
+      const subCategories = await SubCategory.findAll({
         where: whereCondition,
         order: [["name", "ASC"]],
       });
 
-      return categories
-        ? categories.map((productObj) => productObj.get({ plain: true }))
+      return subCategories
+        ? subCategories.map((productObj) => productObj.get({ plain: true }))
         : [];
     } catch (error) {
       serviceError(error);
@@ -35,21 +39,21 @@ class CategoryService {
   }
 
   async postCategory(
-    data: CategoryCreationInterface,
+    data: SubCategoryCreationInterface,
     companyId: string
-  ): Promise<CategoryInterface | string> {
+  ): Promise<SubCategoryInterface | string> {
     try {
-      const existingCategory = await Category.findOne({
+      const existingCategory = await SubCategory.findOne({
         where: {
           name: data.name.toLowerCase(),
         },
       });
 
       if (existingCategory) {
-        return "Category already exists in this branch.";
+        return "SubCategory already exists in this branch.";
       }
 
-      const category = await Category.create({
+      const category = await SubCategory.create({
         ...data,
         companyId,
       });
@@ -66,10 +70,10 @@ class CategoryService {
         throw new Error("Id is required.");
       }
 
-      const deletedCount = await Category.destroy({ where: { id } });
+      const deletedCount = await SubCategory.destroy({ where: { id } });
 
       if (deletedCount === 0) {
-        throw new Error("Category not found");
+        throw new Error("SubCategory not found");
       }
 
       return true;
@@ -79,7 +83,7 @@ class CategoryService {
   }
 }
 
-export default new CategoryService();
+export default new SubCategoryService();
 
 //---------- TESTS ----------
 

@@ -13,23 +13,80 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Switch } from "../ui/switch";
 import ButtonWithLoading from "../common/ButtonWithLoading";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useRouter } from "next/navigation";
+import SubCategoriesServices from "@/services/subCetegories/SubCategoriesServices";
+import { toast } from "sonner";
+import { Combobox } from "../common/Combobox";
+
+const formSchema = z.object({
+  name: z.string().min(1, { message: "El nombre es obligatorio" }),
+  description: z.string().optional(),
+  categoryId: z
+    .string()
+    .min(1, { message: "La categoría principal es obligatoria" }),
+});
 
 type SubCategoriesFormProps = {
   isSubCategoryFormActive: boolean;
-  handleView: (isSubCategoryFormActive: boolean) => void;
+  companyId: string;
+  handleView: (newValue: boolean) => void;
+  categories: { name: string; id: string }[];
 };
 
 export default function SubCategoriesForm({
+  companyId,
   isSubCategoryFormActive,
+  categories = [],
   handleView,
 }: SubCategoriesFormProps) {
-  const form = useForm();
+  const router = useRouter();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      categoryId: "",
+    },
+    mode: "onChange",
+  });
 
+  const categoriesData = Array.isArray(categories)
+    ? categories.map((category) => ({
+        value: category.id,
+        label: category.name.slice(0, 1).toUpperCase() + category.name.slice(1),
+      }))
+    : [];
+
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const formattedData = {
+      name: data.name.toLowerCase(),
+      description: data?.description,
+      categoryId: data.categoryId,
+    };
+
+    const request = await SubCategoriesServices.post({
+      params: formattedData,
+      companyId,
+    });
+
+    toast.promise(Promise.resolve(request), {
+      loading: "Creando la subcategoría...",
+      success: () => {
+        form.reset();
+        router.refresh();
+        return "La subcategoría fue creada con éxito.";
+      },
+      error: "Error al crear la subcategoría.",
+    });
+  };
+  console.log("datos del formulario", form.getValues());
   const { isDirty, isValid, isSubmitting } = form.formState;
 
   return (
     <Form {...form}>
-      <form>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card>
           <CardHeader className="flex flex-row justify-between">
             <div>
@@ -54,16 +111,15 @@ export default function SubCategoriesForm({
             <div className="grid md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="name"
+                name="categoryId"
                 render={({ field }) => (
                   <FormItem>
-                    <Label htmlFor="name">Categoría Principal</Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="Ingresa el nombre..."
+                    <Label htmlFor="categoryId">Categoría Principal</Label>
+                    <Combobox
+                      options={categoriesData}
+                      formValue={field.value}
+                      onChange={field.onChange}
                       disabled={!isSubCategoryFormActive}
-                      {...field}
                     />
                   </FormItem>
                 )}

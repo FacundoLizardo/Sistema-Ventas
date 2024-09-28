@@ -50,7 +50,7 @@ export default function CategoriesForm({
     });
 
     toast.promise(Promise.resolve(request), {
-      loading: "Creando el comprobante...",
+      loading: "Creando la categoría...",
       success: () => {
         form.reset();
         router.refresh();

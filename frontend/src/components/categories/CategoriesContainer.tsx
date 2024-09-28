@@ -44,7 +44,9 @@ export default function CategoriesContainer({
 
           <SubCategoriesForm
             handleView={handleView}
+            companyId={companyId}
             isSubCategoryFormActive={isSubCategoryFormActive}
+            categories={categories}
           />
         </CardContent>
       </Card>

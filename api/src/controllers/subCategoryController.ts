@@ -1,35 +1,34 @@
 import { Request, Response } from "express";
 import { controllerError } from "../utils/controllerError";
-import CategoryServices from "../services/CategoryServices";
+import SubCategoryServices from "../services/SubCategoryServices";
 
-class CategoryController {
-  async getCategories(req: Request, res: Response): Promise<void> {
+class SubCategoryController {
+  async getSubCategories(req: Request, res: Response): Promise<void> {
     try {
-      const { companyId, name } = req.query as {
+      const { companyId, categoryId } = req.query as {
         companyId: string;
-        name?: string;
+        categoryId?: string;
       };
 
       if (!companyId) {
         res.status(400).json({ message: "Company id is required" });
       }
 
-      const categories = await CategoryServices.getCategories({
-        companyId,
-        name,
+      const subCategories = await SubCategoryServices.getSubCategories({
+        categoryId,
       });
 
-      if (!categories) {
-        res.status(404).json({ message: "Categories not found" });
+      if (!subCategories) {
+        res.status(404).json({ message: "SubCategories not found" });
       }
 
-      res.status(200).json({ success: true, categories });
+      res.status(200).json({ success: true, subCategories });
     } catch (error) {
       controllerError(res, error, 500);
     }
   }
 
-  async postCategory(req: Request, res: Response): Promise<void> {
+  async postSubCategory(req: Request, res: Response): Promise<void> {
     try {
       const { companyId } = req.params;
 
@@ -37,7 +36,7 @@ class CategoryController {
         res.status(400).json({ message: "Company id is required" });
       }
 
-      const newCategory = await CategoryServices.postCategory(
+      const newCategory = await SubCategoryServices.postCategory(
         req.body,
         companyId
       );
@@ -54,7 +53,7 @@ class CategoryController {
   }
 
 
-  async deleteCategory(req: Request, res: Response): Promise<void> {
+  async deleteSubCategory(req: Request, res: Response): Promise<void> {
     try {
       const { companyId, id } = req.query as {
         companyId: string;
@@ -65,7 +64,7 @@ class CategoryController {
         res.status(400).json({ message: "companyId is required." });
       }
 
-      const deleteCategory = await CategoryServices.deleteCategory(id);
+      const deleteCategory = await SubCategoryServices.deleteCategory(id);
 
       if (deleteCategory !== true) {
         res.status(400).json({ message: "Category not deleted." });
@@ -78,4 +77,4 @@ class CategoryController {
   }
 }
 
-export default new CategoryController();
+export default new SubCategoryController();
