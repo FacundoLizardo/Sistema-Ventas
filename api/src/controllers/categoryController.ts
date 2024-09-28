@@ -48,7 +48,6 @@ class CategoryController {
       }
 
       console.log(newCategory);
-      
 
       res.status(201).json(newCategory);
     } catch (error) {
@@ -56,27 +55,16 @@ class CategoryController {
     }
   }
 
-  async putCategory(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.params;
-      const updateProduct = await CategoryServices.putCategory(id, req.body);
-
-      if (updateProduct !== true) {
-        res.status(400).json({ message: "Category not updated." });
-      } else {
-        res.status(204).json({ success: true });
-      }
-    } catch (error) {
-      controllerError(res, error, 500);
-    }
-  }
 
   async deleteCategory(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { companyId, id } = req.query as {
+        companyId: string;
+        id: string;
+      };
 
-      if (!id) {
-        res.status(400).json({ message: "Category id is required" });
+      if (!companyId) {
+        res.status(400).json({ message: "companyId is required." });
       }
 
       const deleteCategory = await CategoryServices.deleteCategory(id);

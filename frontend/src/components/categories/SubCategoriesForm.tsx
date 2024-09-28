@@ -109,6 +109,7 @@ export default function SubCategoriesForm({
               type="submit"
               disabled={!isSubCategoryFormActive || !isDirty || !isValid}
               loadingText={"Guardando..."}
+              size={"sm"}
               loading={isSubmitting}
             >
               Guardar Categoría

@@ -123,7 +123,7 @@ export default function LoginClient({ locale }: { locale: string }) {
               loadingText="Ingresando..."
               variant="gradient"
               className="flex flex-row items-center w-full"
-              size={"default"}
+              size={"sm"}
               type="submit"
               disabled={submitDisabled || isSubmitting}
             >

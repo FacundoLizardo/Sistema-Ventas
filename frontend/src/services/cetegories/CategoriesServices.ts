@@ -1,4 +1,5 @@
 import { accessToken } from "../accessToken";
+import { deleteCategoryService } from "./deleteCategoryService";
 import { getCategoryService } from "./getCategoriesService";
 import { postCategoryService } from "./postCategoryService";
 
@@ -43,6 +44,16 @@ class CategoriesServices {
       return await postCategoryService({ params, token, companyId });
     } catch (error) {
       console.error("Error posting category:", error);
+      throw error;
+    }
+  }
+
+  static async delete({ companyId, id }: { companyId: string; id: string }) {
+    try {
+      const token = await this.getToken();
+      return await deleteCategoryService({ token, companyId, id });
+    } catch (error) {
+      console.error("Error deleting category:", error);
       throw error;
     }
   }

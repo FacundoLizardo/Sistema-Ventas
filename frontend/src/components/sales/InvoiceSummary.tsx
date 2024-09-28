@@ -382,7 +382,7 @@ export default function InvoiceSummary({
                 loading={isSubmitting}
                 loadingText="Emitiendo comprobante..."
                 variant="gradient"
-                size="default"
+                size="sm"
                 type="submit"
                 disabled={!isValid}
               >

@@ -49,7 +49,7 @@ export default function CategoriesContainer({
         </CardContent>
       </Card>
       <div>
-        <CategoriesControl categories={categories}/>
+        <CategoriesControl companyId={companyId} categories={categories}/>
       </div>
     </div>
   );

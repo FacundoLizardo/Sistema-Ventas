@@ -110,6 +110,7 @@ export default function CategoriesForm({
             <ButtonWithLoading
               variant="default"
               type="submit"
+              size={"sm"}
               disabled={isSubCategoryFormActive || !isDirty || !isValid}
               loadingText={"Guardando..."}
               loading={isSubmitting}

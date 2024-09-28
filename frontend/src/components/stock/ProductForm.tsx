@@ -181,7 +181,7 @@ export default function ProductForm({ categories }: ProductFormProps) {
           <CardFooter className="flex justify-center gap-4 bg-muted/50 px-3 py-2 md:px-6 md:py-4 rounded-md">
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline">Resetear</Button>
+                <Button size={"sm"} variant="outline">Resetear</Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
@@ -210,7 +210,7 @@ export default function ProductForm({ categories }: ProductFormProps) {
               loading={isSubmitting}
               loadingText="Emitiendo comprobante..."
               variant="gradient"
-              size="default"
+              size={"sm"}
               type="submit"
             >
               Crear producto

@@ -97,7 +97,7 @@ export default function PaymentInformation({
       <CardFooter className="flex justify-center gap-4 bg-muted/50 px-3 py-2 md:px-6 md:py-4 rounded-md">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline">Resetear</Button>
+            <Button size={"sm"} variant="outline">Resetear</Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -127,6 +127,7 @@ export default function PaymentInformation({
         <Button
           variant="default"
           type="button"
+          size={"sm"}
           disabled={submitDisabled}
           onClick={() => {
             handleView();
