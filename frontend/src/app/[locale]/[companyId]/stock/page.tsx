@@ -43,7 +43,6 @@ export default async function Page({
       <ProductControl
         products={products}
         userId={userId}
-        companyId={companyId}
         branchId={branchId}
         categories={categories}
       />

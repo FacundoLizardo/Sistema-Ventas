@@ -5,7 +5,14 @@ import { accessToken } from "../accessToken";
 export interface IProduct {
   id: string;
   name: string;
-  category?: string;
+  category?: {
+    id: string;
+    name: string;
+  };
+  subCategory?: {
+    id: string;
+    name: string;
+  };
   cost?: number;
   finalPrice?: number;
   discount?: number;
@@ -26,6 +33,8 @@ export interface IProduct {
 export interface IProductCreate extends Omit<IProduct, "id"> {
   userId: string;
   branchId: string;
+  categoryId?: string;
+  subCategoryId?: string;
 }
 
 export type AfipProducts = Pick<IProduct, "id" | "name" | "finalPrice">;

@@ -11,7 +11,6 @@ import { useState } from "react";
 type ProductControlProps = {
   products: IProduct[];
   userId: string;
-  companyId: string;
   branchId: string;
   categories: string[];
 };
@@ -19,17 +18,16 @@ type ProductControlProps = {
 export default function ProductControl({
   products,
   branchId,
-  companyId,
 }: ProductControlProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  console.log(companyId);
+  console.log(products);
 
   const filteredProducts = products.filter((product) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     return (
       product.name.toLowerCase().includes(lowerCaseSearchTerm) ||
       (product.category &&
-        product.category.toLowerCase().includes(lowerCaseSearchTerm))
+        product.category.name.toLowerCase().includes(lowerCaseSearchTerm))
     );
   });
 

@@ -36,12 +36,12 @@ export default function BasicProductInformation({
   >([]);
 
   useEffect(() => {
-    const categoryId = form.watch("category");
+    const categoryId = form.watch("categoryId");
     const filtered = subCategories.filter(
       (subCategory) => subCategory.categoryId === categoryId
     );
     setFilteredSubCategories(filtered);
-  }, [form.watch("category"), subCategories]);
+  }, [form.watch("categoryId"), subCategories]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -92,10 +92,10 @@ export default function BasicProductInformation({
 
         <FormField
           control={form.control}
-          name="category"
+          name="categoryId"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="category">Categoría</Label>
+              <Label htmlFor="categoryId">Categoría</Label>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
@@ -122,7 +122,7 @@ export default function BasicProductInformation({
 
         <FormField
           control={form.control}
-          name="subCategory"
+          name="subCategoryId"
           render={({ field }) => (
             <FormItem>
               <Label htmlFor="subCategory">
@@ -136,7 +136,7 @@ export default function BasicProductInformation({
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                   {...field}
-                  disabled={!form.watch("category")}
+                  disabled={!form.watch("categoryId")}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccione una subcategoría" />

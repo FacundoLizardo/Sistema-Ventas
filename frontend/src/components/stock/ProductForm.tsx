@@ -34,8 +34,8 @@ import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "El nombre es requerido." }),
-  category: z.string().optional(),
-  subCategory: z.string().optional(),
+  categoryId: z.string().optional(),
+  subCategoryId: z.string().optional(),
   cost: z
     .number()
     .nonnegative({ message: "El costo no puede ser negativo." })
@@ -94,14 +94,15 @@ export default function ProductForm({
   subCategories,
   branchId,
   companyId,
-  userId
+  userId,
 }: ProductFormProps) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      category: "",
+      categoryId: "",
+      subCategoryId: "",
       cost: undefined,
       finalPrice: undefined,
       discount: 0,
