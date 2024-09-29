@@ -20,7 +20,6 @@ export default function ProductControl({
   branchId,
 }: ProductControlProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  console.log(products);
 
   const filteredProducts = products.filter((product) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();

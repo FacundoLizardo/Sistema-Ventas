@@ -48,6 +48,8 @@ class ProductService {
     stock: Array<{ branchId: string; quantity: number }>
   ): Promise<ProductInterface | string> {
     try {
+console.log("data", data);
+console.log("companyId", companyId);
 
       const existingProduct = await Product.findOne({
         where: {

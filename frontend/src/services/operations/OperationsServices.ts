@@ -1,5 +1,30 @@
 import { accessToken } from "../accessToken";
+import { AfipProducts } from "../products/ProductsServices";
 import { getOperationsService } from "./getOperationsService";
+
+export interface IOperation {
+  id: string;
+  products: AfipProducts[]  
+  amount: string;
+  discount: number;
+  extraCharge: number;
+  debtAmount: string;
+  branchId: string;
+  paymentType: string;
+  invoiceNumber: string;
+  state: string;
+  isDelivery: boolean;
+  deliveryAddress: string | null;
+  customer: string;
+  comments: string;
+  invoiceLink: string;
+  cbteTipo: number;
+  createdAt: string;
+  updatedAt: string;
+  companyId: string;
+  user: string;
+}
+
 
 class OperationsServices {
   static async getToken() {

@@ -4,19 +4,17 @@ import { getCompanyService } from "./getCompanyService";
 
 export interface ICompany {
   id: string;
-  name: string;
-  address?: string;
   country?: string;
   phoneNumbers?: string;
   isActive: boolean;
 
   // Campos adicionales
-  cuit?: string;
-  razonSocial?: string; // RAZON_SOCIAL
-  domicilioFiscal?: string; // DOMICILIO_FISCAL
-  inicioActividad?: string; // INICIO_ACTIVIDAD
-  regimenTributario?: string; // REGIMEN_TRIBUTARIO
-  iibb?: string; // IIBB
+  cuit: string;
+  razonSocial: string; // RAZON_SOCIAL
+  domicilioFiscal: string; // DOMICILIO_FISCAL
+  inicioActividad: string; // INICIO_ACTIVIDAD
+  regimenTributario: string; // REGIMEN_TRIBUTARIO
+  iibb: string; // IIBB
 }
 
 class CompaniesServices {

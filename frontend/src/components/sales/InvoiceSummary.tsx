@@ -47,7 +47,6 @@ export default function InvoiceSummary({
   const { totalPrice, totalPriceWithDiscount, discount } = useSales();
 
   const operationData = form.getValues();
-  console.log("operationData  ", operationData);
 
   const productCount: { [key: string]: number } = {};
 

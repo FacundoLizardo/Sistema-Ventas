@@ -4,14 +4,20 @@ import { hashPassword } from "../utils/hashPassword";
 import { UserCreationInterface, UserInterface } from "../models/user";
 
 class UserServices {
-  async getUser(id: string) {
+  async getUser(id: string): Promise<UserInterface | null> {
     try {
       const user = await User.findByPk(id, {
         include: [{ model: Branch, as: "branch" }],
       });
-      return user;
+
+      if (!user) {
+        console.warn(`User not found with ID: ${id}`);
+      }
+
+      return user ? user.get({ plain: true }) : null;
     } catch (error) {
       serviceError(error);
+      return null; // Retorna null en caso de error
     }
   }
 

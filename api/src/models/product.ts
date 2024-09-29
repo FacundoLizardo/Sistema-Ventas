@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
+import { Sequelize, DataTypes, Model } from "sequelize";
 import { validatePercentage } from "../utils/percentajeValidator";
 
 export interface ProductInterface {
@@ -18,16 +18,8 @@ export interface ProductInterface {
 }
 
 export interface ProductCreationInterface
-  extends Optional<
-    ProductInterface,
-    | "id"
-    | "cost"
-    | "finalPrice"
-    | "discount"
-    | "profitPercentage"
-    | "notesDescription"
-    | "taxes"
-  > {}
+  extends Omit<ProductInterface, 'id' | 'cost' | 'finalPrice' | 'discount' | 'profitPercentage' | 'notesDescription' | 'taxes'> {
+}
 
 class Product
   extends Model<ProductInterface, ProductCreationInterface>
@@ -86,7 +78,7 @@ export default (sequelize: Sequelize) => {
         },
       },
       finalPrice: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.INTEGER,
         allowNull: true,
         validate: {
           isPositive: Product.isPositive,

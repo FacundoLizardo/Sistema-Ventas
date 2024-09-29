@@ -16,6 +16,7 @@ import { useSales } from "@/context/salesContext";
 import AfipServices, { IAfip } from "@/services/afip/AfipServices";
 import { toast } from "sonner";
 import InvoiceSummary from "./InvoiceSummary";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   products: z.array(
@@ -81,6 +82,7 @@ export default function SalesContainer({
   userBranchPtoVta,
   userName,
 }: SalesContainerProps) {
+  const router = useRouter()
   const { productsSelected, discount, totalPrice } = useSales();
   const [showInvoiceSummary, setShowInvoiceSummary] = useState(false);
   const { setProducts, setDiscount } = useSales();
@@ -155,6 +157,7 @@ export default function SalesContainer({
             setProducts([]);
             setShowInvoiceSummary(false);
             setDiscount(0);
+            router.refresh()
             return "Comprobante creado con éxito.";
           },
           error: "Error al crear el Comprobante.",

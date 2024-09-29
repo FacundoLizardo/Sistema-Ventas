@@ -101,8 +101,8 @@ export default function ProductForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      categoryId: "",
-      subCategoryId: "",
+      categoryId: undefined,
+      subCategoryId: undefined,
       cost: undefined,
       finalPrice: undefined,
       discount: 0,
@@ -133,24 +133,29 @@ export default function ProductForm({
   useEffect(() => {
     if (cost !== undefined) {
       let finalPrice = cost;
-
+  
       if (taxes) {
         finalPrice += (finalPrice * taxes) / 100;
       }
-
+  
       if (discount) {
         finalPrice -= (finalPrice * discount) / 100;
       }
-
+  
       if (profitPercentage) {
         finalPrice += (finalPrice * profitPercentage) / 100;
       }
-
-      form.setValue("finalPrice", finalPrice);
+  
+      form.setValue("finalPrice", Math.round(finalPrice));
     }
   }, [cost, taxes, discount, profitPercentage, form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+
+    if (!data.subCategoryId) {
+      delete data.subCategoryId;
+    }
+
     const request = ProductsServices.post({ params: data, companyId });
 
     toast.promise(request, {

@@ -2,14 +2,16 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import GeneralMonitoring from "./GeneralMonitoring";
+import { IOperation } from "@/services/operations/OperationsServices";
 
 type DashboardControlProps = {
   userId: string;
   branchId: string;
   companyId: string;
+  operations: IOperation[];
 };
 
-export default function DashboardControl({}: DashboardControlProps) {
+export default function DashboardControl({operations}: DashboardControlProps) {
   return (
     <div>
       <Tabs defaultValue="general">
@@ -20,7 +22,7 @@ export default function DashboardControl({}: DashboardControlProps) {
             <TabsTrigger value="3">3</TabsTrigger>
           </TabsList>
         </div>
-        <TabsContent value="general"><GeneralMonitoring /></TabsContent>
+        <TabsContent value="general"><GeneralMonitoring operations={operations} /></TabsContent>
         <TabsContent value="2">Soy 2</TabsContent>
         <TabsContent value="3">Soy 3</TabsContent>
       </Tabs>

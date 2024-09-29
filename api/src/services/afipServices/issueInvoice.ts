@@ -9,6 +9,7 @@ import { serviceError } from "../../utils/serviceError";
 import { updateProductStock } from "../../utils/updateProductStock";
 import { format } from "date-fns";
 import CustomerService from "../CustomerServices";
+import UserServices from "../UserServices";
 
 const afip = new Afip({ CUIT: CUIT });
 
@@ -127,7 +128,7 @@ export async function issueInvoice({ req }: { req: Request }) {
 
       products: products,
       importeGravado: importeGravado.toFixed(2),
-    };        
+    };
 
     const voucherData = await afip.ElectronicBilling.createVoucher(data);
 
@@ -173,6 +174,9 @@ export async function issueInvoice({ req }: { req: Request }) {
         ? `DNI: ${customer.docNro} - Cliente: ${customer.firstName} ${customer.lastName}`
         : "No se encontró información del cliente";
 
+    const userData = await UserServices.getUser(userId);
+    const user = `${userData?.firstName} ${userData?.lastName}`;
+
     const operationData = {
       products: products,
       amount: ImpTotal,
@@ -191,6 +195,7 @@ export async function issueInvoice({ req }: { req: Request }) {
       companyId: companyId,
       userId: userId,
       cbteTipo: cbteTipo,
+      user: user,
     };
 
     await Operation.create(operationData, { transaction });

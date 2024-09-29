@@ -24,6 +24,7 @@ export default async function Page({
   ]);
 
   const products = productsData.products;
+  
   const categories = categoriesData.categories.map(
     (category: { name: string; id: string }) => ({
       name: category.name,

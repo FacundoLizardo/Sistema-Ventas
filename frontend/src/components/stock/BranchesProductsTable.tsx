@@ -30,6 +30,7 @@ const BranchesProductsTable = ({
   products,
   branchId,
 }: BranchesProductsTableProps) => {
+
   return (
     <ScrollArea className="flex flex-col h-[350px]">
       <Table>
@@ -63,7 +64,7 @@ const BranchesProductsTable = ({
                   </Badge>
                 </TableCell>
                 <TableCell className="px-2 py-0 text-center">
-                  ${product?.finalPrice && product?.finalPrice.toFixed(2)}
+                  ${product?.finalPrice && product?.finalPrice}
                 </TableCell>
                 <TableCell className="px-2 py-0 text-center">
                   {branchStock ? branchStock.quantity : 0}
