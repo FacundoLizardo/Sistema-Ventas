@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import LoginClient from "./LoginForm";
 import { cookies } from "next/headers";
+import ChatComponent from "@/components/openai/chat";
 
 export default async function Page({
   params,
@@ -25,8 +26,10 @@ export default async function Page({
   }
 
   return (
-    <div className="flex h-screen justify-center items-center">
+    <div className="flexh-screen justify-center items-center">
       <LoginClient locale={locale || "default"} />
+      <h1>Login</h1>
+<ChatComponent/>
     </div>
   );
 }

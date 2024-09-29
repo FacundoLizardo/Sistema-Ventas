@@ -17,6 +17,9 @@ export const {
   SESSION_SECRET,
   JWT_SECRET,
 
+  // OpenAi
+  OPENAI_API_KEY,
+
   // Other
   PORT
 } = process.env;
