@@ -3,6 +3,7 @@ import ProductForm from "@/components/stock/ProductForm";
 import CategoriesServices from "@/services/cetegories/CategoriesServices";
 import CompaniesServices from "@/services/companies/CompaniesServices";
 import ProductsServices from "@/services/products/ProductsServices";
+import SubCategoriesServices from "@/services/subCetegories/SubCategoriesServices";
 import UsersServices from "@/services/user/UsersServices";
 
 export default async function Page({
@@ -15,9 +16,10 @@ export default async function Page({
 }) {
   const { userId, branchId } = await UsersServices.userSession();
 
-  const [productsData, categoriesData] = await Promise.all([
+  const [productsData, categoriesData, subCategoriesData] = await Promise.all([
     ProductsServices.getAll({ companyId, branchId }),
     CategoriesServices.get({ companyId }),
+    SubCategoriesServices.get({ companyId }),
     CompaniesServices.get(companyId),
   ]);
 
@@ -26,6 +28,13 @@ export default async function Page({
     (category: { name: string; id: string }) => ({
       name: category.name,
       id: category.id,
+    })
+  );
+  const subCategories = subCategoriesData.subCategories.map(
+    (subCategory: { name: string; id: string; categoryId: string }) => ({
+      name: subCategory.name,
+      id: subCategory.id,
+      categoryId: subCategory.categoryId,
     })
   );
 
@@ -38,7 +47,13 @@ export default async function Page({
         branchId={branchId}
         categories={categories}
       />
-      <ProductForm categories={categories} />
+      <ProductForm
+        categories={categories}
+        subCategories={subCategories}
+        branchId={branchId}
+        companyId={companyId}
+        userId={userId}
+      />
     </main>
   );
 }

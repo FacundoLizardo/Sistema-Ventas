@@ -81,6 +81,7 @@ export function Combobox({
                       setOpen(false);
                       setInputValue("");
                     }}
+                    className="cursor-pointer"
                   >
                     {option.label}
                     <CheckIcon

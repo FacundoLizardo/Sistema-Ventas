@@ -86,7 +86,7 @@ export default (sequelize: Sequelize) => {
         },
       },
       finalPrice: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: true,
         validate: {
           isPositive: Product.isPositive,

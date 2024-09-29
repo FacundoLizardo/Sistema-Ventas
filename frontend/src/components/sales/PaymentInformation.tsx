@@ -60,7 +60,7 @@ export default function PaymentInformation({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <div className="flex justify-between">
               <span className="font-semibold">Cantidad de Productos</span>
               <span>{productsSelected.length}</span>

@@ -28,10 +28,14 @@ import {
 import { AlertDialogHeader, AlertDialogFooter } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 import { useEffect } from "react";
+import { ICategory } from "@/services/cetegories/CategoriesServices";
+import { ISubCategory } from "@/services/subCetegories/SubCategoriesServices";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "El nombre es requerido." }),
   category: z.string().optional(),
+  subCategory: z.string().optional(),
   cost: z
     .number()
     .nonnegative({ message: "El costo no puede ser negativo." })
@@ -46,18 +50,11 @@ const formSchema = z.object({
     .gte(0, {
       message: "El porcentaje de ganancia debe ser mayor o igual a 0.",
     })
-    .lte(100, {
-      message: "El porcentaje de ganancia debe ser menor o igual a 100.",
-    })
     .optional(),
   stock: z.array(
     z.object({
-      id: z.string(),
       branchId: z.string(),
-      productId: z.string(),
-      quantity: z
-        .number()
-        .min(0, { message: "La cantidad no puede ser negativa." }),
+      quantity: z.number(),
     })
   ),
   allowNegativeStock: z.boolean(),
@@ -78,18 +75,28 @@ const formSchema = z.object({
     .nonnegative({ message: "Las tasas no pueden ser negativas." })
     .optional(),
   barcode: z.string().min(1, { message: "El código de barras es requerido." }),
+  branchId: z.string(),
+  userId: z.string(),
 });
 
 export type ProductFormValues = z.infer<typeof formSchema>;
 
 type ProductFormProps = {
-  categories: {
-    id: string;
-    name: string;
-  }[];
+  categories: ICategory[];
+  subCategories: ISubCategory[];
+  branchId: string;
+  companyId: string;
+  userId: string;
 };
 
-export default function ProductForm({ categories }: ProductFormProps) {
+export default function ProductForm({
+  categories,
+  subCategories,
+  branchId,
+  companyId,
+  userId
+}: ProductFormProps) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -102,6 +109,7 @@ export default function ProductForm({ categories }: ProductFormProps) {
       stock: [
         {
           quantity: 0,
+          branchId,
         },
       ],
       allowNegativeStock: false,
@@ -111,6 +119,8 @@ export default function ProductForm({ categories }: ProductFormProps) {
       notesDescription: "",
       taxes: undefined,
       barcode: "",
+      branchId,
+      userId,
     },
   });
 
@@ -140,12 +150,13 @@ export default function ProductForm({ categories }: ProductFormProps) {
   }, [cost, taxes, discount, profitPercentage, form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const request = ProductsServices.post(data);
+    const request = ProductsServices.post({ params: data, companyId });
 
     toast.promise(request, {
       loading: "Creando el producto...",
       success: () => {
         form.reset();
+        router.refresh();
         return "El producto fue creado con exito.";
       },
       error: "Error al crear el producto.",
@@ -154,14 +165,6 @@ export default function ProductForm({ categories }: ProductFormProps) {
 
   const { isDirty, isValid, isSubmitting } = form.formState;
   const submitDisabled = !isDirty || !isValid;
-
-  console.log("data", form.getValues());
-  console.log("errors", form.formState.errors);
-
-  console.log("isDirty", isDirty);
-  console.log("isValid", isValid);
-  console.log("isSubmitting", isSubmitting);
-  console.log("submitDisabled", submitDisabled);
 
   return (
     <Card>
@@ -175,13 +178,19 @@ export default function ProductForm({ categories }: ProductFormProps) {
             </CardDescription>
           </CardHeader>
           <CardContent className="grid md:grid-cols-[1fr_35%]">
-            <BasicProductInformation form={form} categories={categories} />
+            <BasicProductInformation
+              form={form}
+              categories={categories}
+              subCategories={subCategories}
+            />
             <AdditionalProductInformation form={form} />
           </CardContent>
           <CardFooter className="flex justify-center gap-4 bg-muted/50 px-3 py-2 md:px-6 md:py-4 rounded-md">
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button size={"sm"} variant="outline">Resetear</Button>
+                <Button size={"sm"} variant="outline">
+                  Resetear
+                </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
@@ -212,6 +221,7 @@ export default function ProductForm({ categories }: ProductFormProps) {
               variant="gradient"
               size={"sm"}
               type="submit"
+              disabled={submitDisabled}
             >
               Crear producto
             </ButtonWithLoading>

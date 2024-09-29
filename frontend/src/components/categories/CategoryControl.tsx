@@ -27,41 +27,92 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { AlertDialogHeader, AlertDialogFooter } from "../ui/alert-dialog";
+import SubCategoriesServices, {
+  ISubCategory,
+} from "@/services/subCetegories/SubCategoriesServices";
+
+type CombinedCategory = {
+  id: string;
+  name: string;
+  description?: string;
+  type: "category" | "subcategory";
+  categoryName?: string; // Propiedad opcional para subcategorías
+};
 
 type CategoriesControlProps = {
   categories: ICategory[];
+  subCategories: ISubCategory[];
   companyId: string;
 };
 
 export default function CategoriesControl({
   companyId,
   categories,
+  subCategories,
 }: CategoriesControlProps) {
-  const [searchTerm, setSearchTerm] = useState<string>(""); // Estado para el término de búsqueda
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const router = useRouter();
+console.log("categories", categories);
+console.log("subCategories", subCategories);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string, type: "category" | "subcategory") => {
+    // Definir la traducción del tipo fuera del bloque try
+    const typeTranslation = type === "category" ? "categoría" : "subcategoría";
+
     try {
-      const request = CategoriesServices.delete({ companyId, id });
+      let request;
+      if (type === "category") {
+        request = CategoriesServices.delete({ companyId, id });
+      } else {
+        request = SubCategoriesServices.delete({ companyId, id });
+      }
 
       toast.promise(request, {
-        loading: "Eliminando la categoría...",
+        loading: "Eliminando...",
         success: () => {
           router.refresh();
-          return "La categoría fue eliminada con éxito.";
+          return `La ${typeTranslation} fue eliminada con éxito.`;
         },
-        error: "Error al eliminar la categoría.",
+        error: (error) => {
+          console.error("Error al eliminar:", error);
+          return `Error al eliminar la ${typeTranslation}.`;
+        },
       });
     } catch (error) {
-      toast.error("Error al eliminar la categoría.");
-      console.error("Error al eliminar la categoría:", error);
+      console.error("Error en el bloque catch:", error);
+      toast.error(`Error al eliminar la ${typeTranslation}.`);
     }
   };
 
-  // Filtrar categorías basadas en el término de búsqueda
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const filteredSubCategories = subCategories.filter((subCategory) =>
+    subCategory.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const capitalizeFirstLetter = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  const combinedData: CombinedCategory[] = [
+    ...filteredCategories.map((category) => ({
+      id: category.id,
+      name: capitalizeFirstLetter(category.name),
+      description: category.description,
+      type: "category" as const,
+    })),
+    ...filteredSubCategories.map((subCategory) => ({
+      id: subCategory.id,
+      name: capitalizeFirstLetter(subCategory.name),
+      description: subCategory.description,
+      type: "subcategory" as const,
+      categoryName:
+        categories.find((category) => category.id === subCategory.categoryId)
+          ?.name || "Sin categoría",
+    })),
+  ];
 
   return (
     <div>
@@ -79,24 +130,37 @@ export default function CategoriesControl({
       <ScrollArea className="h-[400px] w-full">
         <div className="w-full overflow-x-auto">
           <Table>
-            <TableCaption>Lista de tus categorías</TableCaption>
+            <TableCaption>Lista de tus categorías y subcategorías</TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead>Categoría</TableHead>
                 <TableHead>Tipo</TableHead>
+                <TableHead>Nombre</TableHead>
                 <TableHead>Descripción</TableHead>
                 <TableHead>Acción</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredCategories.length > 0 ? (
-                filteredCategories.map((category: ICategory) => (
-                  <TableRow key={category.id}>
-                    <TableCell>{category.name}</TableCell>
-                    <TableCell>{category.name}</TableCell>{" "}
+              {combinedData.length > 0 ? (
+                combinedData.map((item) => (
+                  <TableRow key={item.id}>
                     <TableCell>
-                      {category.description || "Sin descripción"}
-                    </TableCell>{" "}
+                      {item.type === "category" ? "Categoría" : "Subcategoría"}
+                    </TableCell>
+                    <TableCell>
+                      {item.type === "subcategory" ? (
+                        <>
+                          {item.name}{" "}
+                          <span className="text-muted-foreground text-xs">
+                            ({item.categoryName})
+                          </span>
+                        </>
+                      ) : (
+                        item.name
+                      )}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground text-xs">
+                      {item.description || "Sin descripción"}
+                    </TableCell>
                     <TableCell>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
@@ -111,18 +175,17 @@ export default function CategoriesControl({
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>
-                              ¿Estás seguro de que quieres eliminar esta
-                              categoría?
+                              {`¿Estás seguro de que quieres eliminar esta ${item.type}?`}
                             </AlertDialogTitle>
                             <AlertDialogDescription>
-                              Esta acción no puede deshacerse. Esto elimina la
-                              categoría y el producto queda sin una categoría.
+                              Esta acción no puede deshacerse. Esto eliminará la{" "}
+                              {item.type}.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancelar</AlertDialogCancel>
                             <AlertDialogAction
-                              onClick={() => handleDelete(category.id)}
+                              onClick={() => handleDelete(item.id, item.type)}
                             >
                               Confirmar
                             </AlertDialogAction>
@@ -134,11 +197,13 @@ export default function CategoriesControl({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4}>No hay categorías.</TableCell>
+                  <TableCell colSpan={4}>
+                    No hay categorías ni subcategorías.
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>
-          </Table>{" "}
+          </Table>
         </div>
         <ScrollBar orientation="horizontal" className="flex" />
         <ScrollBar orientation="vertical" className="flex" />

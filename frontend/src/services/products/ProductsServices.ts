@@ -11,9 +11,7 @@ export interface IProduct {
   discount?: number;
   profitPercentage?: number;
   stock: {
-    id: string;
     branchId: string;
-    productId: string;
     quantity: number;
   }[];
   allowNegativeStock: boolean;
@@ -25,7 +23,10 @@ export interface IProduct {
   barcode: string;
 }
 
-export interface IProductCreate extends Omit<IProduct, "id"> {}
+export interface IProductCreate extends Omit<IProduct, "id"> {
+  userId: string;
+  branchId: string;
+}
 
 export type AfipProducts = Pick<IProduct, "id" | "name" | "finalPrice">;
 
@@ -58,10 +59,16 @@ class ProductsServices {
     }
   }
 
-  static async post(params: IProductCreate) {
+  static async post({
+    params,
+    companyId,
+  }: {
+    params: IProductCreate;
+    companyId: string;
+  }) {
     try {
       const token = await this.getToken();
-      return await postProductService(params, token);
+      return await postProductService({ params, token, companyId });
     } catch (error) {
       console.error("Error posting product:", error);
       throw error;

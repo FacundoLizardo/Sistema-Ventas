@@ -90,7 +90,7 @@ export default function SubCategoriesForm({
         <Card>
           <CardHeader className="flex flex-row justify-between">
             <div>
-              <CardTitle>Sub Categoría</CardTitle>
+              <CardTitle>Subcategoría</CardTitle>
               <CardDescription>
                 Active las opción de sub categorias para crear.
               </CardDescription>
@@ -130,7 +130,7 @@ export default function SubCategoriesForm({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <Label htmlFor="name">Nombre de la Sub Categoría</Label>
+                    <Label htmlFor="name">Nombre de la Subcategoría</Label>
                     <Input
                       id="name"
                       type="text"

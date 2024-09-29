@@ -16,32 +16,68 @@ import {
 import { Textarea } from "../ui/textarea";
 import { Alert, AlertDescription } from "../ui/alert";
 import { OctagonAlert } from "lucide-react";
+import { ICategory } from "@/services/cetegories/CategoriesServices";
+import { useEffect, useState } from "react";
+import { ISubCategory } from "@/services/subCetegories/SubCategoriesServices";
 
 type BasicProductInformationProps = {
   form: UseFormReturn<ProductFormValues>;
-  categories: {
-    id: string;
-    name: string;
-  }[];
+  categories: ICategory[];
+  subCategories: ISubCategory[];
 };
 
 export default function BasicProductInformation({
   form,
   categories,
+  subCategories,
 }: BasicProductInformationProps) {
+  const [filteredSubCategories, setFilteredSubCategories] = useState<
+    ICategory[]
+  >([]);
+
+  useEffect(() => {
+    const categoryId = form.watch("category");
+    const filtered = subCategories.filter(
+      (subCategory) => subCategory.categoryId === categoryId
+    );
+    setFilteredSubCategories(filtered);
+  }, [form.watch("category"), subCategories]);
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid sm:grid-cols-2 gap-4">
+      <FormField
+        control={form.control}
+        name="name"
+        render={({ field }) => (
+          <FormItem>
+            <Label htmlFor="name">Nombre</Label>
+            <FormControl>
+              <Input
+                id="name"
+                placeholder="Nombre del producto o servicio"
+                value={field.value ?? ""}
+                onChange={(e) => {
+                  const value =
+                    e.target.value === "" ? undefined : e.target.value;
+                  field.onChange(value);
+                }}
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+
+      <div className="grid sm:grid-cols-3 gap-4">
         <FormField
           control={form.control}
-          name="name"
+          name="barcode"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="name">Nombre</Label>
+              <Label htmlFor="barcode">Codigo de barras</Label>
               <FormControl>
                 <Input
-                  id="name"
-                  placeholder="Nombre del producto o servicio"
+                  id="barcode"
+                  placeholder="Ingrese el codigo de barras"
                   value={field.value ?? ""}
                   onChange={(e) => {
                     const value =
@@ -50,7 +86,6 @@ export default function BasicProductInformation({
                   }}
                 />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -84,27 +119,37 @@ export default function BasicProductInformation({
             </FormItem>
           )}
         />
-      </div>
-      <div className="grid sm:grid-cols-3 gap-4">
+
         <FormField
           control={form.control}
-          name="barcode"
+          name="subCategory"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="barcode">Codigo de barras</Label>
+              <Label htmlFor="subCategory">
+                Subcategoría{" "}
+                <span className="text-xs text-muted-foreground">
+                  (opcional)
+                </span>
+              </Label>
               <FormControl>
-                <Input
-                  id="barcode"
-                  placeholder="Ingrese el codigo de barras"
-                  value={field.value ?? ""}
-                  onChange={(e) => {
-                    const value =
-                      e.target.value === "" ? undefined : e.target.value;
-                    field.onChange(value);
-                  }}
-                />
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  {...field}
+                  disabled={!form.watch("category")}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccione una subcategoría" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {filteredSubCategories.map((subCategory, index) => (
+                      <SelectItem key={index} value={subCategory.id}>
+                        {subCategory.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -232,15 +277,6 @@ export default function BasicProductInformation({
             </FormItem>
           )}
         />
-      </div>
-      <div className="grid sm:grid-cols-2 gap-4">
-        <Alert>
-          <OctagonAlert size={16} />
-          <AlertDescription>
-            El precio final se calcula automáticamente, pero puedes ajustarlo
-            manualmente.
-          </AlertDescription>
-        </Alert>
 
         <FormField
           control={form.control}
@@ -267,28 +303,40 @@ export default function BasicProductInformation({
           )}
         />
       </div>
-      <FormField
-        control={form.control}
-        name="notesDescription"
-        render={({ field }) => (
-          <FormItem className="col-span-2 w-full">
-            <Label htmlFor="notesDescription">Anotaciones / Descripción</Label>
-            <FormControl>
-              <Textarea
-                id="notesDescription"
-                placeholder="Escriba las anotaciones necesarias"
-                value={field.value ?? ""}
-                onChange={(e) => {
-                  const value =
-                    e.target.value === "" ? undefined : e.target.value;
-                  field.onChange(value);
-                }}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <div className="grid md:grid-cols-2 gap-4">
+        <Alert>
+          <OctagonAlert size={16} />
+          <AlertDescription>
+            El precio final se calcula automáticamente, pero puedes ajustarlo
+            manualmente.
+          </AlertDescription>
+        </Alert>
+
+        <FormField
+          control={form.control}
+          name="notesDescription"
+          render={({ field }) => (
+            <FormItem>
+              <Label htmlFor="notesDescription">
+                Anotaciones / Descripción
+              </Label>
+              <FormControl>
+                <Textarea
+                  id="notesDescription"
+                  placeholder="Escriba las anotaciones necesarias"
+                  value={field.value ?? ""}
+                  onChange={(e) => {
+                    const value =
+                      e.target.value === "" ? undefined : e.target.value;
+                    field.onChange(value);
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
     </div>
   );
 }

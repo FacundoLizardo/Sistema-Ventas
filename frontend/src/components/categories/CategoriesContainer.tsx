@@ -11,12 +11,16 @@ import {
 import CategoriesForm from "./CategoriesForm";
 import SubCategoriesForm from "./SubCategoriesForm";
 import CategoriesControl from "./CategoryControl";
+import { ISubCategory } from "@/services/subCetegories/SubCategoriesServices";
+import { ICategory } from "@/services/cetegories/CategoriesServices";
 
 export default function CategoriesContainer({
   categories,
   companyId,
+  subCategories
 }: {
-  categories: { name: string; id: string }[];
+  categories: ICategory[];
+  subCategories: ISubCategory[];
   companyId: string;
 }) {
   const [isSubCategoryFormActive, setIsSubCategoryFormActive] = useState(false);
@@ -51,7 +55,7 @@ export default function CategoriesContainer({
         </CardContent>
       </Card>
       <div>
-        <CategoriesControl companyId={companyId} categories={categories}/>
+        <CategoriesControl companyId={companyId} categories={categories} subCategories={subCategories}/>
       </div>
     </div>
   );

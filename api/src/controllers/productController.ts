@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import ProductService from "../services/ProductsServices";
 import { controllerError } from "../utils/controllerError";
+import { ProductCreationInterface } from "../models/product";
 
 class ProductController {
   async getProducts(req: Request, res: Response): Promise<void> {
@@ -34,19 +35,19 @@ class ProductController {
   async postProduct(req: Request, res: Response): Promise<void> {
     try {
       const { companyId } = req.params;
-      const { stock, branchId, ...productData } = req.body;
+      const stock = req.body.stock as { branchId: string; quantity: number }[];
+      const data = req.body as ProductCreationInterface;
 
-      if (!companyId || !branchId || typeof stock !== "number") {
+      if (!companyId) {
         res
           .status(400)
-          .json({ message: "Company id, branch id, and stock are required." });
+          .json({ message: "CompanyId is required." });
         return;
       }
 
       const newProduct = await ProductService.postProduct(
-        productData,
+        data,
         companyId,
-        branchId,
         stock
       );
 

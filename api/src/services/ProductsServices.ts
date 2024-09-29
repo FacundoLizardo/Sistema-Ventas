@@ -42,44 +42,40 @@ class ProductService {
       serviceError(error);
     }
   }
-
   async postProduct(
-    data: Omit<ProductCreationInterface, "stock">,
+    data: ProductCreationInterface,
     companyId: string,
-    branchId: string,
-    stock: number
+    stock: Array<{ branchId: string; quantity: number }>
   ): Promise<ProductInterface | string> {
     try {
+
       const existingProduct = await Product.findOne({
         where: {
           name: data.name,
-          branchId: branchId,
         },
       });
 
       if (existingProduct) {
-        return "Product already exists in this branch.";
+        return "Product already exists.";
       }
 
       const product = await Product.create({
         ...data,
         companyId,
-        branchId,
       });
 
       if (product) {
-        await StockServices.postStock(
-          {
-            branchId,
+        for (const item of stock) {
+          await StockServices.postStock({
+            branchId: item.branchId,
             productId: product.getDataValue("id"),
-            quantity: stock,
-          },
-          companyId
-        );
+            quantity: item.quantity,
+          });
+        }
 
         return product.get({ plain: true }) as ProductInterface;
       } else {
-        return "Product not created because it already exists or something is wrong, please try again.";
+        return "Product not created, please try again.";
       }
     } catch (error) {
       serviceError(error);

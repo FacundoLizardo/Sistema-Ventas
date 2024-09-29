@@ -2,13 +2,18 @@
 
 import { IProductCreate } from "./ProductsServices";
 
-export const postProductService = async (
-  params: IProductCreate,
-  token: string
-) => {
+export const postProductService = async ({
+  params,
+  companyId,
+  token,
+}: {
+  params: IProductCreate;
+  companyId: string;
+  token: string;
+}) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${companyId}`,
       {
         method: "POST",
         headers: {
