@@ -1,4 +1,4 @@
-import UsersServices from "@/services/user/UsersServices";
+import UsersServices from "@/services/users/UsersServices";
 import { redirect } from "next/navigation";
 
 export default async function AppPage({

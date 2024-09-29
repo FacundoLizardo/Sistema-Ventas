@@ -31,9 +31,7 @@ export default function BasicProductInformation({
   categories,
   subCategories,
 }: BasicProductInformationProps) {
-  const [filteredSubCategories, setFilteredSubCategories] = useState<
-    ICategory[]
-  >([]);
+  const [filteredSubCategories, setFilteredSubCategories] = useState<ISubCategory[]>([]);
 
   useEffect(() => {
     const categoryId = form.watch("categoryId");
@@ -41,7 +39,7 @@ export default function BasicProductInformation({
       (subCategory) => subCategory.categoryId === categoryId
     );
     setFilteredSubCategories(filtered);
-  }, [form.watch("categoryId"), subCategories]);
+  }, [form, subCategories]);
 
   return (
     <div className="flex flex-col gap-4">

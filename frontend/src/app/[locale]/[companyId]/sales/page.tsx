@@ -2,7 +2,7 @@ import SalesContainer from "@/components/sales/SalesContainer";
 import { SalesContextProvider } from "@/context/salesContext";
 import CompaniesServices from "@/services/companies/CompaniesServices";
 import ProductsServices from "@/services/products/ProductsServices";
-import UsersServices from "@/services/user/UsersServices";
+import UsersServices from "@/services/users/UsersServices";
 
 export default async function Page({
   params: { companyId },

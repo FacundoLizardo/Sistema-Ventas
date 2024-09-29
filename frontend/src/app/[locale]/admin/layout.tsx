@@ -1,5 +1,5 @@
 import AdminNavigation from "@/components/admin/AdminNavigation";
-import UsersServices from "@/services/user/UsersServices";
+import UsersServices from "@/services/users/UsersServices";
 
 export default async function AdminLayout({
   children,

@@ -1,6 +1,6 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import UsersServices from "@/services/user/UsersServices";
+import UsersServices from "@/services/users/UsersServices";
 
 export default async function AppLayout({
   children,

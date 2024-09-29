@@ -1,6 +1,6 @@
 "use server";
 
-import { IUser } from "./UsersServices";
+import { IUser } from "../users/UsersServices";
 import { cookies } from "next/headers";
 
 export const putUserService = async ({

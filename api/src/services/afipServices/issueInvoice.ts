@@ -187,7 +187,7 @@ export async function issueInvoice({ req }: { req: Request }) {
       deliveryAddress: deliveryAddress,
       customer: customerInfo,
       comments: comments,
-      invoiceLink: "",
+      invoiceLink: pdfData.file,
       companyId: companyId,
       userId: userId,
       cbteTipo: cbteTipo,

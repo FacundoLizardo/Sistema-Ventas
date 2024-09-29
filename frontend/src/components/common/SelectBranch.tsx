@@ -16,7 +16,7 @@ import { Form } from "../ui/form";
 import { IBranch } from "@/services/branches/BranchesServices";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
-import UsersServices, { IUser } from "@/services/user/UsersServices";
+import UsersServices, { IUser } from "@/services/users/UsersServices";
 import { useRouter } from "next/navigation";
 import { Input } from "../ui/input";
 import { SearchIcon } from "lucide-react";

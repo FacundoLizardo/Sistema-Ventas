@@ -2,7 +2,7 @@ import { accessToken } from "../accessToken";
 import { IBranch } from "../branches/BranchesServices";
 import { getUserService } from "./getUserService";
 import { getUserSession } from "./getUserSession";
-import { putUserService } from "./putUserService";
+import { putUserService } from "../users/putUserService";
 
 export interface IUser {
   id: string;
