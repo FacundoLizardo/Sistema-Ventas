@@ -2,8 +2,6 @@ import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
 export interface CompanyInterface {
   id: string;
-  name: string;
-  address?: string;
   country?: string;
   phoneNumbers?: string;
   isActive: boolean;
@@ -20,7 +18,6 @@ export interface CompanyInterface {
 export interface CompanyCreationInterface
   extends Optional<
     CompanyInterface,
-    | "address"
     | "country"
     | "phoneNumbers"
     | "cuit"
@@ -59,14 +56,6 @@ export default (sequelize: Sequelize) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
         allowNull: false,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      address: {
-        type: DataTypes.STRING,
-        allowNull: true,
       },
       country: {
         type: DataTypes.STRING,

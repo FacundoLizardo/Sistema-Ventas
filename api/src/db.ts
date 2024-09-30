@@ -11,6 +11,8 @@ import SupplierModel from "./models/suppliers";
 import CashRegisterModel from "./models/cashRegister";
 import CompanyModel from "./models/company";
 import StockModel from "./models/stock";
+import CategoryModel from "./models/category";
+import SubCategoryModel from "./models/subCategory";
 import { NODE_ENV, DB_URL, DB_USER, DB_PASSWORD, DB_HOST } from "./config";
 
 /* ----- Utils ----- */
@@ -65,6 +67,8 @@ SupplierModel(sequelize);
 CashRegisterModel(sequelize);
 CompanyModel(sequelize);
 StockModel(sequelize);
+CategoryModel(sequelize);
+SubCategoryModel(sequelize);
 
 const {
   Product,
@@ -78,6 +82,8 @@ const {
   CashRegister,
   Company,
   Stock,
+  Category,
+  SubCategory,
 } = sequelize.models;
 
 /* ----- Relationships Setup ----- */
@@ -125,6 +131,18 @@ Stock.belongsTo(User, { foreignKey: "userId" });
 Product.hasMany(Stock, { foreignKey: "productId", as: "stock" });
 Stock.belongsTo(Product, { foreignKey: "productId", as: "stock" });
 
+Category.hasMany(Product, { foreignKey: "categoryId", as: "category" });
+Product.belongsTo(Category, { foreignKey: "categoryId", as: "category" });
+
+Category.hasMany(SubCategory, { foreignKey: "categoryId" });
+SubCategory.belongsTo(Category, { foreignKey: "categoryId" });
+
+SubCategory.hasMany(Product, { foreignKey: "subCategoryId", as: "subCategory" });
+Product.belongsTo(SubCategory, { foreignKey: "subCategoryId", as: "subCategory" });
+
+Company.hasMany(Category, { foreignKey: "companyId" });
+Category.belongsTo(Company, { foreignKey: "companyId" });
+
 export {
   sequelize,
   Product,
@@ -138,4 +156,6 @@ export {
   CashRegister,
   Company,
   Stock,
+  Category,
+  SubCategory,
 };

@@ -1,27 +1,10 @@
 import { WhereOptions } from "sequelize";
-import { Product, Stock } from "../db";
+import { Product, Stock, Category, SubCategory } from "../db";
 import { ProductInterface, ProductCreationInterface } from "../models/product";
 import { serviceError } from "../utils/serviceError";
 import StockServices from "./StockServices";
 
 class ProductService {
-  async getProduct(name: string) {
-    try {
-      const whereClause: WhereOptions = { name };
-
-      const product = await Product.findOne({
-        where: whereClause,
-        include: [{ model: Stock, as: "stock" }],
-      });
-
-      return product
-        ? (product.get({ plain: true }) as ProductInterface)
-        : null;
-    } catch (error) {
-      serviceError(error);
-    }
-  }
-
   async getProducts({
     companyId,
     branchId,
@@ -32,19 +15,24 @@ class ProductService {
     name?: string;
   }) {
     try {
-      const whereClause: WhereOptions = { companyId };
+      const whereCondition: WhereOptions = { companyId };
 
       if (branchId) {
-        whereClause.branchId = branchId;
+        whereCondition.branchId = branchId;
       }
 
       if (name) {
-        whereClause.name = name;
+        whereCondition.name = name;
       }
 
       const products = await Product.findAll({
-        where: whereClause,
-        include: [{ model: Stock, as: "stock" }],
+        where: whereCondition,
+        include: [
+          { model: Stock, as: "stock" },
+          { model: Category, as: "category" },
+          { model: SubCategory, as: "subCategory" },
+        ],
+        order: [["name", "ASC"]],
       });
 
       return products
@@ -54,58 +42,42 @@ class ProductService {
       serviceError(error);
     }
   }
-
-  async getCategories(): Promise<string[]> {
-    try {
-      const categories = await Product.findAll({
-        attributes: ["category"],
-        group: ["category"],
-      });
-      return categories.map((categoryObj) =>
-        categoryObj.getDataValue("category")
-      );
-    } catch (error) {
-      serviceError(error);
-    }
-  }
-
   async postProduct(
-    data: Omit<ProductCreationInterface, "stock">,
+    data: ProductCreationInterface,
     companyId: string,
-    branchId: string,
-    stock: number
+    stock: Array<{ branchId: string; quantity: number }>
   ): Promise<ProductInterface | string> {
     try {
+console.log("data", data);
+console.log("companyId", companyId);
+
       const existingProduct = await Product.findOne({
         where: {
           name: data.name,
-          branchId: branchId,
         },
       });
 
       if (existingProduct) {
-        return "Product already exists in this branch.";
+        return "Product already exists.";
       }
 
       const product = await Product.create({
         ...data,
         companyId,
-        branchId,
       });
 
       if (product) {
-        await StockServices.postStock(
-          {
-            branchId,
+        for (const item of stock) {
+          await StockServices.postStock({
+            branchId: item.branchId,
             productId: product.getDataValue("id"),
-            quantity: stock,
-          },
-          companyId
-        );
+            quantity: item.quantity,
+          });
+        }
 
         return product.get({ plain: true }) as ProductInterface;
       } else {
-        return "Product not created because it already exists or something is wrong, please try again.";
+        return "Product not created, please try again.";
       }
     } catch (error) {
       serviceError(error);

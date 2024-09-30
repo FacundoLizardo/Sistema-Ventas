@@ -1,4 +1,4 @@
-import UsersServices from "@/services/user/UsersServices";
+import UsersServices from "@/services/users/UsersServices";
 import { redirect } from "next/navigation";
 
 export default async function AppPage({
@@ -7,11 +7,7 @@ export default async function AppPage({
   params: { locale: string; companyId: string };
 }) {
   const { companyId, locale } = params;
-  const { isAdmin, branchId } = await UsersServices.userSession();
-
-  if (isAdmin) {
-    redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/admin`);
-  }
+  const { branchId } = await UsersServices.userSession();
 
   if (!branchId) {
     redirect(

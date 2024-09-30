@@ -1,6 +1,6 @@
 import SelectBranch from "@/components/common/SelectBranch";
 import BranchesServices from "@/services/branches/BranchesServices";
-import UsersServices from "@/services/user/UsersServices";
+import UsersServices from "@/services/users/UsersServices";
 
 export default async function Page({
   params: { locale, companyId },

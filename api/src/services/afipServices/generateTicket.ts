@@ -12,21 +12,15 @@ import { Sequelize } from "sequelize";
 import { updateProductStock } from "../../utils/updateProductStock";
 
 export const generateTicket = async ({ req }: { req: Request }) => {
-  const {
-    products,
-    cbteTipo,
-    outputDir,
-    discount,
-    importeGravado,
-  } = req.body;
+  const { products, cbteTipo, outputDir, discount, importeGravado, branchId } = req.body;
   const sequelize = Product.sequelize as Sequelize;
-  const transaction = await sequelize.transaction();  
+  const transaction = await sequelize.transaction();
 
   try {
     const htmlPath = cbteTipo === 0 ? path.join(__dirname, "ticket.html") : "";
     let html = fs.readFileSync(htmlPath, "utf8");
 
-    await updateProductStock(products, transaction);
+    await updateProductStock(products, branchId, transaction);
 
     await transaction.commit();
 

@@ -26,7 +26,7 @@ class CompanyServices {
   async postCompany(data: Partial<CompanyInterface>) {
     try {
       const [company, created] = await Company.findOrCreate({
-        where: { name: data.name },
+        where: { razonSocial: data.razonSocial },
         defaults: data,
       });
       return created ? company : "Company already exists or creation failed.";
@@ -66,16 +66,17 @@ export default new CompanyServices();
 
 /* 
     {
-      "name": "GPI 360",
-      "address": "Calle 123",
-      "country": "Argentina",
-      "phoneNumbers": ["+1-234-567-8900", "3442644665"],
-      "cuit": "20-12345678-9",
-      "isActive": true,
       "razonSocial": "GPI 360 S.A.",
       "domicilioFiscal": "Tucuman 1234, CABA",
       "inicioActividad": "20010101",
       "regimenTributario": "Responsable Inscripto",
-      "iibb": "123456789"
+      "iibb": "123456789",
+      "country": "Argentina",
+      "phoneNumbers": [
+        "+1-234-567-8900",
+        "3442644665"
+      ],
+      "cuit": "20-12345678-9",
+      "isActive": true
     }
  */

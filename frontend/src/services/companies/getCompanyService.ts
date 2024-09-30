@@ -4,7 +4,7 @@ export const getCompanyService = async ({
   token,
   companyId,
 }: {
-  token?: string;
+  token: string;
   companyId: string;
 }) => {
   try {

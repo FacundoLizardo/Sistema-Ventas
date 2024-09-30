@@ -23,7 +23,7 @@ export default function SelectCompany({ companies }: { companies: ICompany[] }) 
     setSearchTerm(searchValue);
     setFilteredCompanies(
       companies.filter(company =>
-        company.name.toLowerCase().includes(searchValue.toLowerCase())
+        company.razonSocial.toLowerCase().includes(searchValue.toLowerCase())
       )
     );
   };
@@ -51,7 +51,7 @@ export default function SelectCompany({ companies }: { companies: ICompany[] }) 
           <ul>
             {filteredCompanies.map(company => (
               <li key={company.id} className="py-2">
-                {company.name} 
+                {company.razonSocial} 
                 <Badge variant="default">Activa</Badge>
                 <button>Seleccionar</button>
               </li>

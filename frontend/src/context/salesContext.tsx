@@ -1,29 +1,38 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
 import { AfipProducts } from "@/services/products/ProductsServices";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+} from "react";
 import { toast } from "sonner";
 
 type ContextType = {
-  products: AfipProducts[];
+  productsSelected: AfipProducts[];
   discount: number;
+  setProducts: (productsSelected: AfipProducts[]) => void;
   addProduct: (product: AfipProducts) => void;
   removeProduct: (productId: string) => void;
-  getTotalPrice: () => number;
+  totalPrice: () => number;
+  totalPriceWithDiscount: () => number;
   setDiscount: (discount: number) => void;
 };
 
 const SalesContext = createContext<ContextType>({
-  products: [],
+  productsSelected: [],
   discount: 0,
+  setProducts: () => {},
   addProduct: () => {},
   removeProduct: () => {},
-  getTotalPrice: () => 0,
+  totalPrice: () => 0,
+  totalPriceWithDiscount: () => 0,
   setDiscount: () => {},
 });
 
 export const SalesContextProvider = ({ children }: { children: ReactNode }) => {
-  const [products, setProducts] = useState<AfipProducts[]>([]);
+  const [productsSelected, setProducts] = useState<AfipProducts[]>([]);
   const [discount, setDiscount] = useState<number>(0);
 
   const addProduct = (product: AfipProducts) => {
@@ -50,20 +59,30 @@ export const SalesContextProvider = ({ children }: { children: ReactNode }) => {
     toast.success("Producto eliminado correctamente");
   };
 
-  const getTotalPrice = () => {
-    return products.reduce(
+  const totalPrice = () => {
+    return productsSelected.reduce(
       (total, product) => total + (product.finalPrice || 0),
       0
     );
   };
 
+  const totalPriceWithDiscount = () => {
+    const total = totalPrice();
+
+    const discountedTotal = (total - (total * discount) / 100);
+
+    return discountedTotal;
+  };
+
   return (
     <SalesContext.Provider
       value={{
-        products,
+        productsSelected,
         discount,
         addProduct,
-        getTotalPrice,
+        setProducts,
+        totalPrice,
+        totalPriceWithDiscount,
         removeProduct,
         setDiscount,
       }}

@@ -3,7 +3,7 @@
 export const getCompaniesService = async ({
   token,
 }: {
-  token?: string;
+  token: string;
 }) => {
   try {
     if (!token) {

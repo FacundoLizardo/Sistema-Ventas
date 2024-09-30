@@ -4,24 +4,48 @@ import {
   OperationInterface,
 } from "../models/operations";
 import { serviceError } from "../utils/serviceError";
+import { Op, WhereOptions } from "sequelize";
 
 class OperationServices {
-  async getOperation(id: string) {
+  async getOperations({
+    startDate,
+    endDate,
+    companyId,
+    userId,
+  }: {
+    startDate: string;
+    endDate?: string;
+    companyId: string;
+    userId?: string;
+  }) {
     try {
-      const operation = await Operation.findByPk(id);
-      if (!operation) {
-        throw new Error(`The operation with id: ${id} does not exist`);
-      }
-      return operation.get({ plain: true }) as OperationInterface;
-    } catch (error) {
-      serviceError(error);
-    }
-  }
+      const whereCondition: WhereOptions = {
+        companyId,
+      };
 
-  async getOperations() {
-    try {
-      const operations = await Operation.findAll();
-      return operations.map((operation) => operation.get({ plain: true }));
+      if (userId) {
+        whereCondition.userId = userId;
+      }
+
+      const startDateUTC = new Date(new Date(startDate).toUTCString());
+
+      const endDateUTC = endDate
+        ? new Date(new Date(endDate).toUTCString())
+        : new Date(startDateUTC);
+
+      endDateUTC.setUTCHours(23, 59, 59, 999);
+
+      whereCondition.createdAt = {
+        [Op.between]: [startDateUTC, endDateUTC],
+      };
+
+      const operations = await Operation.findAll({
+        where: whereCondition,
+      });
+
+      return operations.map((operation) =>
+        operation.get({ plain: true })
+      ) as OperationInterface[];
     } catch (error) {
       serviceError(error);
     }
@@ -35,7 +59,7 @@ class OperationServices {
       const operation = await Operation.create({
         defaults: {
           ...data,
-          companyId
+          companyId,
         },
       });
 

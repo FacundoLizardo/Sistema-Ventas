@@ -1,15 +1,16 @@
 import { Transaction } from "sequelize";
-import { Product } from "../db";
+import { Product, Stock } from "../db";
 
 /**
  * Updates the stock of products within a transaction.
  * @param products - Array of products to update with their new stock values.
  * @param transaction - Sequelize transaction instance.
- * @throws Will throw an error if a product is not found.
+ * @throws Will throw an error if a product or stock is not found.
  */
 
 export async function updateProductStock(
-  products: { id: string; quantity: number }[],
+  products: { id: string, name: string, finalPrice: number }[],
+  branchId: string,
   transaction: Transaction
 ): Promise<void> {
   for (const product of products) {
@@ -20,11 +21,23 @@ export async function updateProductStock(
       throw new Error(`Product with ID ${product.id} not found.`);
     }
 
-    const newStock = productRecord.dataValues.stock - 1;
+    const stockRecord = await Stock.findOne({
+      where: { productId: product.id, branchId },
+      transaction,
+    });
 
-    await Product.update(
-      { stock: newStock },
-      { where: { id: product.id }, transaction }
+    if (!stockRecord) {
+      await transaction.rollback();
+      throw new Error(
+        `Stock for product with ID ${product.id} and branch ID ${branchId} not found.`
+      );
+    }
+
+    const newStock = stockRecord.dataValues.quantity - 1;
+
+    await Stock.update(
+      { quantity: newStock },
+      { where: { id: stockRecord.get('id') }, transaction }
     );
   }
 }

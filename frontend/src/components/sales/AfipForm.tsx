@@ -1,10 +1,9 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
@@ -16,11 +15,8 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useForm, useWatch } from "react-hook-form";
-import { z } from "zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
 import {
   Select,
   SelectContent,
@@ -28,98 +24,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import ButtonWithLoading from "../common/ButtonWithLoading";
-import { useSales } from "@/context/salesContext";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FaEdit } from "react-icons/fa";
+import { Badge } from "../ui/badge";
 import { ICompany } from "@/services/companies/CompaniesServices";
 import useCustomer from "@/hooks/useCustomer";
-import { Badge } from "../ui/badge";
-
-const formSchema = z.object({
-  products: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      finalPrice: z.number().positive(),
-    })
-  ),
-  discount: z.number().nonnegative(),
-  cbteTipo: z.number(),
-  ptoVta: z.number(),
-  concepto: z.number(),
-  importeGravado: z.number().nonnegative(),
-  importeExentoIva: z.number().nonnegative(),
-  docNro: z.number().int(),
-  docTipo: z.number(),
-  iva: z.number().nonnegative(),
-  outputDir: z.string(),
-  paymentType: z.enum(["cash", "credit_card", "transfer"]),
-  isdelivery: z.boolean(),
-  deliveryAddress: z.string().optional(),
-  comments: z.string().optional(),
-  branchId: z.string().optional(),
-  userId: z.string(),
-});
+import { SearchIcon } from "lucide-react";
+import { useSales } from "@/context/salesContext";
+import { UseFormReturn } from "react-hook-form";
+import { FormValues } from "./SalesContainer";
 
 type AfipFormProps = {
+  form: UseFormReturn<FormValues>;
   company: ICompany;
   companyId: string;
 };
 
-export default function AfipForm({ company, companyId }: AfipFormProps) {
-  const { getTotalPrice, discount } = useSales();
-  const [docNroCompleted, setDocNroCompleted] = useState(false);
+export default function AfipForm({ company, companyId, form }: AfipFormProps) {
+  const { loading, customer, error, loadCustomer, setError, setCustomer } =
+    useCustomer();
+  const { totalPriceWithDiscount } = useSales();
+  const cbteTipo = form.watch("cbteTipo");
+  const docNro = (form.watch("docNro") || "").toString();
+  const docTipo = (form.watch("docTipo") || "").toString();
 
-  const total = getTotalPrice();
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      loadCustomer(companyId, docTipo, docNro);
+    }
+  };
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      products: [],
-      discount: discount,
-
-      // Client
-      docTipo: 80,
-
-      // Invoice
-      cbteTipo: 1,
-      concepto: 1,
-      paymentType: "cash",
-      importeGravado: total,
-      importeExentoIva: 0,
-      iva: 0,
-
-      // Company
-      outputDir: "",
-      ptoVta: 1,
-
-      // Info additional
-      isdelivery: false,
-      deliveryAddress: "",
-      comments: "",
-
-      // User
-      branchId: "",
-      userId: "",
-    },
-  });
-
-  const isdelivery = useWatch({ control: form.control, name: "isdelivery" });
-  const cbteTipo = useWatch({ control: form.control, name: "cbteTipo" });
-  const docNro = (
-    useWatch({ control: form.control, name: "docNro" }) || ""
-  ).toString();
-  const docTipo = (
-    useWatch({ control: form.control, name: "docTipo" }) || ""
-  ).toString();
-
-  const { loading, customer } = useCustomer({
-    companyId,
-    docNro,
-    docTipo,
-    docNroCompleted,
-  });
+  const handleClient = () => {
+    loadCustomer(companyId, docTipo, docNro);
+  };
 
   const customerName =
     customer?.customerType === "company"
@@ -128,84 +66,72 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
       ? `${customer?.firstName} ${customer?.lastName}`
       : "";
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      setDocNroCompleted(true);
+  useEffect(() => {
+    if (docTipo) {
+      form.setValue("docNro", "");
     }
-  };
-
-  const handleBlur = () => {
-    setDocNroCompleted(true);
-  };
+  }, [docTipo, form]);
 
   useEffect(() => {
     const iva = cbteTipo === 1 || cbteTipo === 6 ? 21 : 0;
     form.setValue("iva", iva);
   }, [cbteTipo, form]);
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
-    // Aquí puedes hacer una llamada a una API para enviar los datos
-  };
-
-  const { isDirty, isValid, isSubmitting } = form.formState;
-  const submitDisabled = !isDirty || !isValid;
-
   return (
-    <Card>
-      <div className="grid md:grid-cols-2 gap-4">
-        <CardHeader>
-          <CardTitle>Facturación</CardTitle>
-          <CardDescription>
-            Completa este formulario para gestionar la información necesaria
-            para AFIP y emitir tu comprobante correctamente. Asegúrate de
-            revisar cada campo antes de enviar.
-          </CardDescription>
-        </CardHeader>
-        <CardHeader>
-          <div className="text-xs border p-2 rounded text-muted-foreground">
-            <p>
-              Razón Social:{" "}
-              <span className="font-bold text-card-foreground">
-                {company.razonSocial}
-              </span>
-            </p>
-            <p>
-              CUIT:{" "}
-              <span className="font-bold text-card-foreground">
-                {company.cuit}
-              </span>
-            </p>
-            <p>
-              Domicilio Fiscal:{" "}
-              <span className="font-bold text-card-foreground">
-                {company.domicilioFiscal}
-              </span>
-            </p>
-            <p>
-              Inicio de Actividad:{" "}
-              <span className="font-bold text-card-foreground">
-                {company.inicioActividad}
-              </span>
-            </p>
-            <p>
-              Régimen Tributario:{" "}
-              <span className="font-bold text-card-foreground">
-                {company.regimenTributario}
-              </span>
-            </p>
-            <p>
-              IIBB:{" "}
-              <span className="font-bold text-card-foreground">
-                {company.iibb}
-              </span>
-            </p>
+    <Form {...form}>
+      <form className="space-y-4">
+        <Card>
+          <div className="grid md:grid-cols-2 gap-4">
+            <CardHeader>
+              <CardTitle>Facturación</CardTitle>
+              <CardDescription>
+                Completa este formulario para gestionar la información necesaria
+                para AFIP y emitir tu comprobante correctamente. Asegúrate de
+                revisar cada campo antes de enviar.
+              </CardDescription>
+            </CardHeader>
+            <CardHeader>
+              <div className="text-xs border p-2 rounded text-muted-foreground">
+                <p>
+                  Razón Social:{" "}
+                  <span className="font-bold text-card-foreground">
+                    {company.razonSocial}
+                  </span>
+                </p>
+                <p>
+                  CUIT:{" "}
+                  <span className="font-bold text-card-foreground">
+                    {company.cuit}
+                  </span>
+                </p>
+                <p>
+                  Domicilio Fiscal:{" "}
+                  <span className="font-bold text-card-foreground">
+                    {company.domicilioFiscal}
+                  </span>
+                </p>
+                <p>
+                  Inicio de Actividad:{" "}
+                  <span className="font-bold text-card-foreground">
+                    {company.inicioActividad}
+                  </span>
+                </p>
+                <p>
+                  Régimen Tributario:{" "}
+                  <span className="font-bold text-card-foreground">
+                    {company.regimenTributario}
+                  </span>
+                </p>
+                <p>
+                  IIBB:{" "}
+                  <span className="font-bold text-card-foreground">
+                    {company.iibb}
+                  </span>
+                </p>
+              </div>
+            </CardHeader>
           </div>
-        </CardHeader>
-      </div>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <CardContent>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
@@ -215,10 +141,8 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                     <FormLabel>Tipo de Documento</FormLabel>
                     <FormControl>
                       <Select
-                        onValueChange={(value) =>
-                          field.onChange(parseInt(value, 10))
-                        }
-                        defaultValue={field.value.toString()}
+                        onValueChange={field.onChange}
+                        value={field.value?.toString()}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -243,16 +167,27 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                   <FormItem>
                     <FormLabel>Número de Documento</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onBlur={handleBlur}
-                        onKeyPress={handleKeyPress}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          setDocNroCompleted(false);
-                        }}
-                      />
+                      <div className="relative w-full">
+                        <Input
+                          type="string"
+                          {...field}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            field.onChange(value);
+                            setError(null);
+                            setCustomer(null);
+                          }}
+                          value={field.value === "0" ? "" : field.value}
+                          onKeyDown={handleKeyPress}
+                        />
+                        <button
+                          className="absolute inset-y-0 right-0 flex items-center px-2"
+                          type="button"
+                          onClick={handleClient}
+                        >
+                          <SearchIcon className="text-background size-5" />
+                        </button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -266,19 +201,27 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                   type="button"
                   className="flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background gap-2"
                   disabled={loading}
+                  onClick={handleClient}
                 >
                   <FaEdit />
                   <div className="truncate overflow-hidden whitespace-nowrap w-56">
-                    {docNro.length > 1 ? (
-                      loading ? (
-                        "Cargando cliente..."
-                      ) : customer ? (
-                        customerName
-                      ) : (
-                        <div className="flex justify-center gap-2">
-                          No encontrado <Badge variant={"default"}>Crear</Badge>
-                        </div>
-                      )
+                    {loading ? (
+                      "Cargando cliente..."
+                    ) : docNro ? (
+                      <>
+                        {!customer ? (
+                          error ? (
+                            <div className="flex justify-center gap-2">
+                              <div>{error}</div>
+                              <Badge variant={"default"}>Crear</Badge>
+                            </div>
+                          ) : (
+                            "Presione Enter o haga click..."
+                          )
+                        ) : (
+                          customerName
+                        )}
+                      </>
                     ) : (
                       "Ingresa un cliente"
                     )}
@@ -298,6 +241,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                           field.onChange(parseInt(value, 10))
                         }
                         defaultValue={field.value.toString()}
+                        value={field.value.toString()}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -326,6 +270,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                           field.onChange(parseInt(value, 10))
                         }
                         defaultValue={field.value.toString()}
+                        value={field.value.toString()}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -354,14 +299,21 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                       <Select
                         onValueChange={(value) => field.onChange(value)}
                         defaultValue={field.value}
+                        value={field.value}
                       >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="cash">Efectivo</SelectItem>
-                          <SelectItem value="credit_card">
+                          <SelectItem value="credit">
                             Tarjeta de Crédito
+                          </SelectItem>
+                          <SelectItem value="debit">
+                            Tarjeta de Débito
+                          </SelectItem>
+                          <SelectItem value="mercadoPago">
+                            Mercado Pago
                           </SelectItem>
                           <SelectItem value="transfer">
                             Transferencia
@@ -380,7 +332,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                     <FormLabel>Importe Gravado</FormLabel>
                     <div className="flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background">
                       <div className="truncate overflow-hidden whitespace-nowrap w-56">
-                        {total}
+                        {totalPriceWithDiscount()}
                       </div>
                     </div>
                   </FormItem>
@@ -392,7 +344,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                       <FormItem>
                         <FormLabel>Importe Exento IVA</FormLabel>
                         <FormControl>
-                          <Input type="number" {...field} />
+                          <Input type="number" {...field} value={field.value} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -406,7 +358,7 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                       <FormItem>
                         <FormLabel>IVA</FormLabel>
                         <FormControl>
-                          <Input type="number" {...field} />
+                          <Input type="number" {...field} value={field.value} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -415,87 +367,9 @@ export default function AfipForm({ company, companyId }: AfipFormProps) {
                 </>
               ) : null}
             </div>
-
-            <div className="pt-4">
-              <CardTitle>Información adicional</CardTitle>
-            </div>
-            <div className="flex gap-10">
-              <FormField
-                control={form.control}
-                name="isdelivery"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>¿Con envío?</FormLabel>
-                    <FormControl>
-                      <div className="flex gap-4">
-                        <Button
-                          type="button"
-                          variant={!field.value ? "accent" : "outline"}
-                          className="w-10 h-10"
-                          onClick={() => field.onChange(false)}
-                        >
-                          No
-                        </Button>
-                        <Button
-                          type="button"
-                          variant={field.value ? "accent" : "outline"}
-                          className="w-10 h-10"
-                          onClick={() => field.onChange(true)}
-                        >
-                          Sí
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="deliveryAddress"
-                disabled={!isdelivery}
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Dirección de Entrega</FormLabel>
-                    <FormControl>
-                      <Input type="text" className="w-full" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="comments"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Comentarios</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <CardFooter>
-            <ButtonWithLoading
-              loading={isSubmitting}
-              loadingText="Emitiendo..."
-              variant="default"
-              size={"default"}
-              type="submit"
-              disabled={submitDisabled || isSubmitting}
-            >
-              Emitir factura
-            </ButtonWithLoading>
-            </CardFooter>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      </form>
+    </Form>
   );
 }
