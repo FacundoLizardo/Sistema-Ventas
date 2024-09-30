@@ -11,7 +11,6 @@ import {
 } from '../ui/card';
 import { Input } from '../ui/input';
 import { ICompany } from '@/services/companies/CompaniesServices';
-import { Badge } from '../ui/badge';
 import { CompanyCardContainer } from './company/CompanyCardContainer';
 
 export default function SelectCompany({ companies }: { companies: ICompany[] }) {

@@ -7,7 +7,7 @@ export default function CompanyCard({ company: company }: { company: ICompany })
     <div className="w-full bg-red-500 rounded-md shadow-sm max-h-[50px]">
       <div className="flex items-center justify-between h-10 px-4">
           <div className="text-card-foreground font-medium">
-            {company.name}
+            {company.razonSocial}
           </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon">
