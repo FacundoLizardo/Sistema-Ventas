@@ -31,15 +31,21 @@ export default function BasicProductInformation({
   categories,
   subCategories,
 }: BasicProductInformationProps) {
-  const [filteredSubCategories, setFilteredSubCategories] = useState<ISubCategory[]>([]);
+  const [filteredSubCategories, setFilteredSubCategories] = useState<
+    ISubCategory[]
+  >([]);
 
   useEffect(() => {
-    const categoryId = form.watch("categoryId");
-    const filtered = subCategories.filter(
-      (subCategory) => subCategory.categoryId === categoryId
-    );
-    setFilteredSubCategories(filtered);
-  }, [form, subCategories]);
+    const subscription = form.watch((value) => {
+      const categoryId = value.categoryId;
+      const filtered = subCategories.filter(
+        (subCategory) => subCategory.categoryId === categoryId
+      );
+      setFilteredSubCategories(filtered);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [subCategories, form]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -98,9 +104,7 @@ export default function BasicProductInformation({
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  {...field}
                 >
-                  {}
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccione una categoria" />
                   </SelectTrigger>
@@ -131,9 +135,8 @@ export default function BasicProductInformation({
               </Label>
               <FormControl>
                 <Select
+                  value={field.value}
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  {...field}
                   disabled={!form.watch("categoryId")}
                 >
                   <SelectTrigger>
@@ -256,12 +259,12 @@ export default function BasicProductInformation({
           name="profitPercentage"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="profitPercentage">Porcentaje de ganancia</Label>
+              <Label htmlFor="profitPercentage">Ganancia (%)</Label>
               <FormControl>
                 <Input
                   id="profitPercentage"
                   type="number"
-                  placeholder="Ingrese el porcentaje de ganancia"
+                  placeholder="Ingrese el % de ganancia"
                   value={field.value ?? ""}
                   onChange={(e) => {
                     const value =

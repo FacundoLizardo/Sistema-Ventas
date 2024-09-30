@@ -5,10 +5,11 @@ import OperationServices from "../services/OperationServices";
 class OperationController {
   async getOperation(req: Request, res: Response) {
     try {
-      const { companyId, startDate, endDate } = req.query as {
+      const { companyId, startDate, endDate, userId } = req.query as {
         companyId: string;
         startDate: string;
         endDate?: string;
+        userId?: string;
       };
 
       if (!companyId) {
@@ -19,6 +20,7 @@ class OperationController {
         startDate,
         endDate,
         companyId,
+        userId,
       });
 
       if (!operations || operations.length === 0) {

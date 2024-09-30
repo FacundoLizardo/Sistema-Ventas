@@ -108,7 +108,7 @@ export default function SubCategoriesForm({
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid lg:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="categoryId"

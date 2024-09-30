@@ -25,7 +25,6 @@ export interface IOperation {
   user: string;
 }
 
-
 class OperationsServices {
   static async getToken() {
     try {
@@ -41,10 +40,12 @@ class OperationsServices {
     companyId,
     startDate,
     endDate,
+    userId
   }: {
     companyId: string;
     startDate: string;
     endDate: string;
+    userId?: string;
   }) {
     try {
       const token = await this.getToken();
@@ -53,6 +54,7 @@ class OperationsServices {
         companyId,
         endDate,
         startDate,
+        userId
       });
     } catch (error) {
       console.error("Error getting products:", error);

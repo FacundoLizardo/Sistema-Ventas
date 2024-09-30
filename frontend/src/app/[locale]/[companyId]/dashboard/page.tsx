@@ -15,7 +15,7 @@ export default async function Page({
   const endDate = new Date(new Date().setHours(23, 59, 59, 999)).toISOString();
 
   const [operationsData] = await Promise.all([
-    OperationsServices.get({ companyId, startDate, endDate }),
+    OperationsServices.get({ companyId, startDate, endDate, userId }),
   ]);
 
   const operations = operationsData?.operations?.sort((a: IOperation, b: IOperation) => {

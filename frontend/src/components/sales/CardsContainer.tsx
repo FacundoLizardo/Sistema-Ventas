@@ -51,7 +51,7 @@ export const CardsContainer = () => {
             <TableBody>
               {groupedProducts.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell className="w-1/2">{product.name}</TableCell>
+                  <TableCell className="w-1/2">{product.name.replace(/\b\w/g, (char) => char.toUpperCase())}</TableCell>
                   <TableCell className="w-1/4 text-center">
                     $
                     {(

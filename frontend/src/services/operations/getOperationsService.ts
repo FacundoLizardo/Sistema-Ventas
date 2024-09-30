@@ -5,11 +5,13 @@ export const getOperationsService = async ({
   companyId,
   startDate,
   endDate,
+  userId
 }: {
   token: string;
   companyId: string;
   startDate: string;
   endDate?: string;
+  userId?: string;
 }) => {
   try {
     if (!token) {
@@ -28,6 +30,10 @@ export const getOperationsService = async ({
 
     if (endDate) {
       queryParams.append("endDate", endDate);
+    }
+
+    if(userId) {
+      queryParams.append("userId", userId);
     }
 
     const response = await fetch(

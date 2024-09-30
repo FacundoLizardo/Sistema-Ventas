@@ -43,7 +43,7 @@ const sequelize =
 
 export const syncDatabase = async () => {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: false });
     console.log(blueText, "Database synced successfully.");
   } catch (error) {
     if (error instanceof Error) {

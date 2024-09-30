@@ -11,15 +11,21 @@ class OperationServices {
     startDate,
     endDate,
     companyId,
+    userId,
   }: {
     startDate: string;
     endDate?: string;
     companyId: string;
+    userId?: string;
   }) {
     try {
       const whereCondition: WhereOptions = {
         companyId,
       };
+
+      if (userId) {
+        whereCondition.userId = userId;
+      }
 
       const startDateUTC = new Date(new Date(startDate).toUTCString());
 

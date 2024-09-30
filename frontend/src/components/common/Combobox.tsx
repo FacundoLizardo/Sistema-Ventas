@@ -33,7 +33,7 @@ export function Combobox({
   options,
   disabled,
   onChange,
-  formValue,
+  formValue
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState("");
@@ -49,7 +49,7 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-start gap-2"
+          className="w-full justify-start gap-2"
           disabled={disabled}
         >
           <SearchIcon className="size-4 shrink-0 opacity-50" />
