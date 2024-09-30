@@ -1,44 +1,30 @@
 "use client";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { IoLogoAppleAr } from "react-icons/io5";
 import { useRouter } from "next/navigation";
+import { DoorClosed } from "lucide-react";
+import { deleteAccessCookie } from "@/lib/AccessStatus";
 
-export default function AdminNavigation({
-  locale,
-  companyId,
-}: {
-  locale: string;
-  companyId: string;
-}) {
+export default function AdminNavigation({ locale }: { locale: string }) {
   const router = useRouter();
 
-  const handleApp = () => {
+  const handleCloseApp = () => {
+    deleteAccessCookie();
+
     router.push(
-      `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/${companyId}/sales`
+      `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/auth/login`
     );
+    router.refresh();
   };
 
   return (
     <header className="sticky flex h-16 items-center gap-4 justify-between">
       <nav className="flex gap-4 md:gap-6">
         <Link
-          href={`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/admin/`}
+          href={`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/admin/app`}
           className="text-muted-foreground transition-colors hover:text-primary"
         >
-          Inicio
-        </Link>
-        <Link
-          href={`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/admin/company`}
-          className="text-muted-foreground transition-colors hover:text-primary"
-        >
-          Compañias
-        </Link>
-        <Link
-          href={`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/admin/statistics`}
-          className="text-muted-foreground transition-colors hover:text-primary"
-        >
-          Estadísticas
+          General
         </Link>
       </nav>
 
@@ -47,9 +33,9 @@ export default function AdminNavigation({
           variant="destructive"
           size="icon"
           className="rounded-full"
-          onClick={handleApp}
+          onClick={handleCloseApp}
         >
-          <IoLogoAppleAr className="h-5 w-5" />
+          <DoorClosed className="h-5 w-5" />
         </Button>
       </div>
     </header>

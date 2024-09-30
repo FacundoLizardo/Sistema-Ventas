@@ -2,14 +2,14 @@ import Navbar from "./Navbar";
 
 export default function Header({
   params,
-  isAdmin,
+  isBasic,
 }: {
   params: { locale: string; companyId: string };
-  isAdmin: boolean;
+  isBasic: boolean;
 }) {
   return (
     <header className="w-full">
-      <Navbar params={params} isAdmin={isAdmin} />
+      <Navbar params={params} isBasic={isBasic} />
     </header>
   );
 }

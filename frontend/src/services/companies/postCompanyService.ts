@@ -1,32 +1,38 @@
 "use server";
 
-import { IProductCreate } from "./ProductsServices";
+import { ICompanyCreate } from "./CompaniesServices";
 
-export const postProductService = async ({
+export const postCompanyService = async ({
   params,
-  companyId,
-  token,
 }: {
-  params: IProductCreate;
-  companyId: string;
-  token: string;
+  params: ICompanyCreate;
 }) => {
+  const tokenFrontend = process.env.NEXT_PUBLIC_TOKEN_FRONTEND;
+
+  if (!tokenFrontend) {
+    throw new Error("No token provided");
+  }
+const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/initialApp/company`
+console.log("url", url);
+
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${companyId}`,
+      url,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(params),
       }
     );
 
+    console.log("response", response);
+
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
+
 
     const body = await response.json();
     return body;

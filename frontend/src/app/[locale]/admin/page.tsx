@@ -1,20 +1,19 @@
-import SelectCompany from "@/components/admin/SelectCompany";
-import CompaniesServices from "@/services/companies/CompaniesServices";
-import UsersServices from "@/services/users/UsersServices";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function AdminPage() {
-  const { role } = await UsersServices.userSession();
+export default async function AdminPage({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
 
-  if (role !== "SUPER_ADMIN") {
-    redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/`);
+  if (isAuthenticated) {
+    redirect(`${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/admin/app`);
   }
 
-  const { companies } = await CompaniesServices.getAll();
-
-  return (
-    <main>
-      <SelectCompany companies={companies} />
-    </main>
+  return redirect(
+    `${process.env.NEXT_PUBLIC_CLIENT_BASE_URL}/${locale}/admin/access`
   );
 }

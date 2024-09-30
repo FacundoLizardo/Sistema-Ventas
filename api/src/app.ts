@@ -3,6 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import mainRouter from "./routes";
+import initialRouter from "./routes/initialApp";
 import { greenText, syncDatabase } from "./db";
 import loginRouter from "./routes/login";
 import { authenticateToken } from "./utils/authenticateToken";
@@ -43,6 +44,7 @@ app.use((_req, res, next) => {
 });
 
 app.use("/api/auth/", loginRouter);
+app.use("/api", initialRouter);
 app.use(
   "/api",
   (req, res, next) => {

@@ -9,17 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
-/* import { toast } from "sonner"; */
+import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2Icon } from "lucide-react";
@@ -30,10 +24,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import CompaniesServices from "@/services/companies/CompaniesServices";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  name: z.string().min(3, { message: "El nombre debe ser más largo." }),
-  address: z.string().min(5, { message: "La dirección debe ser válida." }),
+  razonSocial: z.string().min(3, { message: "El nombre debe ser más largo." }),
+  domicilioFiscal: z
+    .string()
+    .min(5, { message: "La dirección debe ser válida." }),
+  inicioActividad: z.string(),
+  regimenTributario: z.string(),
+  iibb: z.string(),
   country: z.string(),
   phoneNumbers: z
     .string()
@@ -41,7 +42,7 @@ const formSchema = z.object({
       message:
         "El teléfono debe tener al menos 7 dígitos y contener solo números.",
     })
-    .array(),
+    .array().optional(),
   cuit: z.string().regex(/^[0-9]{11}$/, {
     message: "El CUIT debe contener exactamente 11 dígitos.",
   }),
@@ -49,32 +50,37 @@ const formSchema = z.object({
 });
 
 export default function CreateCompanyForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      address: '',
+      razonSocial: "",
+      domicilioFiscal: "",
+      inicioActividad: "",
+      regimenTributario: "",
+      iibb: "",
       country: "Argentina",
       phoneNumbers: [""],
-      cuit: '',
+      cuit: "",
       isActive: true,
     },
   });
-
-  console.log(form.watch());
-
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log(data);
-    
-    /* const request = postCompanyService({ ...data });
-    toast.promise(request, {
-      loading: "Creando la compañía...",
+    console.log("Formulario enviado con datos:", data);
+    const request = await CompaniesServices.post({
+      params: data,
+    });
+    console.log("request", request);
+
+    toast.promise(Promise.resolve(request), {
+      loading: "Creando la compañia...",
       success: () => {
         form.reset();
-        return "Compañía creada exitosamente.";
+        router.refresh();
+        return "La compania fue creada con éxito.";
       },
-      error: "Error al crear la compañía.",
-    }); */
+      error: "Error al crear la compania.",
+    });
   };
 
   const addPhoneNumber = () => {
@@ -88,6 +94,8 @@ export default function CreateCompanyForm() {
     form.setValue("phoneNumbers", [...updatedPhones]);
   };
 
+  console.log("errores", form.formState.errors);
+
   const { isDirty, isValid, isSubmitting } = form.formState;
   const submitDisabled = !isDirty || !isValid;
   const submitLoading = isSubmitting;
@@ -95,43 +103,88 @@ export default function CreateCompanyForm() {
   return (
     <Card>
       <Form {...form}>
-        <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
             <CardTitle className="text-2xl font-bold">Crear Compañía</CardTitle>
           </CardHeader>
           <CardContent className="md:grid-cols-2">
             <FormField
               control={form.control}
-              name="name"
+              name="razonSocial"
               render={({ field }) => (
                 <FormItem>
-                  <Label htmlFor="name">Nombre</Label>
+                  <Label htmlFor="razonSocial">Nombre</Label>
                   <FormControl>
                     <Input
-                      id="name"
+                      id="razonSocial"
                       placeholder="Nombre de la compañía"
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
 
             <FormField
               control={form.control}
-              name="address"
+              name="domicilioFiscal"
               render={({ field }) => (
                 <FormItem>
-                  <Label htmlFor="address">Dirección</Label>
+                  <Label htmlFor="domicilioFiscal">Dirección</Label>
                   <FormControl>
                     <Input
-                      id="address"
+                      id="domicilioFiscal"
                       placeholder="Dirección de la compañía"
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="inicioActividad"
+              render={({ field }) => (
+                <FormItem>
+                  <Label htmlFor="inicioActividad">Inicio de Actividad</Label>
+                  <FormControl>
+                    <Input id="inicioActividad" type="text" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="regimenTributario"
+              render={({ field }) => (
+                <FormItem>
+                  <Label htmlFor="regimenTributario">Régimen Tributario</Label>
+                  <FormControl>
+                    <Input
+                      id="regimenTributario"
+                      placeholder="Régimen tributario de la compañía"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="iibb"
+              render={({ field }) => (
+                <FormItem>
+                  <Label htmlFor="iibb">IIBB</Label>
+                  <FormControl>
+                    <Input
+                      id="iibb"
+                      placeholder="IIBB de la compañía"
+                      {...field}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />
@@ -149,7 +202,6 @@ export default function CreateCompanyForm() {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -176,7 +228,6 @@ export default function CreateCompanyForm() {
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -195,16 +246,17 @@ export default function CreateCompanyForm() {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Card className="col-span-2 w-[50%]">
-              <CardTitle>Telefonos de contacto</CardTitle>
-              <CardDescription>
-                Agregue los telefonos de contacto de la empresa
-              </CardDescription>
+            <Card className="col-span-2">
+              <CardHeader>
+                <CardTitle>Números de Teléfono</CardTitle>
+                <CardDescription>
+                  Agregue los números de contacto de la empresa.
+                </CardDescription>
+              </CardHeader>
               <CardContent>
                 {form.getValues("phoneNumbers").map((_, index) => (
                   <FormField
@@ -214,14 +266,14 @@ export default function CreateCompanyForm() {
                     render={({ field }) => (
                       <FormItem>
                         <Label htmlFor={`phoneNumbers.${index}`}>
-                          Número de Teléfono {index + 1}
+                          Teléfono {index + 1}
                         </Label>
                         <FormControl>
                           <div className="flex gap-2">
                             <Input
                               id={`phoneNumbers.${index}`}
                               placeholder={`Número de Teléfono ${index + 1}`}
-                              type="number"
+                              type="text"
                               {...field}
                             />
                             {index !== 0 && (
@@ -235,7 +287,6 @@ export default function CreateCompanyForm() {
                             )}
                           </div>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -252,12 +303,10 @@ export default function CreateCompanyForm() {
           </CardContent>
           <CardFooter>
             <ButtonWithLoading
-              loading={submitLoading}
               loadingText="Creando compañía..."
               variant="default"
               className="flex flex-row items-center"
               type="submit"
-              disabled={submitDisabled}
             >
               Crear Compañía
             </ButtonWithLoading>

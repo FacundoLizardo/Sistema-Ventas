@@ -8,16 +8,15 @@ import { GrConfigure } from "react-icons/gr";
 
 const baseURL = process.env.NEXT_PUBLIC_CLIENT_BASE_URL;
 
-const navigationLinks = (locale: string, companyId: string, isAdmin: boolean) => {
+const navigationLinks = (locale: string, companyId: string, isBasic: boolean) => {
   const links = [
     { href: `${baseURL}/${locale}/${companyId}/dashboard`, name: "Control" },
     { href: `${baseURL}/${locale}/${companyId}/sales`, name: "Ventas" },
-    { href: `${baseURL}/${locale}/${companyId}/stock`, name: "Inventario" },
-    { href: `${baseURL}/${locale}/${companyId}/cetegories`, name: "Categorías" },
   ];
 
-  if (isAdmin) {
-    links.push({ href: `${baseURL}/${locale}/admin`, name: "Admin" });
+  if (!isBasic) {
+    links.push({ href: `${baseURL}/${locale}/stock`, name: "Inventario" });
+    links.push({ href: `${baseURL}/${locale}/cetegories`, name: "Categorías" });
   }
 
   return links;
@@ -64,10 +63,10 @@ const MenuLinks = ({
 
 const Navigation = ({
   params,
-  isAdmin,
+  isBasic,
 }: {
   params: { locale: string; companyId: string };
-  isAdmin: boolean;
+  isBasic: boolean
 }) => {
   const router = useRouter();
   const activeLink = usePathname();
@@ -106,7 +105,7 @@ const Navigation = ({
     };
   }, [isOpen]);
 
-  const links = navigationLinks(params.locale, params.companyId, isAdmin);
+  const links = navigationLinks(params.locale, params.companyId, isBasic);
   const profileLinks = configLinks(params.locale, params.companyId);
 
   return (
@@ -213,7 +212,7 @@ const Navigation = ({
                   {link.name}
                 </Link>
               ))}
-              {isAdmin && (
+              {isBasic && (
                 <>
                   <hr />
                   <Link
