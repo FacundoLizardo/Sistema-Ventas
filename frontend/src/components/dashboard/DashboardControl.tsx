@@ -11,20 +11,20 @@ type DashboardControlProps = {
   operations: IOperation[];
 };
 
-export default function DashboardControl({operations}: DashboardControlProps) {
+export default function DashboardControl({
+  operations,
+}: DashboardControlProps) {
   return (
     <div>
       <Tabs defaultValue="history">
         <div className="flex items-center">
           <TabsList>
             <TabsTrigger value="history">Historial</TabsTrigger>
-            <TabsTrigger value="2">2</TabsTrigger>
-            <TabsTrigger value="3">3</TabsTrigger>
           </TabsList>
         </div>
-        <TabsContent value="history"><UserMonitoring operations={operations} /></TabsContent>
-        <TabsContent value="2">Soy 2</TabsContent>
-        <TabsContent value="3">Soy 3</TabsContent>
+        <TabsContent value="history">
+          <UserMonitoring operations={operations} />
+        </TabsContent>
       </Tabs>
     </div>
   );

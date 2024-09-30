@@ -194,7 +194,7 @@ export default function UserMonitoring({ operations }: UserMonitoringProps) {
                   </p>
                 ) : (
                   operations.map((operation) => (
-                    <div className="flex items-center gap-4">
+                    <div key={operation.id} className="flex items-center gap-4">
                       <Avatar className="hidden h-9 w-9 sm:flex">
                         <AvatarFallback>
                           {operation.cbteTipo === 1
