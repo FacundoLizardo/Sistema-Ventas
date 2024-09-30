@@ -93,7 +93,7 @@ export default function UserMonitoring({ operations }: UserMonitoringProps) {
             {operations.length > 0 ? (
               <div className="text-2xl font-bold">
                 {format(
-                  new Date(operations[operations.length - 1].createdAt),
+                  new Date(operations[0].createdAt),
                   "HH:mm 'hs'"
                 )}
               </div>

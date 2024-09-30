@@ -52,7 +52,7 @@ export const putUserService = async ({
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "strict",
-          maxAge: 3600,
+          maxAge: 3600000,
         });
       }
     }
