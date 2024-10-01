@@ -1,6 +1,7 @@
 import CategoriesContainer from "@/components/categories/CategoriesContainer";
 import CategoriesServices from "@/services/cetegories/CategoriesServices";
 import SubCategoriesServices from "@/services/subCetegories/SubCategoriesServices";
+import { Suspense } from "react";
 
 interface Category {
   name: string;
@@ -34,8 +35,14 @@ async function fetchCategories(companyId: string): Promise<Category[]> {
 async function fetchSubCategories(companyId: string): Promise<SubCategory[]> {
   try {
     const subCategoriesData = await SubCategoriesServices.get({ companyId });
+    // acá no puedo poner un promise
     return subCategoriesData.subCategories.map(
-      (subCategory: { name: string; id: string; categoryId: string; description?: string }) => ({
+      (subCategory: {
+        name: string;
+        id: string;
+        categoryId: string;
+        description?: string;
+      }) => ({
         name: subCategory.name,
         id: subCategory.id,
         description: subCategory.description,
@@ -63,7 +70,13 @@ export default async function Page({
 
   return (
     <main className="grid gap-4">
-      <CategoriesContainer categories={categories} subCategories={subCategories} companyId={companyId} />
+      <Suspense fallback={<div>Cargando...</div>}>
+        <CategoriesContainer
+          categories={categories}
+          subCategories={subCategories}
+          companyId={companyId}
+        />
+      </Suspense>
     </main>
   );
 }
