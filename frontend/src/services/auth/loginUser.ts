@@ -6,8 +6,11 @@ export async function loginUser(email: string, password: string) {
   try {
     const cookieStore = cookies();
 
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`;
+    console.log("login url", url);
+    
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`,
+      url,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -32,7 +35,7 @@ export async function loginUser(email: string, password: string) {
       sameSite: "strict",
       maxAge: 3600000,
     });
-    
+
     return data;
   } catch (error) {
     console.error("Error during authentication:", error);
