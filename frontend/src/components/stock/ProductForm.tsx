@@ -133,37 +133,40 @@ export default function ProductForm({
   useEffect(() => {
     if (cost !== undefined) {
       let finalPrice = cost;
-  
+
       if (taxes) {
         finalPrice += (finalPrice * taxes) / 100;
       }
-  
+
       if (discount) {
         finalPrice -= (finalPrice * discount) / 100;
       }
-  
+
       if (profitPercentage) {
         finalPrice += (finalPrice * profitPercentage) / 100;
       }
-  
+
       form.setValue("finalPrice", Math.round(finalPrice));
     }
   }, [cost, taxes, discount, profitPercentage, form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const formattedData = {
+      ...data,
+      name: data.name.toLowerCase(),
+    };
 
-    if (!data.subCategoryId) {
-      delete data.subCategoryId;
-    }
+    const request = await ProductsServices.post({
+      params: formattedData,
+      companyId,
+    });
 
-    const request = ProductsServices.post({ params: data, companyId });
-
-    toast.promise(request, {
+    toast.promise(Promise.resolve(request), {
       loading: "Creando el producto...",
       success: () => {
         form.reset();
         router.refresh();
-        return "El producto fue creado con exito.";
+        return "El producto fue creado con éxito.";
       },
       error: "Error al crear el producto.",
     });
@@ -223,7 +226,7 @@ export default function ProductForm({
 
             <ButtonWithLoading
               loading={isSubmitting}
-              loadingText="Emitiendo comprobante..."
+              loadingText="Creando el producto..."
               variant="gradient"
               size={"sm"}
               type="submit"
