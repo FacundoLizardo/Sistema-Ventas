@@ -19,6 +19,7 @@ export async function loginUser(email: string, password: string) {
       }
     );
 
+    console.log("response de login", response);
     if (!response.ok) {
       if (response.status === 401) {
         return { success: false, error: "Correo o contraseña incorrectos." };
