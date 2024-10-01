@@ -7,7 +7,6 @@ export async function loginUser(email: string, password: string) {
     const cookieStore = cookies();
 
     const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`;
-    console.log("login url", url);
     
     const response = await fetch(
       url,
@@ -19,7 +18,6 @@ export async function loginUser(email: string, password: string) {
       }
     );
 
-    console.log("response de login", response);
     if (!response.ok) {
       if (response.status === 401) {
         return { success: false, error: "Correo o contraseña incorrectos." };
@@ -28,7 +26,6 @@ export async function loginUser(email: string, password: string) {
     }
 
     const data = await response.json();
-    console.log("data de login", data);
 
     cookieStore.set("session", JSON.stringify(data), {
       httpOnly: true,
