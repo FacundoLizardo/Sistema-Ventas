@@ -54,9 +54,7 @@ export default function CategoriesControl({
   const router = useRouter();
 
   const handleDelete = async (id: string, type: "category" | "subcategory") => {
-    const typeTranslation = type === "category" ? "categoría" : "subcategoría";
-
-    try {
+     try {
       let request;
       if (type === "category") {
         request = CategoriesServices.delete({ companyId, id });
@@ -68,16 +66,24 @@ export default function CategoriesControl({
         loading: "Eliminando...",
         success: () => {
           router.refresh();
-          return `La ${typeTranslation} fue eliminada con éxito.`;
+          return `La ${
+            type === "category" ? "categoría" : "subcategoría"
+          } fue eliminada con éxito.`;
         },
         error: (error) => {
           console.error("Error al eliminar:", error);
-          return `Error al eliminar la ${typeTranslation}.`;
+          return `Error al eliminar la ${
+            type === "category" ? "categoría" : "subcategoría"
+          }.`;
         },
       });
     } catch (error) {
       console.error("Error en el bloque catch:", error);
-      toast.error(`Error al eliminar la ${typeTranslation}.`);
+      toast.error(
+        `Error al eliminar la ${
+          type === "category" ? "categoría" : "subcategoría"
+        }.`
+      );
     }
   };
 
