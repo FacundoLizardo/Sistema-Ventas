@@ -9,6 +9,7 @@ import { authenticateToken } from "./utils/authenticateToken";
 import cookieParser from "cookie-parser";
 var session = require("express-session");
 import { PORT, NODE_ENV, SESSION_SECRET } from "./config";
+import seedDatabase from "./utils/seedDatabase";
 
 const app = express();
 
@@ -56,7 +57,8 @@ app.use(
 );
 
 syncDatabase()
-  .then(() => {
+  .then(async () => {
+    await seedDatabase(); 
     app.listen(PORT || 3000, () =>
       console.log(greenText, `Server running on port ${PORT}`)
     );
