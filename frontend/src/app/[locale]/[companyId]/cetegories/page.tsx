@@ -2,39 +2,65 @@ import CategoriesContainer from "@/components/categories/CategoriesContainer";
 import CategoriesServices from "@/services/cetegories/CategoriesServices";
 import SubCategoriesServices from "@/services/subCetegories/SubCategoriesServices";
 
-export default async function Page({
-  params: { companyId },
-}: {
-  params: {
-    locale: string;
-    companyId: string;
-  };
-}) {
+const fetchCategoriesData = async (companyId: string) => {
   const [categoriesData, subCategoriesData] = await Promise.all([
     CategoriesServices.get({ companyId }),
     SubCategoriesServices.get({ companyId }),
   ]);
+  return { categoriesData, subCategoriesData };
+};
+
+export default async function Page({
+  params: { companyId },
+}: {
+  params: { companyId: string };
+}) {
+  const { categoriesData, subCategoriesData } = await fetchCategoriesData(
+    companyId
+  );
 
   const categories = categoriesData.categories.map(
-    (category: { name: string; id: string, description?: string }) => ({
-      name: category.name,
-      id: category.id,
-      description: category.description,
+    ({
+      name,
+      id,
+      description,
+    }: {
+      name: string;
+      id: string;
+      description: string;
+    }) => ({
+      name,
+      id,
+      description,
     })
   );
 
   const subCategories = subCategoriesData.subCategories.map(
-    (subCategory: { name: string; id: string, categoryId: string, description?: string }) => ({
-      name: subCategory.name,
-      id: subCategory.id,
-      description: subCategory.description,
-      categoryId: subCategory.categoryId,
+    ({
+      name,
+      id,
+      categoryId,
+      description,
+    }: {
+      name: string;
+      id: string;
+      categoryId: string;
+      description: string;
+    }) => ({
+      name,
+      id,
+      description,
+      categoryId,
     })
   );
 
   return (
     <main className="grid gap-4">
-      <CategoriesContainer categories={categories} subCategories={subCategories} companyId={companyId} />
+      <CategoriesContainer
+        categories={categories}
+        subCategories={subCategories}
+        companyId={companyId}
+      />
     </main>
   );
 }
