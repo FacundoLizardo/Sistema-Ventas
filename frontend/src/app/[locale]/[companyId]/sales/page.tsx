@@ -4,6 +4,8 @@ import CompaniesServices from "@/services/companies/CompaniesServices";
 import ProductsServices from "@/services/products/ProductsServices";
 import UsersServices from "@/services/users/UsersServices";
 
+export const dynamic = 'force-dynamic';
+
 const fetchData = async (
   companyId: string,
   branchId: string,
