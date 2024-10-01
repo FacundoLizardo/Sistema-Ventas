@@ -1,42 +1,52 @@
 import ProductControl from "@/components/stock/ProductControl";
 import ProductForm from "@/components/stock/ProductForm";
 import CategoriesServices from "@/services/cetegories/CategoriesServices";
-import CompaniesServices from "@/services/companies/CompaniesServices";
 import ProductsServices from "@/services/products/ProductsServices";
 import SubCategoriesServices from "@/services/subCetegories/SubCategoriesServices";
 import UsersServices from "@/services/users/UsersServices";
 
-export default async function Page({
-  params: { companyId },
-}: {
+interface PageParams {
   params: {
     locale: string;
     companyId: string;
   };
-}) {
-  const { userId, branchId } = await UsersServices.userSession();
+}
 
+const fetchData = async (companyId: string, branchId: string) => {
   const [productsData, categoriesData, subCategoriesData] = await Promise.all([
     ProductsServices.getAll({ companyId, branchId }),
     CategoriesServices.get({ companyId }),
     SubCategoriesServices.get({ companyId }),
-    CompaniesServices.get(companyId),
   ]);
 
-  const products = productsData.products;
-  
-  const categories = categoriesData.categories.map(
-    (category: { name: string; id: string }) => ({
-      name: category.name,
-      id: category.id,
-    })
-  );
-  const subCategories = subCategoriesData.subCategories.map(
-    (subCategory: { name: string; id: string; categoryId: string }) => ({
-      name: subCategory.name,
-      id: subCategory.id,
-      categoryId: subCategory.categoryId,
-    })
+  return {
+    products: productsData.products,
+    categories: categoriesData.categories.map(
+      ({ name, id }: { name: string; id: string }) => ({ name, id })
+    ),
+    subCategories: subCategoriesData.subCategories.map(
+      ({
+        name,
+        id,
+        categoryId,
+      }: {
+        name: string;
+        id: string;
+        categoryId: string;
+      }) => ({
+        name,
+        id,
+        categoryId,
+      })
+    ),
+  };
+};
+
+export default async function Page({ params: { companyId } }: PageParams) {
+  const { userId, branchId } = await UsersServices.userSession();
+  const { products, categories, subCategories } = await fetchData(
+    companyId,
+    branchId
   );
 
   return (

@@ -54,7 +54,6 @@ export default function CategoriesControl({
   const router = useRouter();
 
   const handleDelete = async (id: string, type: "category" | "subcategory") => {
-    // Definir la traducción del tipo fuera del bloque try
     const typeTranslation = type === "category" ? "categoría" : "subcategoría";
 
     try {
