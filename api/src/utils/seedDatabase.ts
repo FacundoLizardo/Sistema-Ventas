@@ -1,7 +1,4 @@
 import { Branch, Company, Customer, User } from "../db";
-import bcrypt from "bcrypt";
-
-const saltRounds = 10;
 
 export default async function seedDatabase() {
   try {
@@ -27,16 +24,11 @@ export default async function seedDatabase() {
       });
 
       if (!existingUser) {
-        const hashedPassword = await bcrypt.hash(
-          process.env.USER_PASSWORD || Math.random().toString(),
-          saltRounds
-        );
-
         const user = await User.create({
           firstName: "Test",
           lastName: "Test",
           email: "test@gmail.com",
-          password: hashedPassword,
+          password: "123456",
           address: "123 Main St",
           phoneNumber: "1234567890",
           cuit: "20123456789",
