@@ -5,44 +5,48 @@ import ProductsServices from "@/services/products/ProductsServices";
 import SubCategoriesServices from "@/services/subCetegories/SubCategoriesServices";
 import UsersServices from "@/services/users/UsersServices";
 
-interface PageParams {
-  params: {
-    locale: string;
-    companyId: string;
-  };
-}
-
 const fetchData = async (companyId: string, branchId: string) => {
-  const [productsData, categoriesData, subCategoriesData] = await Promise.all([
-    ProductsServices.getAll({ companyId, branchId }),
-    CategoriesServices.get({ companyId }),
-    SubCategoriesServices.get({ companyId }),
-  ]);
+  try {
+    const [productsData, categoriesData, subCategoriesData] = await Promise.all(
+      [
+        ProductsServices.getAll({ companyId, branchId }),
+        CategoriesServices.get({ companyId }),
+        SubCategoriesServices.get({ companyId }),
+      ]
+    );
 
-  return {
-    products: productsData.products,
-    categories: categoriesData.categories.map(
-      ({ name, id }: { name: string; id: string }) => ({ name, id })
-    ),
-    subCategories: subCategoriesData.subCategories.map(
-      ({
-        name,
-        id,
-        categoryId,
-      }: {
-        name: string;
-        id: string;
-        categoryId: string;
-      }) => ({
-        name,
-        id,
-        categoryId,
-      })
-    ),
-  };
+    return {
+      products: productsData.products,
+      categories: categoriesData.categories.map(
+        ({ name, id }: { name: string; id: string }) => ({ name, id })
+      ),
+      subCategories: subCategoriesData.subCategories.map(
+        ({
+          name,
+          id,
+          categoryId,
+        }: {
+          name: string;
+          id: string;
+          categoryId: string;
+        }) => ({
+          name,
+          id,
+          categoryId,
+        })
+      ),
+    };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; 
+  }
 };
 
-export default async function Page({ params: { companyId } }: PageParams) {
+export default async function Page({
+  params: { companyId },
+}: {
+  params: { companyId: string };
+}) {
   const { userId, branchId } = await UsersServices.userSession();
   const { products, categories, subCategories } = await fetchData(
     companyId,
