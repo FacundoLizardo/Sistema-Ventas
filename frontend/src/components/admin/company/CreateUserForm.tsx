@@ -86,10 +86,6 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log({ data });
-    console.log("en el submit");
-
-
     const request = postUserService({ companyId, ...data });
 
     toast.promise(request, {

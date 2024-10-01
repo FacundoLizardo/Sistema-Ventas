@@ -52,8 +52,6 @@ export default function CategoriesControl({
 }: CategoriesControlProps) {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const router = useRouter();
-console.log("categories", categories);
-console.log("subCategories", subCategories);
 
   const handleDelete = async (id: string, type: "category" | "subcategory") => {
     // Definir la traducción del tipo fuera del bloque try

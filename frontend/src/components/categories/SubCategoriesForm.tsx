@@ -81,7 +81,7 @@ export default function SubCategoriesForm({
       error: "Error al crear la subcategoría.",
     });
   };
-  console.log("datos del formulario", form.getValues());
+
   const { isDirty, isValid, isSubmitting } = form.formState;
 
   return (

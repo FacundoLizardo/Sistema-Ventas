@@ -61,7 +61,6 @@ export default function CreateCompanyForm() {
     },
   });
 
-  console.log(form.watch());
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log(data);
