@@ -1,22 +1,10 @@
 import CategoriesContainer from "@/components/categories/CategoriesContainer";
-import CategoriesServices from "@/services/cetegories/CategoriesServices";
-import SubCategoriesServices from "@/services/subCetegories/SubCategoriesServices";
-import { Suspense } from "react";
+import CategoriesServices, { ICategory } from "@/services/cetegories/CategoriesServices";
+import SubCategoriesServices, { ISubCategory } from "@/services/subCetegories/SubCategoriesServices";
 
-interface Category {
-  name: string;
-  id: string;
-  description?: string;
-}
+export const dynamic = 'force-dynamic';
 
-interface SubCategory {
-  name: string;
-  id: string;
-  categoryId: string;
-  description?: string;
-}
-
-async function fetchCategories(companyId: string): Promise<Category[]> {
+async function fetchCategories(companyId: string): Promise<ICategory[]> {
   try {
     const categoriesData = await CategoriesServices.get({ companyId });
     return categoriesData.categories.map(
@@ -32,17 +20,11 @@ async function fetchCategories(companyId: string): Promise<Category[]> {
   }
 }
 
-async function fetchSubCategories(companyId: string): Promise<SubCategory[]> {
+async function fetchSubCategories(companyId: string): Promise<ISubCategory[]> {
   try {
     const subCategoriesData = await SubCategoriesServices.get({ companyId });
-    // acá no puedo poner un promise
     return subCategoriesData.subCategories.map(
-      (subCategory: {
-        name: string;
-        id: string;
-        categoryId: string;
-        description?: string;
-      }) => ({
+      (subCategory: { name: string; id: string; categoryId: string; description?: string }) => ({
         name: subCategory.name,
         id: subCategory.id,
         description: subCategory.description,
@@ -70,13 +52,7 @@ export default async function Page({
 
   return (
     <main className="grid gap-4">
-      <Suspense fallback={<div>Cargando...</div>}>
-        <CategoriesContainer
-          categories={categories}
-          subCategories={subCategories}
-          companyId={companyId}
-        />
-      </Suspense>
+      <CategoriesContainer categories={categories} subCategories={subCategories} companyId={companyId} />
     </main>
   );
 }
