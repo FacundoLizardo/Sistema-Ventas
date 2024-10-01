@@ -18,7 +18,9 @@ export const getUserSession = async ({ token }: { token: string }) => {
     const sessionData = JSON.parse(session);
     const { dataUser } = sessionData;
     const { userId, companyId, branchId, role } = dataUser;
-    const isAdmin = sessionData && sessionData.dataUser.role === "SUPER_ADMIN";
+    const isSuperAdmin = sessionData && sessionData.dataUser.role === "SUPER_ADMIN";
+    const isAdmin = sessionData && sessionData.dataUser.role === "ADMIN";
+    const isBasic = sessionData && sessionData.dataUser.role === "BASIC";
 
     return {
       userId,
@@ -27,6 +29,8 @@ export const getUserSession = async ({ token }: { token: string }) => {
       role,
       token,
       isAdmin,
+      isBasic,
+      isSuperAdmin
     };
   } catch (error) {
     console.error("Error getting session:", error);

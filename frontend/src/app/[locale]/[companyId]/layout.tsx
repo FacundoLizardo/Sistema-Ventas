@@ -12,12 +12,12 @@ export default async function AppLayout({
     companyId: string;
   };
 }>) {
-  const { isAdmin } = await UsersServices.userSession();
+  const { isSuperAdmin } = await UsersServices.userSession();
 
   return (
     <main>
       <div className="flex flex-col min-h-screen bg-background md:max-w-5xl m-auto text-xs md:text-sm">
-        <Header params={params} isAdmin={isAdmin} />
+        <Header params={params} isSuperAdmin={isSuperAdmin} />
         {children}
       </div>
       <Footer />

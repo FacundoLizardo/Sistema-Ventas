@@ -41,6 +41,7 @@
     "@types/pg": "^8.11.6",
     "@types/qrcode": "^1.5.5",
     "@types/sequelize": "^4.28.20",
+    "sequelize-cli": "^6.6.2",
     "ts-node": "^10.9.2",
     "typescript": "5.5.4"
   }
