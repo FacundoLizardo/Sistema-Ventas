@@ -24,6 +24,7 @@ export async function loginUser(email: string, password: string) {
     }
 
     const data = await response.json();
+    console.log("data de login", data);
 
     cookieStore.set("session", JSON.stringify(data), {
       httpOnly: true,
@@ -31,7 +32,7 @@ export async function loginUser(email: string, password: string) {
       sameSite: "strict",
       maxAge: 3600000,
     });
-
+    
     return data;
   } catch (error) {
     console.error("Error during authentication:", error);
