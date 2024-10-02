@@ -164,11 +164,26 @@ export default function SalesContainer({
         }
       );
 
-      if (request.success) {
-        const { afipInvoice } = request;
-        if(afipInvoice.file){
-        window.open(afipInvoice.file, "_blank"); }
+    if (request.success) {
+      const { afipInvoice } = request;
+      
+      if (afipInvoice.file) {
+        try {
+          const link = document.createElement('a');
+          link.href = afipInvoice.file;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } catch (error) {
+          console.error("Error al abrir la factura:", error);
+          toast.error("No se pudo abrir la factura.");
+        }
+      } else {
+        toast.error("No se encontró el archivo de la factura.");
       }
+    }
     } catch (error) {
       console.error(error);
       toast.error("Error.");
