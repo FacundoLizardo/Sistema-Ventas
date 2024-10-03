@@ -18,28 +18,18 @@ export interface ProductInterface {
 }
 
 export interface ProductCreationInterface
-  extends Omit<ProductInterface, 'id' | 'cost' | 'finalPrice' | 'discount' | 'profitPercentage' | 'notesDescription' | 'taxes'> {
-}
+  extends Omit<
+    ProductInterface,
+    | "id"
+    | "cost"
+    | "finalPrice"
+    | "discount"
+    | "profitPercentage"
+    | "notesDescription"
+    | "taxes"
+  > {}
 
-class Product
-  extends Model<ProductInterface, ProductCreationInterface>
-  implements ProductInterface
-{
-  public id!: string;
-  public name!: string;
-  public cost?: number;
-  public finalPrice?: number;
-  public discount?: number;
-  public profitPercentage?: number;
-  public allowNegativeStock!: boolean;
-  public trackStock!: boolean;
-  public minimumStock!: number;
-  public enabled!: boolean;
-  public notesDescription?: string;
-  public taxes?: number;
-  public barcode!: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+class Product extends Model<ProductInterface, ProductCreationInterface> {
   public static isPositive(value: number) {
     if (value < 0) {
       throw new Error("The value must be a positive number.");

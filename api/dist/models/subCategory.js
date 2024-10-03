@@ -2,11 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 class SubCategory extends sequelize_1.Model {
-    id;
-    name;
-    description;
-    createdAt;
-    updatedAt;
 }
 exports.default = (sequelize) => {
     SubCategory.init({

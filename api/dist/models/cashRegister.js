@@ -2,16 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 class CashRegister extends sequelize_1.Model {
-    id;
-    userId;
-    initialAmount;
-    finalAmount;
-    income;
-    egress;
-    totalCashRegister;
-    comments;
-    createdAt;
-    updatedAt;
 }
 exports.default = (sequelize) => {
     CashRegister.init({

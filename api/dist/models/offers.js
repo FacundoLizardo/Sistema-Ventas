@@ -3,13 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const percentajeValidator_1 = require("../utils/percentajeValidator");
 class Offer extends sequelize_1.Model {
-    id;
-    products;
-    imageUrl;
-    discountPercentage;
-    price;
-    createdAt;
-    updatedAt;
 }
 exports.default = (sequelize) => {
     Offer.init({

@@ -31,33 +31,10 @@ export interface OperationCreationInterface
     | "deliveryAddress"
     | "customer"
     | "comments"
-	| "user"
+    | "user"
   > {}
 
-class Operation
-  extends Model<OperationInterface, OperationCreationInterface>
-  implements OperationInterface
-{
-  public id!: number;
-  public products!: any[];
-  public amount!: number;
-  public discount!: number;
-  public extraCharge!: number;
-  public debtAmount?: number;
-  public branchId?: string;
-  public paymentType!: string;
-  public invoiceNumber?: string;
-  public state!: string;
-  public isdelivery!: boolean;
-  public deliveryAddress?: string;
-  public customer?: string;
-  public comments?: string;
-  public invoiceLink?: string;
-  public cbteTipo!: number;
-  public user?: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
+class Operation extends Model<OperationInterface, OperationCreationInterface> {}
 
 export default (sequelize: Sequelize) => {
   Operation.init(

@@ -9,16 +9,7 @@ export interface CategoryInterface {
 export interface CategoryCreationInterface
   extends Optional<CategoryInterface, "id"> {}
 
-class Category
-  extends Model<CategoryInterface, CategoryCreationInterface>
-  implements CategoryInterface
-{
-  public id!: string;
-  public name!: string;
-  public description?: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
+class Category extends Model<CategoryInterface, CategoryCreationInterface> {}
 
 export default (sequelize: Sequelize) => {
   Category.init(

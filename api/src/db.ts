@@ -12,35 +12,22 @@ import CompanyModel from "./models/company";
 import StockModel from "./models/stock";
 import CategoryModel from "./models/category";
 import SubCategoryModel from "./models/subCategory";
-import { NODE_ENV, DB_URL, DB_USER, DB_PASSWORD, DB_HOST } from "./config";
+import { DB_URL } from "./config";
 
 /* ----- Utils ----- */
 export const blueText = "\x1b[34m%s\x1b[0m";
 export const greenText = "\x1b[32m%s\x1b[0m";
 
-if (!DB_URL && NODE_ENV === "production") {
-  throw new Error("DB_URL must be defined in production environment");
+if (!DB_URL) {
+  throw new Error("DB_URL must be defined");
 }
 
-const sequelize =
-  NODE_ENV === "production"
-    ? new Sequelize(DB_URL!, {
-        logging: false,
-        dialect: "postgres",
-      })
-    : new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/gpi`, {
-        logging: false,
-        dialect: "postgres",
-      });
+const sequelize = new Sequelize(DB_URL, {
+  logging: false,
+  dialect: "postgres",
+});
 
-if (NODE_ENV === "production") {
-  console.log(blueText, `Database URL: ${DB_URL}`);
-} else {
-  console.log(
-    blueText,
-    `Database details: postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/gpi`
-  );
-}
+console.log(greenText, `Connecting to database with URL: ${DB_URL}`);
 
 export const syncDatabase = async () => {
   try {

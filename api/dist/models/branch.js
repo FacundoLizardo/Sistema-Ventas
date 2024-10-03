@@ -2,18 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 class Branch extends sequelize_1.Model {
-    id;
-    ptoVta;
-    afipId;
-    name;
-    location;
-    isStorage;
-    enable;
-    manager;
-    hours;
-    phoneNumber;
-    createdAt;
-    updatedAt;
 }
 exports.default = (sequelize) => {
     Branch.init({

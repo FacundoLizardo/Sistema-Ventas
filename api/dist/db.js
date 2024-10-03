@@ -22,25 +22,15 @@ const config_1 = require("./config");
 /* ----- Utils ----- */
 exports.blueText = "\x1b[34m%s\x1b[0m";
 exports.greenText = "\x1b[32m%s\x1b[0m";
-if (!config_1.DB_URL && config_1.NODE_ENV === "production") {
-    throw new Error("DB_URL must be defined in production environment");
+if (!config_1.DB_URL) {
+    throw new Error("DB_URL must be defined");
 }
-const sequelize = config_1.NODE_ENV === "production"
-    ? new sequelize_1.Sequelize(config_1.DB_URL, {
-        logging: false,
-        dialect: "postgres",
-    })
-    : new sequelize_1.Sequelize(`postgres://${config_1.DB_USER}:${config_1.DB_PASSWORD}@${config_1.DB_HOST}/gpi`, {
-        logging: false,
-        dialect: "postgres",
-    });
+const sequelize = new sequelize_1.Sequelize(config_1.DB_URL, {
+    logging: false,
+    dialect: "postgres",
+});
 exports.sequelize = sequelize;
-if (config_1.NODE_ENV === "production") {
-    console.log(exports.blueText, `Database URL: ${config_1.DB_URL}`);
-}
-else {
-    console.log(exports.blueText, `Database details: postgres://${config_1.DB_USER}:${config_1.DB_PASSWORD}@${config_1.DB_HOST}/gpi`);
-}
+console.log(exports.greenText, `Connecting to database with URL: ${config_1.DB_URL}`);
 const syncDatabase = async () => {
     try {
         await sequelize.sync({ force: false });

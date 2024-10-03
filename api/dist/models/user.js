@@ -2,18 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 class User extends sequelize_1.Model {
-    id;
-    firstName;
-    lastName;
-    email;
-    password;
-    address;
-    phoneNumber;
-    cuit;
-    enabled;
-    role;
-    createdAt;
-    updatedAt;
 }
 exports.default = (sequelize) => {
     User.init({

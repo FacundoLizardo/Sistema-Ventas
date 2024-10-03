@@ -9,16 +9,10 @@ export interface SubCategoryInterface {
 export interface SubCategoryCreationInterface
   extends Optional<SubCategoryInterface, "id"> {}
 
-class SubCategory
-  extends Model<SubCategoryInterface, SubCategoryCreationInterface>
-  implements SubCategoryInterface
-{
-  public id!: string;
-  public name!: string;
-  public description?: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
+class SubCategory extends Model<
+  SubCategoryInterface,
+  SubCategoryCreationInterface
+> {}
 
 export default (sequelize: Sequelize) => {
   SubCategory.init(

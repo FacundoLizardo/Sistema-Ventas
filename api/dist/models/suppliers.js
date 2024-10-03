@@ -6,16 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const urlValidator_1 = __importDefault(require("../utils/urlValidator"));
 class Supplier extends sequelize_1.Model {
-    id;
-    location;
-    purchases;
-    phoneNumber;
-    email;
-    webUrl;
-    sellers;
-    frecuentProducts;
-    createdAt;
-    updatedAt;
 }
 exports.default = (sequelize) => {
     Supplier.init({

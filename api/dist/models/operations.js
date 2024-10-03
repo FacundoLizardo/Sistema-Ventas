@@ -2,25 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 class Operation extends sequelize_1.Model {
-    id;
-    products;
-    amount;
-    discount;
-    extraCharge;
-    debtAmount;
-    branchId;
-    paymentType;
-    invoiceNumber;
-    state;
-    isdelivery;
-    deliveryAddress;
-    customer;
-    comments;
-    invoiceLink;
-    cbteTipo;
-    user;
-    createdAt;
-    updatedAt;
 }
 exports.default = (sequelize) => {
     Operation.init({

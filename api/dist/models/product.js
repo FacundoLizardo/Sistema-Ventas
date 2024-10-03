@@ -3,21 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const percentajeValidator_1 = require("../utils/percentajeValidator");
 class Product extends sequelize_1.Model {
-    id;
-    name;
-    cost;
-    finalPrice;
-    discount;
-    profitPercentage;
-    allowNegativeStock;
-    trackStock;
-    minimumStock;
-    enabled;
-    notesDescription;
-    taxes;
-    barcode;
-    createdAt;
-    updatedAt;
     static isPositive(value) {
         if (value < 0) {
             throw new Error("The value must be a positive number.");
