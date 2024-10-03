@@ -164,7 +164,9 @@ export default function SalesContainer({
         }
       );
 
-    if (request.success) {
+      console.log(request);
+
+   /*  if (request.success) {
       const { afipInvoice } = request;
       
       if (afipInvoice.file) {
@@ -183,12 +185,15 @@ export default function SalesContainer({
       } else {
         toast.error("No se encontró el archivo de la factura.");
       }
-    }
+    } */
     } catch (error) {
       console.error(error);
       toast.error("Error.");
     }
   };
+
+  console.log("datos", form.getValues());
+  
 
   return (
     <div className="flex flex-col gap-4">

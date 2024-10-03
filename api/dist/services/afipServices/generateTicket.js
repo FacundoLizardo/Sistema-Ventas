@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -13,15 +22,15 @@ const config_1 = require("../../config");
 const serviceError_1 = require("../../utils/serviceError");
 const db_1 = require("../../db");
 const updateProductStock_1 = require("../../utils/updateProductStock");
-const generateTicket = async ({ req }) => {
+const generateTicket = (_a) => __awaiter(void 0, [_a], void 0, function* ({ req }) {
     const { products, cbteTipo, outputDir, discount, importeGravado, branchId } = req.body;
     const sequelize = db_1.Product.sequelize;
-    const transaction = await sequelize.transaction();
+    const transaction = yield sequelize.transaction();
     try {
         const htmlPath = cbteTipo === 0 ? path_1.default.join(__dirname, "ticket.html") : "";
         let html = fs_1.default.readFileSync(htmlPath, "utf8");
-        await (0, updateProductStock_1.updateProductStock)(products, branchId, transaction);
-        await transaction.commit();
+        yield (0, updateProductStock_1.updateProductStock)(products, branchId, transaction);
+        yield transaction.commit();
         const generateProductRows = (products) => {
             const productMap = new Map();
             products.forEach((product) => {
@@ -77,16 +86,16 @@ const generateTicket = async ({ req }) => {
             .replace("{{discount}}", discount.toFixed(2) || "")
             .replace("{{importeGravado}}", importeGravado || "")
             .replace("{{ImpTotal}}", ImpTotal || "");
-        const browser = await puppeteer_1.default.launch();
-        const page = await browser.newPage();
-        await page.setContent(replacedHTML, { waitUntil: "networkidle0" });
+        const browser = yield puppeteer_1.default.launch();
+        const page = yield browser.newPage();
+        yield page.setContent(replacedHTML, { waitUntil: "networkidle0" });
         // Construcción de la ruta del archivo PDF
         const pdfFileName = `Ticket-${(0, moment_1.default)().format("DD.MM.YYYY-HH.mm")}.pdf`;
         const pdfFilePath = path_1.default.join(outputDir, pdfFileName);
         // Asegúrate de que el directorio exista
-        await fs_2.promises.mkdir(path_1.default.dirname(pdfFilePath), { recursive: true });
+        yield fs_2.promises.mkdir(path_1.default.dirname(pdfFilePath), { recursive: true });
         // Generación del PDF
-        await page.pdf({
+        yield page.pdf({
             path: pdfFilePath,
             format: "A4",
             margin: {
@@ -96,12 +105,12 @@ const generateTicket = async ({ req }) => {
                 left: "0.4in",
             },
         });
-        await browser.close();
+        yield browser.close();
         console.log("PDF generado y guardado en:", pdfFilePath);
         return { pdfFilePath };
     }
     catch (error) {
         (0, serviceError_1.serviceError)(error);
     }
-};
+});
 exports.generateTicket = generateTicket;

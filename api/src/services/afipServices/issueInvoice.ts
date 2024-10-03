@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import CustomerService from "../CustomerServices";
 import UserServices from "../UserServices";
 
-const afip = new Afip({ CUIT: CUIT });
+const afip = new Afip({ CUIT: 20409378472 });
 
 export async function issueInvoice({ req }: { req: Request }) {
   const {
@@ -74,6 +74,7 @@ export async function issueInvoice({ req }: { req: Request }) {
       ptoVta,
       cbteTipo
     );
+    console.log("lastVoucher", lastVoucher);
 
     const numeroFactura = lastVoucher + 1;
 
@@ -129,6 +130,9 @@ export async function issueInvoice({ req }: { req: Request }) {
       products: products,
       importeGravado: importeGravado.toFixed(2),
     };
+
+    console.log("DATA", data);
+    
 
     const voucherData = await afip.ElectronicBilling.createVoucher(data);
 

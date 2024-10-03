@@ -64,6 +64,7 @@ class CustomerService {
   ): Promise<CustomerInterface | null> {
     try {
       const { docNro, docTipo } = data;
+console.log("docNro, docTipo", docNro, docTipo);
 
       const customer = await Customer.findOne({
         where: {

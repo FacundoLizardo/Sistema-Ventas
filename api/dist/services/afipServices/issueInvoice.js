@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -14,74 +23,55 @@ const updateProductStock_1 = require("../../utils/updateProductStock");
 const date_fns_1 = require("date-fns");
 const CustomerServices_1 = __importDefault(require("../CustomerServices"));
 const UserServices_1 = __importDefault(require("../UserServices"));
-const afip = new afip_js_1.default({ CUIT: config_1.CUIT });
-async function issueInvoice({ req }) {
-    const { products, discount, cbteTipo, ptoVta, concepto, importeGravado, importeExentoIva, docNro, docTipo, iva, isdelivery, comments, deliveryAddress, branchId, userId, } = req.body;
-    const { companyId } = req.params;
-    const sequelize = db_1.Product.sequelize;
-    const transaction = await sequelize.transaction();
-    try {
-        let importe_gravado = importeGravado;
-        let importe_exento_iva = importeExentoIva;
-        // Aplicar el descuento tanto al importe gravado como al importe exento de IVA
-        const descuento = discount || 0;
-        const importe_gravado_con_descuento = importe_gravado * (1 - descuento / 100);
-        const importe_exento_iva_con_descuento = importe_exento_iva * (1 - descuento / 100);
-        // Calcular el importe del IVA
-        const porcentajeIVA = iva; // Porcentaje del IVA
-        const importe_iva = (importe_gravado_con_descuento * porcentajeIVA) / 100;
-        // Calcular el importe total
-        const ImpTotConc = 0;
-        const ImpTrib = 0;
-        const ImpTotal = cbteTipo === 11
-            ? importe_gravado_con_descuento + ImpTrib
-            : ImpTotConc +
-                importe_gravado_con_descuento +
-                importe_exento_iva_con_descuento +
-                ImpTrib +
-                importe_iva;
-        let fecha_servicio_desde = null;
-        let fecha_servicio_hasta = null;
-        let fecha_vencimiento_pago = null;
-        // Actualizar el stock de los productos
-        await (0, updateProductStock_1.updateProductStock)(products, branchId, transaction);
-        const lastVoucher = await afip.ElectronicBilling.getLastVoucher(ptoVta, cbteTipo);
-        const numeroFactura = lastVoucher + 1;
-        const fecha = (0, date_fns_1.format)(new Date(), "yyyyMMdd");
-        /**
-         * Concepto de la factura
-         Opciones:
-         1 = Productos
-         2 = Servicios
-         3 = Productos y Servicios
-         **/
-        if (concepto === 2 || concepto === 3) {
-            fecha_servicio_desde = 20191213;
-            fecha_servicio_hasta = 20191213;
-            fecha_vencimiento_pago = 20191213;
-        }
-        const data = {
-            CantReg: 1,
-            PtoVta: ptoVta,
-            CbteTipo: cbteTipo,
-            Concepto: concepto,
-            DocTipo: docTipo,
-            DocNro: docNro,
-            CbteDesde: numeroFactura,
-            CbteHasta: numeroFactura,
-            CbteFch: fecha,
-            FchServDesde: fecha_servicio_desde,
-            FchServHasta: fecha_servicio_hasta,
-            FchVtoPago: fecha_vencimiento_pago,
-            ImpTotal: ImpTotal.toFixed(2),
-            ImpTotConc: ImpTotConc.toFixed(2),
-            ImpNeto: importe_gravado_con_descuento.toFixed(2),
-            ImpOpEx: importe_exento_iva_con_descuento.toFixed(2),
-            ImpIVA: cbteTipo === 11 ? 0 : importe_iva.toFixed(2),
-            ImpTrib: 0,
-            MonId: "PES",
-            MonCotiz: 1,
-            ...(cbteTipo !== 11
+const afip = new afip_js_1.default({ CUIT: 20409378472 });
+function issueInvoice(_a) {
+    return __awaiter(this, arguments, void 0, function* ({ req }) {
+        const { products, discount, cbteTipo, ptoVta, concepto, importeGravado, importeExentoIva, docNro, docTipo, iva, isdelivery, comments, deliveryAddress, branchId, userId, } = req.body;
+        const { companyId } = req.params;
+        const sequelize = db_1.Product.sequelize;
+        const transaction = yield sequelize.transaction();
+        try {
+            let importe_gravado = importeGravado;
+            let importe_exento_iva = importeExentoIva;
+            // Aplicar el descuento tanto al importe gravado como al importe exento de IVA
+            const descuento = discount || 0;
+            const importe_gravado_con_descuento = importe_gravado * (1 - descuento / 100);
+            const importe_exento_iva_con_descuento = importe_exento_iva * (1 - descuento / 100);
+            // Calcular el importe del IVA
+            const porcentajeIVA = iva; // Porcentaje del IVA
+            const importe_iva = (importe_gravado_con_descuento * porcentajeIVA) / 100;
+            // Calcular el importe total
+            const ImpTotConc = 0;
+            const ImpTrib = 0;
+            const ImpTotal = cbteTipo === 11
+                ? importe_gravado_con_descuento + ImpTrib
+                : ImpTotConc +
+                    importe_gravado_con_descuento +
+                    importe_exento_iva_con_descuento +
+                    ImpTrib +
+                    importe_iva;
+            let fecha_servicio_desde = null;
+            let fecha_servicio_hasta = null;
+            let fecha_vencimiento_pago = null;
+            // Actualizar el stock de los productos
+            yield (0, updateProductStock_1.updateProductStock)(products, branchId, transaction);
+            const lastVoucher = yield afip.ElectronicBilling.getLastVoucher(ptoVta, cbteTipo);
+            console.log("lastVoucher", lastVoucher);
+            const numeroFactura = lastVoucher + 1;
+            const fecha = (0, date_fns_1.format)(new Date(), "yyyyMMdd");
+            /**
+             * Concepto de la factura
+             Opciones:
+             1 = Productos
+             2 = Servicios
+             3 = Productos y Servicios
+             **/
+            if (concepto === 2 || concepto === 3) {
+                fecha_servicio_desde = 20191213;
+                fecha_servicio_hasta = 20191213;
+                fecha_vencimiento_pago = 20191213;
+            }
+            const data = Object.assign(Object.assign({ CantReg: 1, PtoVta: ptoVta, CbteTipo: cbteTipo, Concepto: concepto, DocTipo: docTipo, DocNro: docNro, CbteDesde: numeroFactura, CbteHasta: numeroFactura, CbteFch: fecha, FchServDesde: fecha_servicio_desde, FchServHasta: fecha_servicio_hasta, FchVtoPago: fecha_vencimiento_pago, ImpTotal: ImpTotal.toFixed(2), ImpTotConc: ImpTotConc.toFixed(2), ImpNeto: importe_gravado_con_descuento.toFixed(2), ImpOpEx: importe_exento_iva_con_descuento.toFixed(2), ImpIVA: cbteTipo === 11 ? 0 : importe_iva.toFixed(2), ImpTrib: 0, MonId: "PES", MonCotiz: 1 }, (cbteTipo !== 11
                 ? {
                     Iva: [
                         {
@@ -91,79 +81,78 @@ async function issueInvoice({ req }) {
                         },
                     ],
                 }
-                : {}),
-            products: products,
-            importeGravado: importeGravado.toFixed(2),
-        };
-        const voucherData = await afip.ElectronicBilling.createVoucher(data);
-        const qrData = {
-            ver: 1,
-            fecha: fecha,
-            cuit: config_1.CUIT,
-            ptoVta: data.PtoVta,
-            tipoCmp: data.CbteTipo,
-            nroCmp: numeroFactura,
-            importe: data.ImpTotal,
-            moneda: data.MonId,
-            ctz: data.MonCotiz,
-            tipoDocRec: data.DocTipo,
-            nroDocRec: data.DocNro,
-            tipoCodAut: "E",
-            codAut: 70417054367476,
-        };
-        const jsonData = JSON.stringify(qrData);
-        const base64Data = btoa(jsonData);
-        const URL = `https://www.afip.gob.ar/fe/qr/?p=${base64Data}`;
-        const urlQr = await qrcode_1.default.toDataURL(URL);
-        const pdfData = await (0, generatePDF_1.generatePDF)({
-            voucherData,
-            data,
-            numeroFactura,
-            urlQr,
-            discount,
-        });
-        const customer = await CustomerServices_1.default.getCustomerByDocument({
-            docTipo,
-            docNro,
-        });
-        const customerInfo = customer?.docTipo === "80"
-            ? `CUIT: ${customer.docNro} - Empresa: ${customer.companyName}`
-            : customer?.docTipo === "96"
-                ? `DNI: ${customer.docNro} - Cliente: ${customer.firstName} ${customer.lastName}`
-                : "No se encontró información del cliente";
-        const userData = await UserServices_1.default.getUser(userId);
-        const user = `${userData?.firstName} ${userData?.lastName}`;
-        const operationData = {
-            products: products,
-            amount: ImpTotal,
-            discount: discount || 0,
-            extraCharge: 0,
-            debtAmount: 0,
-            branchId: branchId,
-            paymentType: "cash",
-            invoiceNumber: numeroFactura.toString(),
-            state: "completed",
-            isdelivery: isdelivery,
-            deliveryAddress: deliveryAddress,
-            customer: customerInfo,
-            comments: comments,
-            invoiceLink: pdfData.file,
-            companyId: companyId,
-            userId: userId,
-            cbteTipo: cbteTipo,
-            user: user,
-        };
-        await db_1.Operation.create(operationData, { transaction });
-        await transaction.commit();
-        console.log({
-            cae: voucherData.CAE,
-            vencimiento: voucherData.CAEFchVto,
-        });
-        return pdfData;
-    }
-    catch (error) {
-        (0, serviceError_1.serviceError)(error);
-    }
+                : {})), { products: products, importeGravado: importeGravado.toFixed(2) });
+            console.log("DATA", data);
+            const voucherData = yield afip.ElectronicBilling.createVoucher(data);
+            const qrData = {
+                ver: 1,
+                fecha: fecha,
+                cuit: config_1.CUIT,
+                ptoVta: data.PtoVta,
+                tipoCmp: data.CbteTipo,
+                nroCmp: numeroFactura,
+                importe: data.ImpTotal,
+                moneda: data.MonId,
+                ctz: data.MonCotiz,
+                tipoDocRec: data.DocTipo,
+                nroDocRec: data.DocNro,
+                tipoCodAut: "E",
+                codAut: 70417054367476,
+            };
+            const jsonData = JSON.stringify(qrData);
+            const base64Data = btoa(jsonData);
+            const URL = `https://www.afip.gob.ar/fe/qr/?p=${base64Data}`;
+            const urlQr = yield qrcode_1.default.toDataURL(URL);
+            const pdfData = yield (0, generatePDF_1.generatePDF)({
+                voucherData,
+                data,
+                numeroFactura,
+                urlQr,
+                discount,
+            });
+            const customer = yield CustomerServices_1.default.getCustomerByDocument({
+                docTipo,
+                docNro,
+            });
+            const customerInfo = (customer === null || customer === void 0 ? void 0 : customer.docTipo) === "80"
+                ? `CUIT: ${customer.docNro} - Empresa: ${customer.companyName}`
+                : (customer === null || customer === void 0 ? void 0 : customer.docTipo) === "96"
+                    ? `DNI: ${customer.docNro} - Cliente: ${customer.firstName} ${customer.lastName}`
+                    : "No se encontró información del cliente";
+            const userData = yield UserServices_1.default.getUser(userId);
+            const user = `${userData === null || userData === void 0 ? void 0 : userData.firstName} ${userData === null || userData === void 0 ? void 0 : userData.lastName}`;
+            const operationData = {
+                products: products,
+                amount: ImpTotal,
+                discount: discount || 0,
+                extraCharge: 0,
+                debtAmount: 0,
+                branchId: branchId,
+                paymentType: "cash",
+                invoiceNumber: numeroFactura.toString(),
+                state: "completed",
+                isdelivery: isdelivery,
+                deliveryAddress: deliveryAddress,
+                customer: customerInfo,
+                comments: comments,
+                invoiceLink: pdfData.file,
+                companyId: companyId,
+                userId: userId,
+                cbteTipo: cbteTipo,
+                user: user,
+            };
+            yield db_1.Operation.create(operationData, { transaction });
+            yield transaction.commit();
+            console.log({
+                cae: voucherData.CAE,
+                vencimiento: voucherData.CAEFchVto,
+            });
+            return pdfData;
+        }
+        catch (error) {
+            (0, serviceError_1.serviceError)(error);
+        }
+    });
 }
 // --------------------------------------------------------------------
 /*
