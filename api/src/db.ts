@@ -1,5 +1,4 @@
 import { Sequelize } from "sequelize";
-import pg from "pg";
 import ProductModel from "./models/product";
 import UserModel from "./models/user";
 import BranchModel from "./models/branch";
