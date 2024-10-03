@@ -28,25 +28,7 @@ export interface CompanyCreationInterface
     | "iibb"
   > {}
 
-class Company
-  extends Model<CompanyInterface, CompanyCreationInterface>
-  implements CompanyInterface
-{
-  public id!: string;
-  public name!: string;
-  public address?: string;
-  public country?: string;
-  public phoneNumbers?: string;
-  public isActive!: boolean;
-  public cuit?: string;
-  public razonSocial?: string;
-  public domicilioFiscal?: string;
-  public inicioActividad?: string;
-  public regimenTributario?: string;
-  public iibb?: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
+class Company extends Model<CompanyInterface, CompanyCreationInterface> {}
 
 export default (sequelize: Sequelize) => {
   Company.init(
