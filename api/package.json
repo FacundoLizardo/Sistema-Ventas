@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon --exec ts-node ./src/index.ts",
-    "build": "tsc"
+    "build": "tsc && cp src/services/afipServices/*.html dist/services/afipServices"
   },
   "author": "",
   "license": "ISC",
@@ -43,6 +43,7 @@
     "@types/pg": "^8.11.6",
     "@types/qrcode": "^1.5.5",
     "@types/sequelize": "^4.28.20",
+    "copyfiles": "^2.4.1",
     "sequelize-cli": "^6.6.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"

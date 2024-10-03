@@ -74,7 +74,6 @@ export async function issueInvoice({ req }: { req: Request }) {
       ptoVta,
       cbteTipo
     );
-    console.log("lastVoucher", lastVoucher);
 
     const numeroFactura = lastVoucher + 1;
 
@@ -130,9 +129,6 @@ export async function issueInvoice({ req }: { req: Request }) {
       products: products,
       importeGravado: importeGravado.toFixed(2),
     };
-
-    console.log("DATA", data);
-    
 
     const voucherData = await afip.ElectronicBilling.createVoucher(data);
 

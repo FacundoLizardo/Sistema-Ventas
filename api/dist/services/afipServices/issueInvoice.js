@@ -56,7 +56,6 @@ function issueInvoice(_a) {
             // Actualizar el stock de los productos
             yield (0, updateProductStock_1.updateProductStock)(products, branchId, transaction);
             const lastVoucher = yield afip.ElectronicBilling.getLastVoucher(ptoVta, cbteTipo);
-            console.log("lastVoucher", lastVoucher);
             const numeroFactura = lastVoucher + 1;
             const fecha = (0, date_fns_1.format)(new Date(), "yyyyMMdd");
             /**
@@ -82,7 +81,6 @@ function issueInvoice(_a) {
                     ],
                 }
                 : {})), { products: products, importeGravado: importeGravado.toFixed(2) });
-            console.log("DATA", data);
             const voucherData = yield afip.ElectronicBilling.createVoucher(data);
             const qrData = {
                 ver: 1,
