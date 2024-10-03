@@ -19,27 +19,29 @@ import { NODE_ENV, DB_URL, DB_USER, DB_PASSWORD, DB_HOST } from "./config";
 export const blueText = "\x1b[34m%s\x1b[0m";
 export const greenText = "\x1b[32m%s\x1b[0m";
 
-if (NODE_ENV === "production" && !DB_URL) {
+if (!DB_URL && NODE_ENV === "production") {
   throw new Error("DB_URL must be defined in production environment");
-}
-if (NODE_ENV === "development" && (!DB_USER || !DB_PASSWORD || !DB_HOST)) {
-  throw new Error(
-    "DB_USER, DB_PASSWORD, and DB_HOST must be defined in development environment"
-  );
 }
 
 const sequelize =
   NODE_ENV === "production"
     ? new Sequelize(DB_URL!, {
         logging: false,
-        dialectModule: pg,
         dialect: "postgres",
       })
     : new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/gpi`, {
         logging: false,
-        dialectModule: pg,
         dialect: "postgres",
       });
+
+if (NODE_ENV === "production") {
+  console.log(blueText, `Database URL: ${DB_URL}`);
+} else {
+  console.log(
+    blueText,
+    `Database details: postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/gpi`
+  );
+}
 
 export const syncDatabase = async () => {
   try {
@@ -137,8 +139,14 @@ Product.belongsTo(Category, { foreignKey: "categoryId", as: "category" });
 Category.hasMany(SubCategory, { foreignKey: "categoryId" });
 SubCategory.belongsTo(Category, { foreignKey: "categoryId" });
 
-SubCategory.hasMany(Product, { foreignKey: "subCategoryId", as: "subCategory" });
-Product.belongsTo(SubCategory, { foreignKey: "subCategoryId", as: "subCategory" });
+SubCategory.hasMany(Product, {
+  foreignKey: "subCategoryId",
+  as: "subCategory",
+});
+Product.belongsTo(SubCategory, {
+  foreignKey: "subCategoryId",
+  as: "subCategory",
+});
 
 Company.hasMany(Category, { foreignKey: "companyId" });
 Category.belongsTo(Company, { foreignKey: "companyId" });
