@@ -183,7 +183,7 @@ export default function InvoiceSummary({
                   Total a pagar
                 </span>
                 <Badge variant="default" className="md:text-lg">
-                  $ {totalToPay}
+                  $ {totalToPay.toFixed(2)}
                 </Badge>
               </div>
             </CardFooter>

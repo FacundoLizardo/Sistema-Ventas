@@ -17,17 +17,17 @@ export interface IProduct {
   finalPrice?: number;
   discount?: number;
   profitPercentage?: number;
-  stock: {
+  stock?: {
     branchId: string;
     quantity: number;
   }[];
-  allowNegativeStock: boolean;
-  trackStock: boolean;
-  minimumStock: number;
+  allowNegativeStock?: boolean;
+  trackStock?: boolean;
+  minimumStock?: number;
   enabled: boolean;
   notesDescription?: string;
   taxes?: number;
-  barcode: string;
+  barcode?: string;
 }
 
 export interface IProductCreate extends Omit<IProduct, "id"> {

@@ -116,7 +116,7 @@ export default function CategoriesControl({
           ?.name || "Sin categoría",
     })),
   ];
-
+  
   return (
     <div>
       <div className="flex w-full border rounded-md bg-background flex-1 items-center gap-2 my-4">
@@ -178,11 +178,11 @@ export default function CategoriesControl({
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>
-                              {`¿Estás seguro de que quieres eliminar esta ${item.type}?`}
+                              {`¿Estás seguro de que quieres eliminar esta ${item.type === "category" ? "Categoría" : "Subcategoría"}?`}
                             </AlertDialogTitle>
                             <AlertDialogDescription>
                               Esta acción no puede deshacerse. Esto eliminará la{" "}
-                              {item.type}.
+                              {item.type === "category" ? "Categoría" : "Subcategoría"}
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>

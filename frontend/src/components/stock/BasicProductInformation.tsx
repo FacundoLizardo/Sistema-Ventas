@@ -102,19 +102,20 @@ export default function BasicProductInformation({
               <Label htmlFor="categoryId">Categoría</Label>
               <FormControl>
                 <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value || ""}
+                  onValueChange={(value) => field.onChange(value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Seleccione una categoria" />
+                    <SelectValue placeholder="Seleccione una categoría" />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories &&
-                      categories.map((category, index) => (
-                        <SelectItem key={index} value={category.id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
+                    {categories && categories.length > 0
+                      ? categories.map((category, index) => (
+                          <SelectItem key={index} value={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))
+                      : null}
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -127,7 +128,7 @@ export default function BasicProductInformation({
           name="subCategoryId"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="subCategory">
+              <Label htmlFor="subCategoryId">
                 Subcategoría{" "}
                 <span className="text-xs text-muted-foreground">
                   (opcional)
@@ -143,11 +144,13 @@ export default function BasicProductInformation({
                     <SelectValue placeholder="Seleccione una subcategoría" />
                   </SelectTrigger>
                   <SelectContent>
-                    {filteredSubCategories.map((subCategory, index) => (
-                      <SelectItem key={index} value={subCategory.id}>
-                        {subCategory.name}
-                      </SelectItem>
-                    ))}
+                    {filteredSubCategories && filteredSubCategories.length > 0
+                      ? filteredSubCategories.map((subCategory, index) => (
+                          <SelectItem key={index} value={subCategory.id}>
+                            {subCategory.name}
+                          </SelectItem>
+                        ))
+                      : null}
                   </SelectContent>
                 </Select>
               </FormControl>

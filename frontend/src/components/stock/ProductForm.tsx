@@ -51,18 +51,21 @@ const formSchema = z.object({
       message: "El porcentaje de ganancia debe ser mayor o igual a 0.",
     })
     .optional(),
-  stock: z.array(
-    z.object({
-      branchId: z.string(),
-      quantity: z.number(),
-    })
-  ),
-  allowNegativeStock: z.boolean(),
-  trackStock: z.boolean(),
+  stock: z
+    .array(
+      z.object({
+        branchId: z.string(),
+        quantity: z.number(),
+      })
+    )
+    .optional(),
+  allowNegativeStock: z.boolean().optional().default(false),
+  trackStock: z.boolean().optional().default(false),
   minimumStock: z
     .number()
     .min(0, { message: "El stock mínimo no puede ser negativo." })
-    .default(0),
+    .default(0)
+    .optional(),
   enabled: z.boolean(),
   notesDescription: z
     .string()
@@ -130,6 +133,8 @@ export default function ProductForm({
   const discount = form.watch("discount");
   const profitPercentage = form.watch("profitPercentage");
 
+  console.log("datos del formulario", form.watch());
+
   useEffect(() => {
     if (cost !== undefined) {
       let finalPrice = cost;
@@ -146,14 +151,23 @@ export default function ProductForm({
         finalPrice += (finalPrice * profitPercentage) / 100;
       }
 
+      if (userId) {
+        form.setValue("userId", userId);
+      }
+
+      if (branchId) {
+        form.setValue("branchId", branchId);
+      }
+
       form.setValue("finalPrice", Math.round(finalPrice));
     }
-  }, [cost, taxes, discount, profitPercentage, form]);
+  }, [cost, taxes, discount, profitPercentage, userId, branchId, form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const formattedData = {
       ...data,
       name: data.name.toLowerCase(),
+      stock: data.stock ?? [],
     };
 
     const request = await ProductsServices.post({
@@ -171,7 +185,7 @@ export default function ProductForm({
       error: "Error al crear el producto.",
     });
   };
-
+  console.log("error", form.formState.errors);
   const { isDirty, isValid, isSubmitting } = form.formState;
   const submitDisabled = !isDirty || !isValid;
 
