@@ -9,6 +9,7 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  console.error("Ocurrio un error:", error);
   return (
     <html>
       <body className="w-full h-screen flex flex-col items-center justify-center text-center gap-4 md:gap-8">

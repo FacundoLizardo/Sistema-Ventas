@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 
- --primary: 30, 100%, 50%; 
- --primary-foreground: 210 40% 98%;
- --secondary: 0, 100%, 50%;
- --secondary-foreground: 255, 255%, 255%; 
-*/
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
