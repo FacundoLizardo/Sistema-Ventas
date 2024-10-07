@@ -27,8 +27,6 @@ const sequelize = new Sequelize(DB_URL, {
   dialect: "postgres",
 });
 
-console.log(greenText, `Connecting to database with URL: ${DB_URL}`);
-
 export const syncDatabase = async () => {
   try {
     await sequelize.sync({ force: false });

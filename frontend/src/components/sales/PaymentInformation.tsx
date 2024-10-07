@@ -67,7 +67,7 @@ export default function PaymentInformation({
             </div>
             <div className="flex justify-between">
               <span className="font-semibold">Precio Total sin descuento</span>
-              <span>$ {totalPrice()}</span>
+              <span>$ {totalPrice().toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold">Descuento</span>
@@ -75,7 +75,7 @@ export default function PaymentInformation({
             </div>
             <div className="flex justify-between">
               <span className="font-semibold">Precio Total con descuento</span>
-              <span>$ {totalPriceWithDiscount()}</span>
+              <span>$ {totalPriceWithDiscount().toFixed(2)}</span>
             </div>
             {IVA ? (
               <div className="flex justify-between">
