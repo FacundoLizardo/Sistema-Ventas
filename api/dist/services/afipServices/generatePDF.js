@@ -18,9 +18,9 @@ const moment_1 = __importDefault(require("moment"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const afip_js_1 = __importDefault(require("@afipsdk/afip.js"));
-const config_1 = require("../../config");
-const afip = new afip_js_1.default({ CUIT: config_1.CUIT });
 const generatePDF = (_a) => __awaiter(void 0, [_a], void 0, function* ({ voucherData, data, numeroFactura, urlQr, discount, }) {
+    const cuitNumber = Number(data.companyData.cuit);
+    const afip = new afip_js_1.default({ CUIT: cuitNumber });
     try {
         const htmlPath = data.CbteTipo === 1
             ? path_1.default.join(__dirname, "facturaA.html")
@@ -48,7 +48,7 @@ const generatePDF = (_a) => __awaiter(void 0, [_a], void 0, function* ({ voucher
                         description: existingProduct.description,
                         quantity: existingProduct.quantity + 1,
                         unitPrice: existingProduct.unitPrice,
-                        totalAmount: existingProduct.totalAmount += finalPrice,
+                        totalAmount: (existingProduct.totalAmount += finalPrice),
                     });
                 }
             });
@@ -73,12 +73,6 @@ const generatePDF = (_a) => __awaiter(void 0, [_a], void 0, function* ({ voucher
             return `${tableHeader}${tableRows}`;
         };
         let productRows = generateProductRows(data.products);
-        let razonSocial = config_1.RAZON_SOCIAL;
-        let domicilio = config_1.DOMICILIO_FISCAL;
-        let cuit = config_1.CUIT;
-        let regimenTributario = config_1.REGIMEN_TRIBUTARIO;
-        let iibb = config_1.IIBB;
-        let inicioActividad = config_1.INICIO_ACTIVIDAD;
         let fechaEmision = (0, moment_1.default)().format("DD-MM-YYYY");
         const conceptoFinal = () => {
             const conceptos = {
@@ -105,12 +99,12 @@ const generatePDF = (_a) => __awaiter(void 0, [_a], void 0, function* ({ voucher
             .replace("{{urlQr}}", urlQr || "QR no found")
             .replace("{{CAE}}", voucherData.CAE || "")
             .replace("{{Vencimiento}}", voucherData.CAEFchVto || "")
-            .replace("{{razonSocial}}", razonSocial || "")
-            .replace("{{domicilio}}", domicilio || "")
-            .replace("{{cuit}}", cuit || "")
-            .replace("{{regimenTributario}}", regimenTributario || "")
-            .replace("{{iibb}}", iibb || "")
-            .replace("{{inicioActividad}}", inicioActividad || "")
+            .replace("{{razonSocial}}", data.companyData.razonSocial || "")
+            .replace("{{domicilio}}", data.companyData.domicilioFiscal || "")
+            .replace("{{cuit}}", data.companyData.cuit || "")
+            .replace("{{regimenTributario}}", data.companyData.regimenTributario || "")
+            .replace("{{iibb}}", data.companyData.iibb || "")
+            .replace("{{inicioActividad}}", data.companyData.inicioActividad || "")
             .replace("{{productRows}}", productRows || "")
             .replace("{{ImpTotal}}", data.ImpTotal || "")
             .replace("{{cbteTipo}}", data.CbteTipo || "")

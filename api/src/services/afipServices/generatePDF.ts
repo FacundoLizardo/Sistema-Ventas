@@ -3,17 +3,8 @@ import moment from "moment";
 import path from "path";
 import fs from "fs";
 import Afip from "@afipsdk/afip.js";
-import {
-  CUIT,
-  RAZON_SOCIAL,
-  DOMICILIO_FISCAL,
-  REGIMEN_TRIBUTARIO,
-  IIBB,
-  INICIO_ACTIVIDAD,
-} from "../../config";
-import { ProductInterface } from "../../models/product";
 
-const afip = new Afip({ CUIT: CUIT });
+import { ProductInterface } from "../../models/product";
 
 type GeneratePDFProps = {
   voucherData: any;
@@ -30,6 +21,9 @@ export const generatePDF = async ({
   urlQr,
   discount,
 }: GeneratePDFProps) => {
+  const cuitNumber = Number(data.companyData.cuit);
+  const afip = new Afip({ CUIT: cuitNumber });
+
   try {
     const htmlPath =
       data.CbteTipo === 1
@@ -60,7 +54,7 @@ export const generatePDF = async ({
             description: existingProduct.description,
             quantity: existingProduct.quantity + 1,
             unitPrice: existingProduct.unitPrice,
-            totalAmount: existingProduct.totalAmount += finalPrice,
+            totalAmount: (existingProduct.totalAmount += finalPrice),
           });
         }
       });
@@ -91,12 +85,6 @@ export const generatePDF = async ({
     };
 
     let productRows = generateProductRows(data.products);
-    let razonSocial = RAZON_SOCIAL;
-    let domicilio = DOMICILIO_FISCAL;
-    let cuit = CUIT;
-    let regimenTributario = REGIMEN_TRIBUTARIO;
-    let iibb = IIBB;
-    let inicioActividad = INICIO_ACTIVIDAD;
     let fechaEmision = moment().format("DD-MM-YYYY");
 
     const conceptoFinal = () => {
@@ -126,12 +114,15 @@ export const generatePDF = async ({
       .replace("{{urlQr}}", urlQr || "QR no found")
       .replace("{{CAE}}", voucherData.CAE || "")
       .replace("{{Vencimiento}}", voucherData.CAEFchVto || "")
-      .replace("{{razonSocial}}", razonSocial || "")
-      .replace("{{domicilio}}", domicilio || "")
-      .replace("{{cuit}}", cuit || "")
-      .replace("{{regimenTributario}}", regimenTributario || "")
-      .replace("{{iibb}}", iibb || "")
-      .replace("{{inicioActividad}}", inicioActividad || "")
+      .replace("{{razonSocial}}", data.companyData.razonSocial || "")
+      .replace("{{domicilio}}", data.companyData.domicilioFiscal || "")
+      .replace("{{cuit}}", data.companyData.cuit || "")
+      .replace(
+        "{{regimenTributario}}",
+        data.companyData.regimenTributario || ""
+      )
+      .replace("{{iibb}}", data.companyData.iibb || "")
+      .replace("{{inicioActividad}}", data.companyData.inicioActividad || "")
       .replace("{{productRows}}", productRows || "")
       .replace("{{ImpTotal}}", data.ImpTotal || "")
       .replace("{{cbteTipo}}", data.CbteTipo || "")
@@ -143,7 +134,7 @@ export const generatePDF = async ({
       .replace("{{ImpIVA}}", data.ImpIVA)
       .replace("{{ImpNeto}}", data.ImpNeto)
       .replace("{{discount}}", discount.toFixed(2) || "")
-      .replace("{{importeGravado}}", data.importeGravado)
+      .replace("{{importeGravado}}", data.importeGravado);
 
     const options = {
       width: 8,
@@ -158,9 +149,8 @@ export const generatePDF = async ({
       file_name: "Voucher",
       options: options,
     });
-    
-    return pdfData
 
+    return pdfData;
   } catch (error) {
     throw new Error(`An error occurred while generating the PDF: ${error}`);
   }

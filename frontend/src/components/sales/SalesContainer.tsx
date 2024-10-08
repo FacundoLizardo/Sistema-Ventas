@@ -19,13 +19,15 @@ import InvoiceSummary from "./InvoiceSummary";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  products: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      finalPrice: z.number().positive(),
-    })
-  ),
+  products: z
+    .array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        finalPrice: z.number().positive(),
+      })
+    )
+    .min(1, { message: "Debe agregar al menos un producto." }),
   discount: z.number().nonnegative().optional(),
 
   // Client
@@ -48,6 +50,7 @@ const formSchema = z.object({
   domicilioFiscal: z.string(),
   inicioActividad: z.string(),
   regimenTributario: z.string(),
+  cuit: z.string(),
 
   // Info additional
   isdelivery: z.boolean().optional().default(false),
@@ -82,7 +85,7 @@ export default function SalesContainer({
   userBranchPtoVta,
   userName,
 }: SalesContainerProps) {
-  const router = useRouter()
+  const router = useRouter();
   const { productsSelected, discount, totalPrice } = useSales();
   const [showInvoiceSummary, setShowInvoiceSummary] = useState(false);
   const { setProducts, setDiscount } = useSales();
@@ -117,6 +120,7 @@ export default function SalesContainer({
       domicilioFiscal: company.domicilioFiscal,
       inicioActividad: company.inicioActividad,
       regimenTributario: company.regimenTributario,
+      cuit: company.cuit,
 
       // Info additional
       isdelivery: false,
@@ -148,42 +152,39 @@ export default function SalesContainer({
         params: data,
       });
 
-      toast.promise(
-        Promise.resolve(request),
-        {
-          loading: "Creando el comprobante...",
-          success: () => {
-            form.reset();
-            setProducts([]);
-            setShowInvoiceSummary(false);
-            setDiscount(0);
-            router.refresh()
-            return "Comprobante creado con éxito.";
-          },
-          error: "Error al crear el Comprobante.",
-        }
-      );
+      toast.promise(Promise.resolve(request), {
+        loading: "Creando el comprobante...",
+        success: () => {
+          form.reset();
+          setProducts([]);
+          setShowInvoiceSummary(false);
+          setDiscount(0);
+          router.refresh();
+          return "Comprobante creado con éxito.";
+        },
+        error: "Error al crear el Comprobante.",
+      });
 
-    if (request.success) {
-      const { afipInvoice } = request;
-      
-      if (afipInvoice.file) {
-        try {
-          const link = document.createElement('a');
-          link.href = afipInvoice.file;
-          link.target = '_blank';
-          link.rel = 'noopener noreferrer';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        } catch (error) {
-          console.error("Error al abrir la factura:", error);
-          toast.error("No se pudo abrir la factura.");
+      if (request.success) {
+        const { afipInvoice } = request;
+
+        if (afipInvoice.file) {
+          try {
+            const link = document.createElement("a");
+            link.href = afipInvoice.file;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } catch (error) {
+            console.error("Error al abrir la factura:", error);
+            toast.error("No se pudo abrir la factura.");
+          }
+        } else {
+          toast.error("No se encontró el archivo de la factura.");
         }
-      } else {
-        toast.error("No se encontró el archivo de la factura.");
       }
-    }
     } catch (error) {
       console.error(error);
       toast.error("Error.");

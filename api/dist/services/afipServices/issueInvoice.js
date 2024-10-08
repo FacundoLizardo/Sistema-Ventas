@@ -23,10 +23,13 @@ const updateProductStock_1 = require("../../utils/updateProductStock");
 const date_fns_1 = require("date-fns");
 const CustomerServices_1 = __importDefault(require("../CustomerServices"));
 const UserServices_1 = __importDefault(require("../UserServices"));
-const afip = new afip_js_1.default({ CUIT: 20409378472 });
 function issueInvoice(_a) {
     return __awaiter(this, arguments, void 0, function* ({ req }) {
-        const { products, discount, cbteTipo, ptoVta, concepto, importeGravado, importeExentoIva, docNro, docTipo, iva, isdelivery, comments, deliveryAddress, branchId, userId, } = req.body;
+        const { products, discount, cbteTipo, ptoVta, concepto, importeGravado, importeExentoIva, docNro, docTipo, iva, isdelivery, comments, deliveryAddress, branchId, userId, cuit, razonSocial, domicilioFiscal, inicioActividad, regimenTributario, iibb, } = req.body;
+        const cuitNumber = Number(cuit);
+        console.log("cuitNumber", cuitNumber);
+        const afip = new afip_js_1.default({ CUIT: cuitNumber });
+        console.log("afip", afip);
         const { companyId } = req.params;
         const sequelize = db_1.Product.sequelize;
         const transaction = yield sequelize.transaction();
@@ -80,7 +83,14 @@ function issueInvoice(_a) {
                         },
                     ],
                 }
-                : {})), { products: products, importeGravado: importeGravado.toFixed(2) });
+                : {})), { products: products, importeGravado: importeGravado.toFixed(2), companyData: {
+                    cuit,
+                    razonSocial,
+                    domicilioFiscal,
+                    inicioActividad,
+                    regimenTributario,
+                    iibb,
+                } });
             const voucherData = yield afip.ElectronicBilling.createVoucher(data);
             const qrData = {
                 ver: 1,

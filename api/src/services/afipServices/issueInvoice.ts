@@ -11,8 +11,6 @@ import { format } from "date-fns";
 import CustomerService from "../CustomerServices";
 import UserServices from "../UserServices";
 
-const afip = new Afip({ CUIT: 20409378472 });
-
 export async function issueInvoice({ req }: { req: Request }) {
   const {
     products,
@@ -30,7 +28,19 @@ export async function issueInvoice({ req }: { req: Request }) {
     deliveryAddress,
     branchId,
     userId,
+    cuit,
+    razonSocial,
+    domicilioFiscal,
+    inicioActividad,
+    regimenTributario,
+    iibb,
   } = req.body;
+
+  const cuitNumber = Number(cuit);
+  console.log("cuitNumber", cuitNumber);
+  
+  const afip = new Afip({ CUIT: cuitNumber });
+console.log("afip", afip);
   const { companyId } = req.params;
 
   const sequelize = Product.sequelize as Sequelize;
@@ -128,7 +138,15 @@ export async function issueInvoice({ req }: { req: Request }) {
 
       products: products,
       importeGravado: importeGravado.toFixed(2),
-    };
+      companyData: {
+        cuit,
+        razonSocial,
+        domicilioFiscal,
+        inicioActividad,
+        regimenTributario,
+        iibb,
+      },
+    }
 
     const voucherData = await afip.ElectronicBilling.createVoucher(data);
 

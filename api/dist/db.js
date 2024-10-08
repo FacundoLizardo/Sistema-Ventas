@@ -39,7 +39,6 @@ const sequelize = new sequelize_1.Sequelize(config_1.DB_URL, {
     dialect: "postgres",
 });
 exports.sequelize = sequelize;
-console.log(exports.greenText, `Connecting to database with URL: ${config_1.DB_URL}`);
 const syncDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield sequelize.sync({ force: false });

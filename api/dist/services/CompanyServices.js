@@ -92,7 +92,7 @@ exports.default = new CompanyServices();
         "+1-234-567-8900",
         "3442644665"
       ],
-      "cuit": "20-12345678-9",
+      "cuit": "20409378472",
       "isActive": true
     }
  */

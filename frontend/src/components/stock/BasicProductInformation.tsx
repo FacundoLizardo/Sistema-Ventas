@@ -62,7 +62,7 @@ export default function BasicProductInformation({
                 value={field.value ?? ""}
                 onChange={(e) => {
                   const value =
-                    e.target.value === "" ? undefined : e.target.value;
+                    e.target.value === "" ? undefined : e.target.value.toLowerCase();
                   field.onChange(value);
                 }}
               />

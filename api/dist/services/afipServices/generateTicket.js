@@ -18,12 +18,11 @@ const fs_1 = __importDefault(require("fs"));
 const fs_2 = require("fs");
 const moment_1 = __importDefault(require("moment"));
 const puppeteer_1 = __importDefault(require("puppeteer"));
-const config_1 = require("../../config");
 const serviceError_1 = require("../../utils/serviceError");
 const db_1 = require("../../db");
 const updateProductStock_1 = require("../../utils/updateProductStock");
 const generateTicket = (_a) => __awaiter(void 0, [_a], void 0, function* ({ req }) {
-    const { products, cbteTipo, outputDir, discount, importeGravado, branchId } = req.body;
+    const { products, cbteTipo, outputDir, discount, importeGravado, branchId, data, } = req.body;
     const sequelize = db_1.Product.sequelize;
     const transaction = yield sequelize.transaction();
     try {
@@ -74,8 +73,8 @@ const generateTicket = (_a) => __awaiter(void 0, [_a], void 0, function* ({ req 
             return `${tableHeader}${tableRows}`;
         };
         let productRows = generateProductRows(products);
-        let razonSocial = config_1.RAZON_SOCIAL;
-        let domicilio = config_1.DOMICILIO_FISCAL;
+        let razonSocial = data.companyData.razonSocial;
+        let domicilio = data.companyData.domicilioFiscal;
         let fechaEmision = (0, moment_1.default)().format("DD-MM-YYYY");
         const ImpTotal = (importeGravado * (1 - discount / 100)).toFixed(2);
         const replacedHTML = html

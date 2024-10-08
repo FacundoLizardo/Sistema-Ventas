@@ -31,7 +31,7 @@ function seedDatabase() {
                     iibb: "123456789",
                     country: "Argentina",
                     phoneNumbers: ["3442644674"],
-                    cuit: "20331112225",
+                    cuit: "20409378472",
                     isActive: true,
                 });
                 const existingUser = yield db_1.User.findOne({
@@ -46,7 +46,7 @@ function seedDatabase() {
                         password: hashedPassword,
                         address: "123 Main St",
                         phoneNumber: "1234567890",
-                        cuit: "20123456789",
+                        cuit: "20409378472",
                         enabled: true,
                         role: "SUPER_ADMIN",
                         companyId: company.dataValues.id,

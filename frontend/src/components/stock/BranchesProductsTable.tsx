@@ -47,7 +47,7 @@ const BranchesProductsTable = ({
         </TableHeader>
         <TableBody>
           {products.map((product: IProduct, index: number) => {
-            const branchStock = product.stock.find(
+            const branchStock = product.stock?.find(
               (stock) => stock.branchId === branchId
             );
 

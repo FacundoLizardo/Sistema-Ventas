@@ -3,7 +3,6 @@ import fs from "fs";
 import { promises as fsPromises } from "fs";
 import moment from "moment";
 import puppeteer from "puppeteer";
-import { DOMICILIO_FISCAL, RAZON_SOCIAL } from "../../config";
 import { serviceError } from "../../utils/serviceError";
 import { Request } from "express";
 import { ProductInterface } from "../../models/product";
@@ -12,7 +11,15 @@ import { Sequelize } from "sequelize";
 import { updateProductStock } from "../../utils/updateProductStock";
 
 export const generateTicket = async ({ req }: { req: Request }) => {
-  const { products, cbteTipo, outputDir, discount, importeGravado, branchId } = req.body;
+  const {
+    products,
+    cbteTipo,
+    outputDir,
+    discount,
+    importeGravado,
+    branchId,
+    data,
+  } = req.body;
   const sequelize = Product.sequelize as Sequelize;
   const transaction = await sequelize.transaction();
 
@@ -73,8 +80,8 @@ export const generateTicket = async ({ req }: { req: Request }) => {
     };
 
     let productRows = generateProductRows(products);
-    let razonSocial = RAZON_SOCIAL;
-    let domicilio = DOMICILIO_FISCAL;
+    let razonSocial = data.companyData.razonSocial;
+    let domicilio = data.companyData.domicilioFiscal;
     let fechaEmision = moment().format("DD-MM-YYYY");
 
     const ImpTotal = (importeGravado * (1 - discount / 100)).toFixed(2);
