@@ -1,6 +1,10 @@
 import { WhereOptions } from "sequelize";
 import { Product, Stock, Category, SubCategory } from "../db";
-import { ProductInterface, ProductCreationInterface } from "../models/product";
+import {
+  ProductInterface,
+  ProductCreationInterface,
+  ProductWithStockCreationInterface,
+} from "../models/product";
 import { serviceError } from "../utils/serviceError";
 import StockServices from "./StockServices";
 
@@ -48,7 +52,6 @@ class ProductService {
     stock: Array<{ branchId: string; quantity: number }>
   ): Promise<ProductInterface | string> {
     try {
-
       const existingProduct = await Product.findOne({
         where: {
           name: data.name,
@@ -82,10 +85,7 @@ class ProductService {
     }
   }
 
-  async putProduct(
-    id: string,
-    data: ProductCreationInterface
-  ): Promise<boolean | string> {
+  async putProduct(id: string, data: ProductWithStockCreationInterface) {
     try {
       const existingProduct = await Product.findOne({ where: { id } });
 
@@ -93,7 +93,22 @@ class ProductService {
         return `The product with id: ${id} does not exist`;
       }
 
-      await existingProduct.update(data);
+      const { stock, ...productData } = data;
+
+      if (productData.subCategoryId === "") {
+        delete productData.subCategoryId;
+      }
+
+      await existingProduct.update(productData);
+
+      if (stock) {
+        const stockUpdates = stock.map((item) =>
+          StockServices.putStock(item.id, item)
+        );
+
+        await Promise.all(stockUpdates);
+      }
+
       return true;
     } catch (error) {
       serviceError(error);

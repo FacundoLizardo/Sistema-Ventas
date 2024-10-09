@@ -40,7 +40,7 @@ export async function issueInvoice({ req }: { req: Request }) {
   console.log("cuitNumber", cuitNumber);
   
   const afip = new Afip({ CUIT: cuitNumber });
-console.log("afip", afip);
+
   const { companyId } = req.params;
 
   const sequelize = Product.sequelize as Sequelize;

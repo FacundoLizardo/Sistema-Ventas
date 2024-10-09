@@ -13,7 +13,9 @@ import { toast } from "sonner";
 import { z } from "zod";
 import ButtonWithLoading from "../common/ButtonWithLoading";
 import { Form } from "../ui/form";
-import ProductsServices from "@/services/products/ProductsServices";
+import ProductsServices, {
+  IProduct,
+} from "@/services/products/ProductsServices";
 import AdditionalProductInformation from "./AdditionalProductInformation";
 import BasicProductInformation from "./BasicProductInformation";
 import {
@@ -24,13 +26,14 @@ import {
   AlertDialogDescription,
   AlertDialogCancel,
   AlertDialogAction,
-} from "@radix-ui/react-alert-dialog";
+} from "../ui/alert-dialog";
 import { AlertDialogHeader, AlertDialogFooter } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 import { useEffect } from "react";
 import { ICategory } from "@/services/cetegories/CategoriesServices";
 import { ISubCategory } from "@/services/subCetegories/SubCategoriesServices";
 import { useRouter } from "next/navigation";
+import { useEditProduct } from "@/context/editProductContect";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "El nombre es requerido." }),
@@ -56,6 +59,7 @@ const formSchema = z.object({
       z.object({
         branchId: z.string(),
         quantity: z.number(),
+        id: z.string().optional(),
       })
     )
     .optional(),
@@ -100,40 +104,70 @@ export default function ProductForm({
   userId,
 }: ProductFormProps) {
   const router = useRouter();
+  const { selectedProduct, selectProduct } = useEditProduct();
+
+  const defaultValues = {
+    name: "",
+    categoryId: undefined,
+    subCategoryId: undefined,
+    cost: undefined,
+    finalPrice: undefined,
+    discount: 0,
+    profitPercentage: undefined,
+    stock: [
+      {
+        quantity: 0,
+        branchId,
+      },
+    ],
+    allowNegativeStock: false,
+    trackStock: false,
+    minimumStock: 0,
+    enabled: true,
+    notesDescription: "",
+    taxes: undefined,
+    barcode: "",
+    branchId,
+    userId,
+  };
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      categoryId: undefined,
-      subCategoryId: undefined,
-      cost: undefined,
-      finalPrice: undefined,
-      discount: 0,
-      profitPercentage: undefined,
-      stock: [
-        {
-          quantity: 0,
-          branchId,
-        },
-      ],
-      allowNegativeStock: false,
-      trackStock: false,
-      minimumStock: 0,
-      enabled: true,
-      notesDescription: "",
-      taxes: undefined,
-      barcode: "",
-      branchId,
-      userId,
-    },
+    defaultValues: defaultValues,
   });
+
+  useEffect(() => {
+    if (selectedProduct) {
+      form.reset({
+        name: selectedProduct.name,
+        categoryId: selectedProduct.category?.id,
+        subCategoryId: selectedProduct.subCategory?.id,
+        cost: selectedProduct.cost,
+        finalPrice: selectedProduct.finalPrice,
+        discount: selectedProduct.discount,
+        profitPercentage: selectedProduct.profitPercentage,
+        stock: selectedProduct?.stock?.map((s) => ({
+          branchId: s.branchId,
+          quantity: s.quantity,
+          id: s.id,
+        })),
+        allowNegativeStock: selectedProduct.allowNegativeStock,
+        trackStock: selectedProduct.trackStock,
+        minimumStock: selectedProduct.minimumStock,
+        enabled: selectedProduct.enabled,
+        notesDescription: selectedProduct.notesDescription,
+        taxes: selectedProduct.taxes,
+        barcode: selectedProduct.barcode,
+        branchId,
+        userId,
+      });
+    }
+  }, [selectedProduct, form, branchId, userId]);
 
   const cost = form.watch("cost");
   const taxes = form.watch("taxes");
   const discount = form.watch("discount");
   const profitPercentage = form.watch("profitPercentage");
-
-  console.log("datos del formulario", form.watch());
 
   useEffect(() => {
     if (cost !== undefined) {
@@ -166,26 +200,41 @@ export default function ProductForm({
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const formattedData = {
       ...data,
+      stock:
+        data?.stock?.map((item) => ({
+          id: item.id || undefined,
+          branchId: item.branchId,
+          quantity: item.quantity,
+        })) || [],
       name: data.name.toLowerCase(),
-      stock: data.stock ?? [],
     };
 
-    const request = await ProductsServices.post({
-      params: formattedData,
-      companyId,
-    });
+    const request: IProduct = selectedProduct
+      ? await ProductsServices.put({
+          params: formattedData,
+          productId: selectedProduct.id,
+        })
+      : await ProductsServices.post({
+          params: formattedData,
+          companyId,
+        });
 
     toast.promise(Promise.resolve(request), {
-      loading: "Creando el producto...",
+      loading: selectedProduct
+        ? "Actualizando el producto..."
+        : "Creando el producto...",
       success: () => {
-        form.reset();
+        form.reset(defaultValues);
         router.refresh();
-        return "El producto fue creado con éxito.";
+        selectProduct(null);
+        return selectedProduct
+          ? "El producto fue actualizado con éxito."
+          : "El producto fue creado con éxito.";
       },
-      error: "Error al crear el producto.",
+      error: "Error al procesar el producto.",
     });
   };
-  console.log("error", form.formState.errors);
+
   const { isDirty, isValid, isSubmitting } = form.formState;
   const submitDisabled = !isDirty || !isValid;
 
@@ -229,7 +278,8 @@ export default function ProductForm({
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => {
-                      form.reset();
+                      form.reset(defaultValues)
+                      selectProduct(null)
                     }}
                   >
                     Confirmar
@@ -240,13 +290,17 @@ export default function ProductForm({
 
             <ButtonWithLoading
               loading={isSubmitting}
-              loadingText="Creando el producto..."
+              loadingText={
+                selectedProduct
+                  ? "Actualizando el producto..."
+                  : "Creando el producto..."
+              }
               variant="gradient"
               size={"sm"}
               type="submit"
               disabled={submitDisabled}
             >
-              Crear producto
+              {selectedProduct ? "Actualizar" : "Crear producto"}
             </ButtonWithLoading>
           </CardFooter>
         </form>

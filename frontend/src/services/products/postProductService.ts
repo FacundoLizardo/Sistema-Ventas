@@ -25,7 +25,6 @@ export const postProductService = async ({
     );
 
     if (!response.ok) {
-      console.error(response.statusText);
       throw new Error("Network response was not ok");
     }
 

@@ -7,10 +7,6 @@ class StockController {
     try {
       const { id, branchId } = req.query as { id: string; branchId: string };
 
-      if (!id) {
-        res.status(404).json({ message: "Stock id is required" });
-      }
-
       const stock = await StockServices.getStock({ id, branchId });
 
       if (!stock) {

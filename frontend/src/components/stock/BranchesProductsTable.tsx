@@ -20,16 +20,36 @@ import {
 import { Badge } from "../ui/badge";
 import { IProduct } from "@/services/products/ProductsServices";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 
 type BranchesProductsTableProps = {
   products: IProduct[];
   branchId: string;
+  selectProduct: (product: IProduct) => void;
 };
 
 const BranchesProductsTable = ({
   products,
   branchId,
+  selectProduct,
 }: BranchesProductsTableProps) => {
+  const handleDelete = (productId: string) => {
+    console.log("Deleting product:", productId);
+  };
+
+  const handleDeactivate = (productId: string) => {
+    console.log("Deactivating product:", productId);
+  };
 
   return (
     <ScrollArea className="flex flex-col h-[350px]">
@@ -59,15 +79,32 @@ const BranchesProductsTable = ({
                   )}
                 </TableCell>
                 <TableCell className="px-2 py-0 text-center">
-                  <Badge variant="outline">
-                    {product.enabled === true ? "Activo" : "Inactivo"}
+                  <Badge
+                    variant="outline"
+                    className={
+                      product.enabled
+                        ? "text-constructive border-constructive"
+                        : "text-destructive border-destext-destructive"
+                    }
+                  >
+                    {product.enabled ? "Activo" : "Inactivo"}
                   </Badge>
                 </TableCell>
                 <TableCell className="px-2 py-0 text-center">
                   ${product?.finalPrice && product?.finalPrice}
                 </TableCell>
-                <TableCell className="px-2 py-0 text-center">
-                  {branchStock ? branchStock.quantity : 0}
+                <TableCell
+                  className={
+                    branchStock && branchStock.quantity < 0
+                      ? "text-destructive px-2 py-0 text-center"
+                      : "px-2 py-0 text-center"
+                  }
+                >
+                  {branchStock
+                    ? branchStock.quantity !== undefined
+                      ? branchStock.quantity
+                      : 0
+                    : 0}
                 </TableCell>
                 <TableCell className="px-2 py-0 text-center">
                   {product.category?.name.replace(/^\w|(?<=\s)\w/g, (char) =>
@@ -82,21 +119,70 @@ const BranchesProductsTable = ({
                 <TableCell className="px-2 py-0 text-center">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button
-                        aria-haspopup="true"
-                        size="icon"
-                        variant="ghost"
-                        className="my-1"
-                      >
+                      <Button aria-haspopup="true" size="icon" variant="ghost">
                         <MoreHorizontal className="h-4 w-4" />
-                        <span className="sr-only">Toggle menu</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent
+                      align="end"
+                      className="flex flex-col text-sm outline-none transition-colors items-start"
+                    >
                       <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                      <DropdownMenuItem>Editar</DropdownMenuItem>
-                      <DropdownMenuItem>Eliminar</DropdownMenuItem>
-                      <DropdownMenuItem>Desactivar</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => selectProduct(product)}>
+                        Editar
+                      </DropdownMenuItem>
+
+                      <DropdownMenuItem asChild>
+                        <AlertDialog>
+                          <AlertDialogTrigger className="px-2 py-1.5">
+                            Eliminar
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                ¿Eliminar producto?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Esta acción no puede deshacerse.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(product.id)}
+                              >
+                                Confirmar
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </DropdownMenuItem>
+
+                      <DropdownMenuItem asChild>
+                        <AlertDialog>
+                          <AlertDialogTrigger className="px-2 py-1.5">
+                            {product.enabled ? "Desactivar" : "Activar"}
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                              ¿{product.enabled ? "Desactivar" : "Activar"} producto?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Esta acción puede ser revertida.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeactivate(product.id)}
+                              >
+                                Confirmar
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

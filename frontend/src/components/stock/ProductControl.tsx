@@ -7,6 +7,7 @@ import { IProduct } from "@/services/products/ProductsServices";
 import { Input } from "../ui/input";
 import BranchesProductsTable from "./BranchesProductsTable";
 import { useState } from "react";
+import { useEditProduct } from "@/context/editProductContect";
 
 type ProductControlProps = {
   products: IProduct[];
@@ -20,6 +21,7 @@ export default function ProductControl({
   branchId,
 }: ProductControlProps) {
   const [searchTerm, setSearchTerm] = useState("");
+  const { selectProduct } = useEditProduct();
 
   const filteredProducts = products.filter((product) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
@@ -58,6 +60,7 @@ export default function ProductControl({
             <CardContent>
               <BranchesProductsTable
                 products={filteredProducts}
+                selectProduct={selectProduct}
                 branchId={branchId}
               />
             </CardContent>

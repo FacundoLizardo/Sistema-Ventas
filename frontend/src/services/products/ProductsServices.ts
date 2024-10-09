@@ -1,6 +1,7 @@
 import { getProductsService } from "./getProductsService";
-import { postProductService } from "./postProductsService";
 import { accessToken } from "../accessToken";
+import { postProductService } from "./postProductService";
+import { putProductService } from "./putProductService";
 
 export interface IProduct {
   id: string;
@@ -18,6 +19,7 @@ export interface IProduct {
   discount?: number;
   profitPercentage?: number;
   stock?: {
+    id?: string;
     branchId: string;
     quantity: number;
   }[];
@@ -78,6 +80,22 @@ class ProductsServices {
     try {
       const token = await this.getToken();
       return await postProductService({ params, token, companyId });
+    } catch (error) {
+      console.error("Error posting product:", error);
+      throw error;
+    }
+  }
+
+  static async put({
+    params,
+    productId,
+  }: {
+    params: IProductCreate;
+    productId: string;
+  }) {
+    try {
+      const token = await this.getToken();
+      return await putProductService({ params, token, productId });
     } catch (error) {
       console.error("Error posting product:", error);
       throw error;

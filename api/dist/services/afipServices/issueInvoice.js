@@ -29,7 +29,6 @@ function issueInvoice(_a) {
         const cuitNumber = Number(cuit);
         console.log("cuitNumber", cuitNumber);
         const afip = new afip_js_1.default({ CUIT: cuitNumber });
-        console.log("afip", afip);
         const { companyId } = req.params;
         const sequelize = db_1.Product.sequelize;
         const transaction = yield sequelize.transaction();

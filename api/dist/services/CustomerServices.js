@@ -52,7 +52,6 @@ class CustomerService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { docNro, docTipo } = data;
-                console.log("docNro, docTipo", docNro, docTipo);
                 const customer = yield db_1.Customer.findOne({
                     where: {
                         docTipo: docTipo,

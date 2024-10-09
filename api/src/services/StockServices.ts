@@ -1,21 +1,25 @@
 import { serviceError } from "../utils/serviceError";
 import { StockCreationInterface, StockInterface } from "../models/stock";
 import { Stock } from "../db";
+import { WhereOptions } from "sequelize";
 
 class StockServices {
-    async getStock({ id, branchId }: { id: string; branchId: string }) {
-        try {
-          const user = await Stock.findOne({
-            where: {
-              id: id,
-              branchId: branchId,
-            },
-          });
-          return user;
-        } catch (error) {
-          serviceError(error);
-        }
+  async getStock({ id, branchId }: { id?: string; branchId?: string }) {
+    try {
+      const whereCondition: WhereOptions = { branchId };
+
+      if (id) {
+        whereCondition.id = id;
       }
+
+      const stock = await Stock.findOne({
+        where: whereCondition,
+      });
+      return stock;
+    } catch (error) {
+      serviceError(error);
+    }
+  }
 
   async getStocks(companyId: string) {
     try {
@@ -51,27 +55,23 @@ class StockServices {
     }
   }
 
-  /* async putUser(
+  async putStock(
     id: string,
-    data: UserCreationInterface
+    data: StockCreationInterface
   ): Promise<boolean | string> {
     try {
-      const existingUser = await User.findOne({ where: { id } });
+      const existingStock = await Stock.findOne({ where: { id } });
 
-      if (!existingUser) {
+      if (!existingStock) {
         return `The user with id: ${id} does not exist`;
       }
 
-      if (data.password) {
-        data.password = await hashPassword(data.password);
-      }
-
-      await existingUser.update(data);
+      await existingStock.update(data);
       return true;
     } catch (error) {
       serviceError(error);
     }
-  } */
+  }
 
   /* async deleteUser(id: string): Promise<boolean> {
     try {

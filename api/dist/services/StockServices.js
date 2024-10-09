@@ -15,13 +15,14 @@ class StockServices {
     getStock(_a) {
         return __awaiter(this, arguments, void 0, function* ({ id, branchId }) {
             try {
-                const user = yield db_1.Stock.findOne({
-                    where: {
-                        id: id,
-                        branchId: branchId,
-                    },
+                const whereCondition = { branchId };
+                if (id) {
+                    whereCondition.id = id;
+                }
+                const stock = yield db_1.Stock.findOne({
+                    where: whereCondition,
                 });
-                return user;
+                return stock;
             }
             catch (error) {
                 (0, serviceError_1.serviceError)(error);
@@ -54,6 +55,21 @@ class StockServices {
                 else {
                     return "Stock not created because it already exists or something went wrong, please try again.";
                 }
+            }
+            catch (error) {
+                (0, serviceError_1.serviceError)(error);
+            }
+        });
+    }
+    putStock(id, data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const existingStock = yield db_1.Stock.findOne({ where: { id } });
+                if (!existingStock) {
+                    return `The user with id: ${id} does not exist`;
+                }
+                yield existingStock.update(data);
+                return true;
             }
             catch (error) {
                 (0, serviceError_1.serviceError)(error);

@@ -54,7 +54,7 @@ export default function CategoriesControl({
   const router = useRouter();
 
   const handleDelete = async (id: string, type: "category" | "subcategory") => {
-     try {
+    try {
       let request;
       if (type === "category") {
         request = CategoriesServices.delete({ companyId, id });
@@ -116,9 +116,9 @@ export default function CategoriesControl({
           ?.name || "Sin categoría",
     })),
   ];
-  
+
   return (
-    <div>
+    <div className="grid w-full">
       <div className="flex w-full border rounded-md bg-background flex-1 items-center gap-2 my-4">
         <Input
           type="text"
@@ -131,82 +131,88 @@ export default function CategoriesControl({
       </div>
 
       <ScrollArea className="h-[400px]">
-          <Table>
-            <TableCaption>Lista de tus categorías y subcategorías</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Tipo</TableHead>
-                <TableHead>Nombre</TableHead>
-                <TableHead className="hidden sm:block">Descripción</TableHead>
-                <TableHead>Acción</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {combinedData.length > 0 ? (
-                combinedData.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>
-                      {item.type === "category" ? "Categoría" : "Subcategoría"}
-                    </TableCell>
-                    <TableCell>
-                      {item.type === "subcategory" ? (
-                        <>
-                          {item.name}{" "}
-                          <span className="text-muted-foreground text-xs">
-                            ({item.categoryName})
-                          </span>
-                        </>
-                      ) : (
-                        item.name
-                      )}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground text-xs hidden sm:block">
-                      {item.description || "Sin descripción"}
-                    </TableCell>
-                    <TableCell>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            type="button"
-                            className="hover:text-destructive"
+        <Table>
+          <TableCaption>Lista de tus categorías y subcategorías</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Tipo</TableHead>
+              <TableHead>Nombre</TableHead>
+              <TableHead>Descripción</TableHead>
+              <TableHead>Acción</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {combinedData.length > 0 ? (
+              combinedData.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell>
+                    {item.type === "category" ? "Categoría" : "Subcategoría"}
+                  </TableCell>
+                  <TableCell>
+                    {item.type === "subcategory" ? (
+                      <>
+                        {item.name}{" "}
+                        <span className="text-muted-foreground text-xs">
+                          ({item.categoryName})
+                        </span>
+                      </>
+                    ) : (
+                      item.name
+                    )}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground text-xs">
+                    {item.description || "Sin descripción"}
+                  </TableCell>
+                  <TableCell>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          type="button"
+                          className="hover:text-destructive"
+                        >
+                          <X size={16} />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            {`¿Estás seguro de que quieres eliminar esta ${
+                              item.type === "category"
+                                ? "Categoría"
+                                : "Subcategoría"
+                            }?`}
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Esta acción no puede deshacerse. Esto eliminará la{" "}
+                            {item.type === "category"
+                              ? "Categoría"
+                              : "Subcategoría"}
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDelete(item.id, item.type)}
                           >
-                            <X size={16} />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              {`¿Estás seguro de que quieres eliminar esta ${item.type === "category" ? "Categoría" : "Subcategoría"}?`}
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Esta acción no puede deshacerse. Esto eliminará la{" "}
-                              {item.type === "category" ? "Categoría" : "Subcategoría"}
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDelete(item.id, item.type)}
-                            >
-                              Confirmar
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={4}>
-                    No hay categorías ni subcategorías.
+                            Confirmar
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-              
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4}>
+                  No hay categorías ni subcategorías.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+
         <ScrollBar orientation="horizontal" className="flex" />
         <ScrollBar orientation="vertical" className="flex" />
       </ScrollArea>

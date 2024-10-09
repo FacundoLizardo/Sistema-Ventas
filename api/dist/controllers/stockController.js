@@ -19,9 +19,6 @@ class StockController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id, branchId } = req.query;
-                if (!id) {
-                    res.status(404).json({ message: "Stock id is required" });
-                }
                 const stock = yield StockServices_1.default.getStock({ id, branchId });
                 if (!stock) {
                     res.status(404).json({ message: "Stock not found" });

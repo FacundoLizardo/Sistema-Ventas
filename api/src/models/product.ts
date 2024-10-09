@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 import { validatePercentage } from "../utils/percentajeValidator";
+import { StockInterface } from "./stock";
 
 export interface ProductInterface {
   id: string;
@@ -42,6 +43,12 @@ class Product extends Model<ProductInterface, ProductCreationInterface> {
       throw new Error("The discount must be less than 10000.");
     }
   }
+}
+
+export interface ProductWithStockCreationInterface extends ProductCreationInterface {
+  stock?: StockInterface[];
+  categoryId?: string;
+  subCategoryId?: string;
 }
 
 export default (sequelize: Sequelize) => {

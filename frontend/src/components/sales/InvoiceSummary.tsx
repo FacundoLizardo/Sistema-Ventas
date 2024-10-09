@@ -173,7 +173,7 @@ export default function InvoiceSummary({
                       <span className="font-semibold">IVA (%)</span>
                       <span>%{IVA || 0}</span>
                     </div>
-                  ): null}
+                  ) : null}
                 </div>
               </div>
             </CardContent>
@@ -310,28 +310,37 @@ export default function InvoiceSummary({
                     <span>{form.getValues("razonSocial")}</span>
                   </li>
                   <li className="flex items-center justify-between">
-                    <span className="text-muted-foreground">IIBB</span>
-                    <span>{form.getValues("iibb")}</span>
-                  </li>
-                  <li className="flex items-center justify-between">
                     <span className="text-muted-foreground">
                       Domicilio Fiscal
                     </span>
                     <span>{form.getValues("domicilioFiscal")}</span>
                   </li>
-                  <li className="flex items-center justify-between">
-                    <span className="text-muted-foreground">
-                      Inicio de Actividad
-                    </span>
-                    <span>{form.getValues("inicioActividad")}</span>
-                  </li>
-                  <li className="flex items-center justify-between">
-                    <span className="text-muted-foreground">
-                      Régimen Tributario
-                    </span>
-                    <span>{form.getValues("regimenTributario")}</span>
-                  </li>
+                  {(cbteTipo === 1 || cbteTipo === 6) && (
+                    <>
+                      <li className="flex items-center justify-between">
+                        <span className="text-muted-foreground">CUIT</span>
+                        <span>{form.getValues("cuit")}</span>
+                      </li>
+                      <li className="flex items-center justify-between">
+                        <span className="text-muted-foreground">IIBB</span>
+                        <span>{form.getValues("iibb")}</span>
+                      </li>
+                      <li className="flex items-center justify-between">
+                        <span className="text-muted-foreground">
+                          Inicio de Actividad
+                        </span>
+                        <span>{form.getValues("inicioActividad")}</span>
+                      </li>
+                      <li className="flex items-center justify-between">
+                        <span className="text-muted-foreground">
+                          Régimen Tributario
+                        </span>
+                        <span>{form.getValues("regimenTributario")}</span>
+                      </li>
+                    </>
+                  )}
                 </ul>
+
                 <Separator className="my-2" />
 
                 <div className="font-semibold">Información adicional</div>

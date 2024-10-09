@@ -1,11 +1,12 @@
 import ProductControl from "@/components/stock/ProductControl";
 import ProductForm from "@/components/stock/ProductForm";
+import { EditProductProvider } from "@/context/editProductContect";
 import CategoriesServices from "@/services/cetegories/CategoriesServices";
 import ProductsServices from "@/services/products/ProductsServices";
 import SubCategoriesServices from "@/services/subCetegories/SubCategoriesServices";
 import UsersServices from "@/services/users/UsersServices";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 const fetchData = async (companyId: string, branchId: string) => {
   try {
@@ -40,7 +41,7 @@ const fetchData = async (companyId: string, branchId: string) => {
     };
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -56,20 +57,22 @@ export default async function Page({
   );
 
   return (
-    <main className="grid gap-4">
-      <ProductControl
-        products={products}
-        userId={userId}
-        branchId={branchId}
-        categories={categories}
-      />
-      <ProductForm
-        categories={categories}
-        subCategories={subCategories}
-        branchId={branchId}
-        companyId={companyId}
-        userId={userId}
-      />
-    </main>
+    <EditProductProvider>
+      <main className="grid gap-4">
+        <ProductControl
+          products={products}
+          userId={userId}
+          branchId={branchId}
+          categories={categories}
+        />
+        <ProductForm
+          categories={categories}
+          subCategories={subCategories}
+          branchId={branchId}
+          companyId={companyId}
+          userId={userId}
+        />
+      </main>
+    </EditProductProvider>
   );
 }
