@@ -31,6 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
+import { capitalizeWords } from "@/lib/capitalizeWords";
 
 type BranchesProductsTableProps = {
   products: IProduct[];
@@ -74,9 +75,7 @@ const BranchesProductsTable = ({
             return (
               <UITableRow key={index}>
                 <TableCell className="px-2 py-0 text-center">
-                  {product.name.replace(/^\w|(?<=\s)\w/g, (char) =>
-                    char.toUpperCase()
-                  )}
+                  {product.name ? capitalizeWords(product.name) : ""}
                 </TableCell>
                 <TableCell className="px-2 py-0 text-center">
                   <Badge
@@ -107,14 +106,14 @@ const BranchesProductsTable = ({
                     : 0}
                 </TableCell>
                 <TableCell className="px-2 py-0 text-center">
-                  {product.category?.name.replace(/^\w|(?<=\s)\w/g, (char) =>
-                    char.toUpperCase()
-                  )}
+                  {product.category?.name
+                    ? capitalizeWords(product.category.name)
+                    : ""}
                 </TableCell>
                 <TableCell className="px-2 py-0 text-center">
-                  {product.subCategory?.name.replace(/^\w|(?<=\s)\w/g, (char) =>
-                    char.toUpperCase()
-                  )}
+                  {product.subCategory?.name
+                    ? capitalizeWords(product.subCategory.name)
+                    : ""}
                 </TableCell>
                 <TableCell className="px-2 py-0 text-center">
                   <DropdownMenu>
@@ -166,7 +165,8 @@ const BranchesProductsTable = ({
                           <AlertDialogContent>
                             <AlertDialogHeader>
                               <AlertDialogTitle>
-                              ¿{product.enabled ? "Desactivar" : "Activar"} producto?
+                                ¿{product.enabled ? "Desactivar" : "Activar"}{" "}
+                                producto?
                               </AlertDialogTitle>
                               <AlertDialogDescription>
                                 Esta acción puede ser revertida.

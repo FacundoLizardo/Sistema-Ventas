@@ -1,5 +1,6 @@
 import { accessToken } from "../accessToken";
 import { getCustomerService } from "./getCustomerService";
+import { postCustomerService } from "./postCustomerService";
 
 export interface ICustomer {
   id: string;
@@ -17,6 +18,8 @@ export interface ICustomer {
   dateOfBirth?: Date;
   enableDebt?: boolean;
 }
+
+export interface ICustomerCreate extends Omit<ICustomer, "id"> {}
 
 class CustomersServices {
   static async getToken() {
@@ -51,6 +54,23 @@ class CustomersServices {
       return response;
     } catch (error) {
       console.error("Error getting company:", error);
+      throw error;
+    }
+  }
+
+  static async post({
+    params,
+    companyId,
+  }: {
+    params: ICustomerCreate;
+    companyId: string;
+  }) {
+    try {
+      const token = await this.getToken();
+
+      await postCustomerService({ params, token, companyId });
+    } catch (error) {
+      console.error("Error with Token:", error);
       throw error;
     }
   }

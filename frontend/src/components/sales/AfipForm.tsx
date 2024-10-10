@@ -24,23 +24,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { FaEdit } from "react-icons/fa";
-import { Badge } from "../ui/badge";
 import { ICompany } from "@/services/companies/CompaniesServices";
 import useCustomer from "@/hooks/useCustomer";
-import { SearchIcon } from "lucide-react";
+import { AlertTriangle, CheckCircle2, SearchIcon } from "lucide-react";
 import { useSales } from "@/context/salesContext";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "./SalesContainer";
+import { ICustomer } from "@/services/customers/CustomersServices";
+
+const getCustomerName = (customer: ICustomer | null) => {
+  if (!customer) return "";
+
+  if (customer.customerType === "company") {
+    return customer.companyName || "";
+  } else if (customer.customerType === "person") {
+    return `${customer.firstName} ${customer.lastName}`;
+  }
+  return "";
+};
 
 type AfipFormProps = {
   form: UseFormReturn<FormValues>;
   company: ICompany;
   companyId: string;
+  handleClientModal: () => void;
 };
 
-export default function AfipForm({ company, companyId, form }: AfipFormProps) {
+export default function AfipForm({
+  company,
+  companyId,
+  form,
+  handleClientModal,
+}: AfipFormProps) {
   const { loading, customer, error, loadCustomer, setError, setCustomer } =
     useCustomer();
   const { totalPriceWithDiscount } = useSales();
@@ -55,16 +72,11 @@ export default function AfipForm({ company, companyId, form }: AfipFormProps) {
     }
   };
 
-  const handleClient = () => {
+  const handleGetClient = () => {
     loadCustomer(companyId, docTipo, docNro);
   };
 
-  const customerName =
-    customer?.customerType === "company"
-      ? customer?.companyName || ""
-      : customer?.customerType === "person"
-      ? `${customer?.firstName} ${customer?.lastName}`
-      : "";
+  const customerName = useMemo(() => getCustomerName(customer), [customer]);
 
   useEffect(() => {
     if (docTipo) {
@@ -183,7 +195,7 @@ export default function AfipForm({ company, companyId, form }: AfipFormProps) {
                         <button
                           className="absolute inset-y-0 right-0 flex items-center px-2"
                           type="button"
-                          onClick={handleClient}
+                          onClick={handleGetClient}
                         >
                           <SearchIcon className="text-background size-5" />
                         </button>
@@ -199,11 +211,22 @@ export default function AfipForm({ company, companyId, form }: AfipFormProps) {
                 <Button
                   variant={"outline"}
                   type="button"
-                  className="flex h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background gap-2"
+                  className="flex h-10 w-full rounded-md border border-input px-3 text-sm ring-offset-background"
                   disabled={loading}
-                  onClick={handleClient}
+                  onClick={handleGetClient}
                 >
-                  <FaEdit />
+                  {!customer && !error && <FaEdit />}
+
+                  {!customer && error && (
+                    <AlertTriangle className="text-destructive" />
+                  )}
+
+                  {customer && !error && (
+                    <>
+                      <CheckCircle2 className="text-constructive" />
+                    </>
+                  )}
+
                   <div className="truncate overflow-hidden whitespace-nowrap w-56">
                     {loading ? (
                       "Cargando cliente..."
@@ -211,10 +234,7 @@ export default function AfipForm({ company, companyId, form }: AfipFormProps) {
                       <>
                         {!customer ? (
                           error ? (
-                            <div className="flex justify-center gap-2">
-                              <div>{error}</div>
-                              <Badge variant={"default"}>Crear</Badge>
-                            </div>
+                            <div className="flex justify-center">{error}</div>
                           ) : (
                             "Presione Enter o haga click..."
                           )
@@ -226,6 +246,16 @@ export default function AfipForm({ company, companyId, form }: AfipFormProps) {
                       "Ingresa un cliente"
                     )}
                   </div>
+                  {!customer && error && (
+                    <Button
+                      variant={"default"}
+                      className="h-6"
+                      type="button"
+                      onClick={handleClientModal}
+                    >
+                      Crear
+                    </Button>
+                  )}
                 </Button>
               </FormItem>
 
@@ -258,6 +288,7 @@ export default function AfipForm({ company, companyId, form }: AfipFormProps) {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="concepto"

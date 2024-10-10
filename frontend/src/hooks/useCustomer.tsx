@@ -28,7 +28,7 @@ export default function useCustomer() {
       if (response.customer) {
         setCustomer(response.customer);
       } else {
-        setError("No encontrado.");
+        setError("No encontrado");
         setCustomer(null);
       }
     } catch (error) {
