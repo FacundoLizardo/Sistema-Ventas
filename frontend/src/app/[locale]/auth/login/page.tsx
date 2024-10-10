@@ -28,8 +28,7 @@ export default async function Page({
   return (
     <div className="flexh-screen justify-center items-center">
       <LoginClient locale={locale || "default"} />
-      <h1>Login</h1>
-<ChatComponent/>
+      <ChatComponent/>
     </div>
   );
 }

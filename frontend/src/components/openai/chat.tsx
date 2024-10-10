@@ -6,7 +6,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { UserIcon } from "lucide-react"
+import { UserIcon, BotMessageSquare } from "lucide-react"
+
 
 export default function ChatComponent() {
   const [message, setMessage] = useState<string>("")
@@ -39,17 +40,21 @@ export default function ChatComponent() {
   }, [chatLog])
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full max-w-2xl mx-auto mb-60">
       <CardHeader>
-        <CardTitle>Chat with OpenAI</CardTitle>
+        <CardTitle>Asistente virtual de GPI360</CardTitle>
       </CardHeader>
       <CardContent>
         <ScrollArea ref={scrollAreaRef} className="h-[400px] pr-4 overflow-y-auto">
-          {chatLog.map((msg, index) => (
+          {chatLog.map((msg: { role: string; content: string }, index: number) => (
             <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} mb-4`}>
               <div className={`flex items-start gap-2.5 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
-                <UserIcon className="w-4 h-4" />
-                <div className={`flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 ${msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"} rounded-e-xl rounded-es-xl`}>
+                {msg.role === "user" ? 
+                <UserIcon /> 
+                : 
+                <BotMessageSquare />}
+               
+                <div className={`flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 ${msg.role === "user" ? "bg-muted text-primary-foreground rounded-s-xl" : " bg-primary rounded-se-xl "} rounded-b-xl `}>
                   <p className="text-sm font-normal">{msg.content}</p>
                 </div>
               </div>
