@@ -66,10 +66,6 @@ class SubCategoryService {
 
   async deleteCategory(id: string): Promise<boolean> {
     try {
-      if (!id) {
-        throw new Error("Id is required.");
-      }
-
       const deletedCount = await SubCategory.destroy({ where: { id } });
 
       if (deletedCount === 0) {

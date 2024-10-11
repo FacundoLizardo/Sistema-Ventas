@@ -1,4 +1,6 @@
-import { ICustomer } from "@/services/customers/CustomersServices";
+import CustomersServices, {
+  ICustomer,
+} from "@/services/customers/CustomersServices";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,14 +27,19 @@ import { Button } from "../ui/button";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { useState } from "react";
 import { capitalizeWords } from "@/lib/capitalizeWords";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type ClientsMonitoringProps = {
   customers: ICustomer[];
+  companyId: string;
 };
 
 export default function ClientsMonitoring({
   customers,
+  companyId,
 }: ClientsMonitoringProps) {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredCustomers = customers.filter((customer) => {
@@ -50,7 +57,24 @@ export default function ClientsMonitoring({
   });
 
   const handleDelete = (customerId: string) => {
-    // Implementar la lógica para eliminar el cliente aquí
+    try {
+      const request = CustomersServices.delete({ companyId, id: customerId });
+
+      toast.promise(request, {
+        loading: "Eliminando...",
+        success: () => {
+          router.refresh();
+          return "El cliente fue eliminado con exito.";
+        },
+        error: (error) => {
+          console.error("Error al eliminar:", error);
+          return `Error al eliminar el cliente.`;
+        },
+      });
+    } catch (error) {
+      console.error("Error en el bloque catch:", error);
+      toast.error("Error al eliminar el cliente.");
+    }
   };
 
   return (

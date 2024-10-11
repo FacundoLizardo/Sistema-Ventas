@@ -1,4 +1,5 @@
 import { accessToken } from "../accessToken";
+import { deleteCustomerService } from "./deleteCustomerService";
 import { getCustomerService } from "./getCustomerService";
 import { postCustomerService } from "./postCustomerService";
 
@@ -69,6 +70,16 @@ class CustomersServices {
       const token = await this.getToken();
 
       await postCustomerService({ params, token, companyId });
+    } catch (error) {
+      console.error("Error with Token:", error);
+      throw error;
+    }
+  }
+
+  static async delete({ companyId, id }: { companyId: string; id: string }) {
+    try {
+      const token = await this.getToken();
+      await deleteCustomerService({ token, companyId, id });
     } catch (error) {
       console.error("Error with Token:", error);
       throw error;

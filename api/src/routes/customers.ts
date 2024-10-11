@@ -6,6 +6,6 @@ const router = Router();
 router.get("/", customerController.getCustomers);
 router.post("/:companyId", customerController.postCustomer);
 router.put("/:id", customerController.putCustomer);
-router.delete("/:id", customerController.deleteCustomer);
+router.delete("/", customerController.deleteCustomer);
 
 module.exports = router;

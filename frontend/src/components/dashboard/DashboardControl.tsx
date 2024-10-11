@@ -16,7 +16,8 @@ type DashboardControlProps = {
 
 export default function DashboardControl({
   operations,
-  customers
+  customers,
+  companyId,
 }: DashboardControlProps) {
   return (
     <div>
@@ -31,7 +32,7 @@ export default function DashboardControl({
           <UserMonitoring operations={operations} />
         </TabsContent>
         <TabsContent value="clients">
-          <ClientsMonitoring customers={customers} />
+          <ClientsMonitoring customers={customers} companyId={companyId} />
         </TabsContent>
       </Tabs>
     </div>
