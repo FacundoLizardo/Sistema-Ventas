@@ -110,6 +110,7 @@ export default function ClientsMonitoring({
           <TableCaption>Lista de clientes</TableCaption>
           <TableHeader>
             <TableRow>
+              <TableHead>ID</TableHead>
               <TableHead>Nombre</TableHead>
               <TableHead>Correo</TableHead>
               <TableHead>Teléfono</TableHead>
@@ -130,6 +131,7 @@ export default function ClientsMonitoring({
 
                 return (
                   <TableRow key={customer.id}>
+                    <TableCell>{customer.docNro}</TableCell>
                     <TableCell>{capitalizedDisplayName}</TableCell>
                     <TableCell>{customer.email || "Sin correo"}</TableCell>
                     <TableCell>
@@ -156,7 +158,7 @@ export default function ClientsMonitoring({
                             {canDeleteCustomer && (
                               <AlertDialog>
                                 <AlertDialogTrigger className="px-2 py-1.5 hover:bg-accent hover:text-accent-foreground rounded-md">
-                                  <span>Eliminar</span>
+                                  Eliminar
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                   <AlertDialogHeader>

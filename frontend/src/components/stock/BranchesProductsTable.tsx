@@ -141,14 +141,14 @@ const BranchesProductsTable = ({
                     className={
                       product.enabled
                         ? "text-constructive border-constructive"
-                        : "text-destructive border-destext-destructive"
+                        : "text-destructive border-destructive"
                     }
                   >
                     {product.enabled ? "Activo" : "Inactivo"}
                   </Badge>
                 </TableCell>
                 <TableCell className="px-2 py-0 text-center">
-                  ${product?.finalPrice && product?.finalPrice}
+                  {product?.finalPrice ? `$ ${product?.finalPrice}` : <span className="text-xs text-primary">n/d</span>}
                 </TableCell>
                 <TableCell
                   className={

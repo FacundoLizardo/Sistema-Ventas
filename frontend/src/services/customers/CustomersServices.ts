@@ -6,10 +6,9 @@ import { postCustomerService } from "./postCustomerService";
 export interface ICustomer {
   id: string;
   customerType: "person" | "company";
-  dni?: number;
   passport?: string;
-  cuit?: number;
-  cuil?: number;
+  docTipo?: string;
+  docNro?: string;
   firstName?: string;
   lastName?: string;
   companyName?: string;
