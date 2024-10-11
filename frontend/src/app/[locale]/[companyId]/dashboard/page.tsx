@@ -1,5 +1,8 @@
 import DashboardControl from "@/components/dashboard/DashboardControl";
-import OperationsServices, { IOperation } from "@/services/operations/OperationsServices";
+import CustomersServices from "@/services/customers/CustomersServices";
+import OperationsServices, {
+  IOperation,
+} from "@/services/operations/OperationsServices";
 import UsersServices from "@/services/users/UsersServices";
 
 export default async function Page({
@@ -14,13 +17,17 @@ export default async function Page({
   const startDate = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
   const endDate = new Date(new Date().setHours(23, 59, 59, 999)).toISOString();
 
-  const [operationsData] = await Promise.all([
+  const [operationsData, customersData] = await Promise.all([
     OperationsServices.get({ companyId, startDate, endDate, userId }),
+    CustomersServices.get({ companyId }),
   ]);
 
-  const operations = operationsData?.operations?.sort((a: IOperation, b: IOperation) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  }) || [];
+  const operations =
+    operationsData?.operations?.sort((a: IOperation, b: IOperation) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }) || [];
+
+  const customers = customersData?.customer || [];
 
   return (
     <main className="grid gap-4">
@@ -29,6 +36,7 @@ export default async function Page({
         userId={userId}
         branchId={branchId}
         operations={operations}
+        customers={customers}
       />
     </main>
   );

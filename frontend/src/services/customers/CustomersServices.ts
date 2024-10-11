@@ -38,8 +38,8 @@ class CustomersServices {
     docNro,
   }: {
     companyId: string;
-    docTipo: string;
-    docNro: string;
+    docTipo?: string;
+    docNro?: string;
   }) {
     try {
       const token = await this.getToken();

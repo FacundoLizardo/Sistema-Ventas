@@ -8,8 +8,8 @@ export const getCustomerService = async ({
 }: {
   token: string;
   companyId: string;
-  docTipo: string;
-  docNro: string;
+  docTipo?: string;
+  docNro?: string;
 }) => {
   try {
     if (!token) {
