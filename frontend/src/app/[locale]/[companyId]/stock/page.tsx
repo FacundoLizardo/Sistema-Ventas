@@ -50,7 +50,8 @@ export default async function Page({
 }: {
   params: { companyId: string };
 }) {
-  const { userId, branchId } = await UsersServices.userSession();
+  const { userId, branchId, isSuperAdmin, isOwner, isAdmin } =
+    await UsersServices.userSession();
   const { products, categories, subCategories } = await fetchData(
     companyId,
     branchId
@@ -64,6 +65,10 @@ export default async function Page({
           userId={userId}
           branchId={branchId}
           categories={categories}
+          companyId={companyId}
+          isSuperAdmin={isSuperAdmin}
+          isOwner={isOwner}
+          isAdmin={isAdmin}
         />
         <ProductForm
           categories={categories}

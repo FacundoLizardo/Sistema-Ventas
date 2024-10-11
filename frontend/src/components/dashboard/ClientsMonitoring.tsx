@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { SearchIcon, X } from "lucide-react";
+import { MoreHorizontal, SearchIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
@@ -29,6 +29,13 @@ import { useState } from "react";
 import { capitalizeWords } from "@/lib/capitalizeWords";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 type ClientsMonitoringProps = {
   customers: ICustomer[];
@@ -83,7 +90,7 @@ export default function ClientsMonitoring({
     }
   };
 
-  const deletePermission = isSuperAdmin || isOwner || isAdmin;
+  const canDeleteCustomer = isSuperAdmin || isOwner || isAdmin;
 
   return (
     <div className="grid w-full">
@@ -106,7 +113,7 @@ export default function ClientsMonitoring({
               <TableHead>Nombre</TableHead>
               <TableHead>Correo</TableHead>
               <TableHead>Teléfono</TableHead>
-              {deletePermission && <TableHead>Acción</TableHead>}
+              {canDeleteCustomer && <TableHead>Acción</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -129,39 +136,55 @@ export default function ClientsMonitoring({
                       {customer.phoneNumber || "Sin teléfono"}
                     </TableCell>
                     <TableCell>
-                      {deletePermission && (
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              type="button"
-                              className="hover:text-destructive"
-                            >
-                              <X size={16} />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                ¿Estás seguro de que quieres eliminar este
-                                cliente?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Esta acción no puede deshacerse. Esto eliminará
-                                al cliente.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleDelete(customer.id)}
-                              >
-                                Confirmar
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      )}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            aria-haspopup="true"
+                            size="icon"
+                            variant="ghost"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="flex flex-col text-sm outline-none transition-colors items-start"
+                        >
+                          <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                          <DropdownMenuItem>Editar</DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            {canDeleteCustomer && (
+                              <AlertDialog>
+                                <AlertDialogTrigger className="px-2 py-1.5 hover:bg-accent hover:text-accent-foreground rounded-md">
+                                  <span>Eliminar</span>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                      ¿Estás seguro de que quieres eliminar este
+                                      cliente?
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Esta acción no puede deshacerse. Esto
+                                      eliminará al cliente.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>
+                                      Cancelar
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => handleDelete(customer.id)}
+                                    >
+                                      Confirmar
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            )}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 );

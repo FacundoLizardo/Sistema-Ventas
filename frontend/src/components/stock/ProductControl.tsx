@@ -14,11 +14,19 @@ type ProductControlProps = {
   userId: string;
   branchId: string;
   categories: string[];
+  isSuperAdmin: boolean;
+  isOwner: boolean;
+  isAdmin: boolean;
+  companyId: string;
 };
 
 export default function ProductControl({
   products,
   branchId,
+  companyId,
+  isSuperAdmin,
+  isOwner,
+  isAdmin,
 }: ProductControlProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const { selectProduct } = useEditProduct();
@@ -62,6 +70,10 @@ export default function ProductControl({
                 products={filteredProducts}
                 selectProduct={selectProduct}
                 branchId={branchId}
+                companyId={companyId}
+                isSuperAdmin={isSuperAdmin}
+                isOwner={isOwner}
+                isAdmin={isAdmin}
               />
             </CardContent>
           </Card>
