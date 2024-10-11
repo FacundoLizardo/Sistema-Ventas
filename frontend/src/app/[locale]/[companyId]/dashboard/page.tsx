@@ -13,7 +13,7 @@ export default async function Page({
     companyId: string;
   };
 }) {
-  const { userId, branchId } = await UsersServices.userSession();
+  const { userId, branchId, isSuperAdmin, isOwner, isAdmin  } = await UsersServices.userSession();
   const startDate = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
   const endDate = new Date(new Date().setHours(23, 59, 59, 999)).toISOString();
 
@@ -37,6 +37,9 @@ export default async function Page({
         branchId={branchId}
         operations={operations}
         customers={customers}
+        isSuperAdmin={isSuperAdmin}
+        isOwner={isOwner}
+        isAdmin={isAdmin}
       />
     </main>
   );

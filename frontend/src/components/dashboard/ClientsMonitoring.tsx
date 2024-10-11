@@ -33,11 +33,17 @@ import { useRouter } from "next/navigation";
 type ClientsMonitoringProps = {
   customers: ICustomer[];
   companyId: string;
+  isSuperAdmin: boolean;
+  isOwner: boolean;
+  isAdmin: boolean;
 };
 
 export default function ClientsMonitoring({
   customers,
   companyId,
+  isSuperAdmin,
+  isOwner,
+  isAdmin,
 }: ClientsMonitoringProps) {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
@@ -77,6 +83,8 @@ export default function ClientsMonitoring({
     }
   };
 
+  const deletePermission = isSuperAdmin || isOwner || isAdmin;
+
   return (
     <div className="grid w-full">
       <div className="flex w-full border rounded-md bg-background flex-1 items-center gap-2 my-4">
@@ -98,7 +106,7 @@ export default function ClientsMonitoring({
               <TableHead>Nombre</TableHead>
               <TableHead>Correo</TableHead>
               <TableHead>Teléfono</TableHead>
-              <TableHead>Acción</TableHead>
+              {deletePermission && <TableHead>Acción</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -121,37 +129,39 @@ export default function ClientsMonitoring({
                       {customer.phoneNumber || "Sin teléfono"}
                     </TableCell>
                     <TableCell>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            type="button"
-                            className="hover:text-destructive"
-                          >
-                            <X size={16} />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              ¿Estás seguro de que quieres eliminar este
-                              cliente?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Esta acción no puede deshacerse. Esto eliminará al
-                              cliente.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDelete(customer.id)}
+                      {deletePermission && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              type="button"
+                              className="hover:text-destructive"
                             >
-                              Confirmar
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                              <X size={16} />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                ¿Estás seguro de que quieres eliminar este
+                                cliente?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Esta acción no puede deshacerse. Esto eliminará
+                                al cliente.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(customer.id)}
+                              >
+                                Confirmar
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
                     </TableCell>
                   </TableRow>
                 );

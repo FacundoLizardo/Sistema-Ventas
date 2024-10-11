@@ -12,12 +12,18 @@ type DashboardControlProps = {
   companyId: string;
   operations: IOperation[];
   customers: ICustomer[];
+  isSuperAdmin: boolean;
+  isOwner: boolean;
+  isAdmin: boolean;
 };
 
 export default function DashboardControl({
   operations,
   customers,
   companyId,
+  isSuperAdmin,
+  isOwner,
+  isAdmin,
 }: DashboardControlProps) {
   return (
     <div>
@@ -32,7 +38,13 @@ export default function DashboardControl({
           <UserMonitoring operations={operations} />
         </TabsContent>
         <TabsContent value="clients">
-          <ClientsMonitoring customers={customers} companyId={companyId} />
+          <ClientsMonitoring
+            customers={customers}
+            companyId={companyId}
+            isSuperAdmin={isSuperAdmin}
+            isOwner={isOwner}
+            isAdmin={isAdmin}
+          />
         </TabsContent>
       </Tabs>
     </div>
