@@ -254,6 +254,7 @@ export default function CreateCompanyForm() {
               loading={submitLoading}
               loadingText="Creando compañía..."
               variant="default"
+              size={"sm"}
               className="flex flex-row items-center"
               type="submit"
               disabled={submitDisabled}

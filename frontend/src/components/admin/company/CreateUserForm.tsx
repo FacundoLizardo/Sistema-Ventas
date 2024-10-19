@@ -394,6 +394,7 @@ export default function CreateUserForm({ companyId }: { companyId: string }) {
               loading={submitLoading}
               loadingText="Creando producto..."
               variant="default"
+              size={"sm"}
               className="flex flex-row items-center"
               type="submit"
               disabled={submitDisabled}

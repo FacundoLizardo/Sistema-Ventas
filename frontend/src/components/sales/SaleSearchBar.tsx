@@ -7,6 +7,7 @@ import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { AfipProducts, IProduct } from "@/services/products/ProductsServices";
 import { Badge } from "../ui/badge";
 import { useSales } from "@/context/salesContext";
+import { capitalizeWords } from "@/lib/capitalizeWords";
 
 type SaleSearchBarProps = {
   products: IProduct[];
@@ -60,12 +61,7 @@ export default function SaleSearchBar({ products }: SaleSearchBarProps) {
                       })
                     }
                   >
-                    <p>
-                      {product.name.replace(/\b\w/g, (char) =>
-                        char.toUpperCase()
-                      )}
-                    </p>
-
+                    <p>{capitalizeWords(product.name)}</p>
                     <div>
                       {Array.isArray(product.stock) &&
                       product.stock.length > 0 ? (

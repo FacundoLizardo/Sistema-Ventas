@@ -121,9 +121,9 @@ class CustomerService {
     }
   }
 
-  async deleteCustomer(dni: string): Promise<boolean> {
+  async deleteCustomer(id: string) {
     try {
-      const deletedCount = await Customer.destroy({ where: { dni } });
+      const deletedCount = await Customer.destroy({ where: { id } });
 
       if (deletedCount === 0) {
         throw new Error("Customer not found");

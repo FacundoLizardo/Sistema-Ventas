@@ -1,4 +1,5 @@
 "use client";
+
 import { Badge } from "../ui/badge";
 import {
   Card,
@@ -23,6 +24,7 @@ import {
 import { Button } from "../ui/button";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "./SalesContainer";
+import useCustomer from "@/hooks/useCustomer";
 
 type SalesInfoProps = {
   form: UseFormReturn<FormValues>;
@@ -41,6 +43,7 @@ export default function PaymentInformation({
     setDiscount,
     setProducts,
   } = useSales();
+  const { setCustomer, setError } = useCustomer();
 
   const IVA = form.getValues("iva");
   const totalToPay = IVA
@@ -97,7 +100,9 @@ export default function PaymentInformation({
       <CardFooter className="flex justify-center gap-4 bg-muted/50 px-3 py-2 md:px-6 md:py-4 rounded-md">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button size={"sm"} variant="outline">Resetear</Button>
+            <Button size={"sm"} variant="outline">
+              Resetear
+            </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -116,6 +121,9 @@ export default function PaymentInformation({
                   form.reset();
                   setDiscount(0);
                   setProducts([]);
+                  setError(null);
+                  setCustomer(null);
+                  window.location.reload();
                 }}
               >
                 Confirmar

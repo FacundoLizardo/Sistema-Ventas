@@ -78,7 +78,21 @@ class CustomerController {
 
   async deleteCustomer(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id, companyId } = req.query as {
+        id: string;
+        companyId?: string;
+      };
+
+      if (!companyId) {
+        res.status(400).json({ message: "Company id is required" });
+        return;
+      }
+      
+      if (!id) {
+        res.status(400).json({ message: "Customer id is required" });
+        return;
+      }
+
       const deleteResult = await CustomerService.deleteCustomer(id);
 
       if (deleteResult === true) {

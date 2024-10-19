@@ -1,15 +1,13 @@
 "use server";
 
-export const getCustomerService = async ({
+export const deleteProductService = async ({
   token,
   companyId,
-  docTipo,
-  docNro
+  id,
 }: {
   token: string;
   companyId: string;
-  docTipo?: string;
-  docNro?: string;
+  id?: string;
 }) => {
   try {
     if (!token) {
@@ -21,17 +19,17 @@ export const getCustomerService = async ({
     if (companyId) {
       queryParams.append("companyId", companyId);
     }
-    if (docTipo) {
-      queryParams.append("docTipo", docTipo);
-    }
-    if (docNro) {
-      queryParams.append("docNro", docNro);
+
+    if (id) {
+      queryParams.append("id", id);
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/customers?${queryParams.toString()}`,
+      `${
+        process.env.NEXT_PUBLIC_API_BASE_URL
+      }/api/products?${queryParams.toString()}`,
       {
-        method: "GET",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -39,10 +37,13 @@ export const getCustomerService = async ({
       }
     );
 
-    const body = await response.json();
-    return body;
+    if (!response.ok) {
+      throw new Error(`Error en la respuesta del servidor: ${response.status}`);
+    }
+
+    return true;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error eliminando la categoría:", error);
     throw error;
   }
 };

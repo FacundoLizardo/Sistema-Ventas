@@ -13,6 +13,7 @@ import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { useSales } from "@/context/salesContext";
 import { Button } from "../ui/button";
 import { CiInboxIn } from "react-icons/ci";
+import { capitalizeWords } from "@/lib/capitalizeWords";
 
 export const CardsContainer = () => {
   const { productsSelected, addProduct, removeProduct } = useSales();
@@ -51,7 +52,9 @@ export const CardsContainer = () => {
             <TableBody>
               {groupedProducts.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell className="w-1/2">{product.name.replace(/\b\w/g, (char) => char.toUpperCase())}</TableCell>
+                  <TableCell className="w-1/2">
+                    {capitalizeWords(product.name)}
+                  </TableCell>
                   <TableCell className="w-1/4 text-center">
                     $
                     {(
@@ -89,7 +92,7 @@ export const CardsContainer = () => {
       ) : (
         <div className="flex flex-col items-center justify-center h-full gap-4">
           <div>
-            <CiInboxIn  size={48} />
+            <CiInboxIn size={48} />
           </div>
           <p>No hay productos seleccionados</p>
         </div>

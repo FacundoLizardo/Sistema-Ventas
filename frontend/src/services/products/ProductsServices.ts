@@ -2,6 +2,7 @@ import { getProductsService } from "./getProductsService";
 import { accessToken } from "../accessToken";
 import { postProductService } from "./postProductService";
 import { putProductService } from "./putProductService";
+import { deleteProductService } from "./deleteProductService";
 
 export interface IProduct {
   id: string;
@@ -39,6 +40,7 @@ export interface IProductCreate extends Omit<IProduct, "id"> {
   subCategoryId?: string;
 }
 
+export type IProductFull = IProduct & IProductCreate
 export type AfipProducts = Pick<IProduct, "id" | "name" | "finalPrice">;
 
 class ProductsServices {
@@ -89,15 +91,27 @@ class ProductsServices {
   static async put({
     params,
     productId,
+    enabled,
   }: {
-    params: IProductCreate;
+    params?: IProductCreate;
     productId: string;
+    enabled?: boolean;
   }) {
     try {
       const token = await this.getToken();
-      return await putProductService({ params, token, productId });
+      return await putProductService({ params, token, productId, enabled });
     } catch (error) {
       console.error("Error posting product:", error);
+      throw error;
+    }
+  }
+
+  static async delete({ companyId, id }: { companyId: string; id: string }) {
+    try {
+      const token = await this.getToken();
+      return await deleteProductService({ token, companyId, id });
+    } catch (error) {
+      console.error("Error deleting product:", error);
       throw error;
     }
   }

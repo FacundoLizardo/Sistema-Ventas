@@ -5,13 +5,20 @@ import { IProductCreate } from "./ProductsServices";
 export const putProductService = async ({
   params,
   token,
-  productId
+  productId,
+  enabled,
 }: {
-  params: IProductCreate;
+  params?: IProductCreate;
   token: string;
   productId: string;
+  enabled?: boolean;
 }) => {
   try {
+
+    const body = {
+      ...params,
+      enabled,
+    };
     
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products/${productId}`,
@@ -21,7 +28,7 @@ export const putProductService = async ({
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(params),
+        body: JSON.stringify(body),
       }
     );
 

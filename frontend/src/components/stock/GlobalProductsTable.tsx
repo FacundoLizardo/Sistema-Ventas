@@ -14,25 +14,13 @@ import { capitalizeWords } from "@/lib/capitalizeWords";
 import { IBranch } from "@/services/branches/BranchesServices";
 import { IProductFull } from "@/services/products/ProductsServices";
 
-const getBranchNameById = (
-  branchId: string,
-  branchesData: IBranch[]
-): string => {
-  const branch = branchesData.find((branch) => branch.id === branchId);
-  return branch ? branch.name : "Sucursal no encontrada";
-};
-
 type BranchesProductsTableProps = {
   allProducts: IProductFull[];
-  branchesData: IBranch[];
 };
 
-export default function BranchesProductsTable({
+export default function GlobalProductsTable({
   allProducts,
-  branchesData,
 }: BranchesProductsTableProps) {
-  console.log("branchesData", branchesData);
-  
   return (
     <ScrollArea className="flex flex-col h-[350px]">
       <Table>
@@ -40,8 +28,7 @@ export default function BranchesProductsTable({
           <UITableRow>
             <TableHead className="text-center">Producto</TableHead>
             <TableHead className="text-center">Estado</TableHead>
-            <TableHead className="text-center">Sucursal</TableHead>
-            <TableHead className="text-center">Cantidad</TableHead>
+            <TableHead className="text-center">Cantidad total</TableHead>
           </UITableRow>
         </TableHeader>
         <TableBody>
@@ -64,10 +51,9 @@ export default function BranchesProductsTable({
                   </Badge>
                 </TableCell>
                 <TableCell className="p-2 text-center">
-                  {getBranchNameById(product.branchId, branchesData)}
-                </TableCell>
-                <TableCell className="p-2 text-center">
-                  {product?.stock?.map((stock) => stock.quantity)}
+                  {product?.stock?.reduce((acc, stock) => {
+                    return acc + stock.quantity;
+                  }, 0) || 0}
                 </TableCell>
               </UITableRow>
             );

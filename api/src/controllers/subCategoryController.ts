@@ -60,6 +60,10 @@ class SubCategoryController {
         id: string;
       };
 
+      if (!id) {
+        throw new Error("Id is required.");
+      }
+
       if (!companyId) {
         res.status(400).json({ message: "companyId is required." });
       }

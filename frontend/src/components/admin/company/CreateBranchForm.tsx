@@ -369,6 +369,7 @@ export default function CreateBranchForm({
               loadingText="Creando sucursal..."
               variant="default"
               className="flex flex-row items-center"
+              size={"sm"}
               type="submit"
               disabled={submitDisabled}
             >

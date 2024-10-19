@@ -39,9 +39,7 @@ class ProductController {
       const data = req.body as ProductCreationInterface;
 
       if (!companyId) {
-        res
-          .status(400)
-          .json({ message: "CompanyId is required." });
+        res.status(400).json({ message: "CompanyId is required." });
         return;
       }
 
@@ -79,10 +77,17 @@ class ProductController {
 
   async deleteProduct(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id, companyId } = req.query as {
+        id: string;
+        companyId: string;
+      };
 
       if (!id) {
         res.status(400).json({ message: "Product id is required" });
+      }
+
+      if (!companyId) {
+        res.status(400).json({ message: "Company id is required" });
       }
 
       const deleteProduct = await ProductService.deleteProduct(id);

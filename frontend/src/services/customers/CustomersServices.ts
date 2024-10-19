@@ -1,13 +1,14 @@
 import { accessToken } from "../accessToken";
+import { deleteCustomerService } from "./deleteCustomerService";
 import { getCustomerService } from "./getCustomerService";
+import { postCustomerService } from "./postCustomerService";
 
 export interface ICustomer {
   id: string;
   customerType: "person" | "company";
-  dni?: number;
   passport?: string;
-  cuit?: number;
-  cuil?: number;
+  docTipo?: string;
+  docNro?: string;
   firstName?: string;
   lastName?: string;
   companyName?: string;
@@ -17,6 +18,8 @@ export interface ICustomer {
   dateOfBirth?: Date;
   enableDebt?: boolean;
 }
+
+export interface ICustomerCreate extends Omit<ICustomer, "id"> {}
 
 class CustomersServices {
   static async getToken() {
@@ -35,8 +38,8 @@ class CustomersServices {
     docNro,
   }: {
     companyId: string;
-    docTipo: string;
-    docNro: string;
+    docTipo?: string;
+    docNro?: string;
   }) {
     try {
       const token = await this.getToken();
@@ -51,6 +54,33 @@ class CustomersServices {
       return response;
     } catch (error) {
       console.error("Error getting company:", error);
+      throw error;
+    }
+  }
+
+  static async post({
+    params,
+    companyId,
+  }: {
+    params: ICustomerCreate;
+    companyId: string;
+  }) {
+    try {
+      const token = await this.getToken();
+
+      await postCustomerService({ params, token, companyId });
+    } catch (error) {
+      console.error("Error with Token:", error);
+      throw error;
+    }
+  }
+
+  static async delete({ companyId, id }: { companyId: string; id: string }) {
+    try {
+      const token = await this.getToken();
+      await deleteCustomerService({ token, companyId, id });
+    } catch (error) {
+      console.error("Error with Token:", error);
       throw error;
     }
   }

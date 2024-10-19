@@ -17,6 +17,7 @@ import AfipServices, { IAfip } from "@/services/afip/AfipServices";
 import { toast } from "sonner";
 import InvoiceSummary from "./InvoiceSummary";
 import { useRouter } from "next/navigation";
+import ClientModal from "../common/ClientModal";
 
 const formSchema = z.object({
   products: z
@@ -32,7 +33,7 @@ const formSchema = z.object({
 
   // Client
   docTipo: z.string(),
-  docNro: z.string().min(1),
+  docNro: z.string().min(1, "Requerido"),
 
   // Invoice
   cbteTipo: z.number(),
@@ -86,6 +87,7 @@ export default function SalesContainer({
   userName,
 }: SalesContainerProps) {
   const router = useRouter();
+  const [modalOpen, setModalOpen] = useState(false);
   const { productsSelected, discount, totalPrice } = useSales();
   const [showInvoiceSummary, setShowInvoiceSummary] = useState(false);
   const { setProducts, setDiscount } = useSales();
@@ -191,14 +193,30 @@ export default function SalesContainer({
     }
   };
 
+  const handleClientModal = () => {
+    setModalOpen(!modalOpen);
+  };
+
   return (
-    <div className="flex flex-col gap-4">
+    <div
+      className={`flex flex-col gap-4 ${modalOpen ? "overflow-hidden" : ""}`}
+    >
       {!showInvoiceSummary ? (
         <>
           <SelectedBranch branch={userBranch} />
           <SaleSeachBar products={products} />
           <CardsContainer />
-          <AfipForm company={company} companyId={companyId} form={form} />
+          <AfipForm
+            company={company}
+            companyId={companyId}
+            form={form}
+            handleClientModal={handleClientModal}
+          />
+          <ClientModal
+            open={modalOpen}
+            onClose={handleClientModal}
+            companyId={companyId}
+          />
           <div className="grid md:grid-cols-2 gap-4">
             <AdditionalInformation form={form} />
             <PaymentInformation form={form} handleView={handleView} />
