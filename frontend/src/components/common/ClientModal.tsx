@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import {
   Card,
@@ -59,8 +60,6 @@ export default function ClientModal({
   onClose,
   companyId,
 }: ClientModalProps) {
-  if (!open) return null;
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,6 +74,8 @@ export default function ClientModal({
       phoneNumber: "",
     },
   });
+
+  if (!open) return null;
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log(data);
