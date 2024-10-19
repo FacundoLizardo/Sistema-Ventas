@@ -40,6 +40,7 @@ export interface IProductCreate extends Omit<IProduct, "id"> {
   subCategoryId?: string;
 }
 
+export type IProductFull = IProduct & IProductCreate
 export type AfipProducts = Pick<IProduct, "id" | "name" | "finalPrice">;
 
 class ProductsServices {

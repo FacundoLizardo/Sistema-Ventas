@@ -3,14 +3,17 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { SearchIcon } from "lucide-react";
 import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
-import { IProduct } from "@/services/products/ProductsServices";
+import { IProductFull } from "@/services/products/ProductsServices";
 import { Input } from "../ui/input";
-import BranchesProductsTable from "./BranchesProductsTable";
 import { useState } from "react";
 import { useEditProduct } from "@/context/editProductContect";
+import BranchProductsTable from "./BranchProductsTable";
+import BranchesProductsTable from "./BranchesProductsTable";
+import { IBranch } from "@/services/branches/BranchesServices";
 
 type ProductControlProps = {
-  products: IProduct[];
+  products: IProductFull[];
+  allProducts: IProductFull[];
   userId: string;
   branchId: string;
   categories: string[];
@@ -18,15 +21,18 @@ type ProductControlProps = {
   isOwner: boolean;
   isAdmin: boolean;
   companyId: string;
+  branchesData: IBranch[];
 };
 
 export default function ProductControl({
   products,
+  allProducts,
   branchId,
   companyId,
   isSuperAdmin,
   isOwner,
   isAdmin,
+  branchesData,
 }: ProductControlProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const { selectProduct } = useEditProduct();
@@ -66,7 +72,7 @@ export default function ProductControl({
               </div>
             </CardHeader>
             <CardContent>
-              <BranchesProductsTable
+              <BranchProductsTable
                 products={filteredProducts}
                 selectProduct={selectProduct}
                 branchId={branchId}
@@ -81,7 +87,12 @@ export default function ProductControl({
         <TabsContent value="branches">
           <Card className="h-[460px]">
             <CardHeader className="flex md:flex-row justify-between"></CardHeader>
-            <CardContent></CardContent>
+            <CardContent>
+              <BranchesProductsTable
+                allProducts={allProducts}
+                branchesData={branchesData}
+              />
+            </CardContent>
             <CardFooter></CardFooter>
           </Card>
         </TabsContent>
