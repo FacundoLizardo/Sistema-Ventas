@@ -2,7 +2,7 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { SearchIcon } from "lucide-react";
-import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
+import { Card, CardHeader, CardContent } from "../ui/card";
 import { IProductFull } from "@/services/products/ProductsServices";
 import { Input } from "../ui/input";
 import { useState } from "react";
@@ -113,7 +113,7 @@ export default function ProductControl({
         </TabsContent>
         <TabsContent value="all">
           <Card className="h-[460px]">
-          <CardHeader className="flex h-12 flex-row items-center justify-between gap-4">
+            <CardHeader className="flex h-12 flex-row items-center justify-between gap-4">
               <div className="flex border rounded-md bg-background flex-1 items-center gap-2 mt-1.5">
                 <Input
                   type="text"
@@ -127,7 +127,6 @@ export default function ProductControl({
             <CardContent>
               <GlobalProductsTable
                 allProducts={filteredAllProducts}
-                branchesData={branchesData}
               />
             </CardContent>
           </Card>
