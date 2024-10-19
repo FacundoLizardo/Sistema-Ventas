@@ -59,6 +59,9 @@ class CategoryController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { companyId, id } = req.query;
+                if (!id) {
+                    throw new Error("Id is required.");
+                }
                 if (!companyId) {
                     res.status(400).json({ message: "companyId is required." });
                 }

@@ -57,9 +57,6 @@ class SubCategoryService {
     deleteCategory(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (!id) {
-                    throw new Error("Id is required.");
-                }
                 const deletedCount = yield db_1.SubCategory.destroy({ where: { id } });
                 if (deletedCount === 0) {
                     throw new Error("SubCategory not found");

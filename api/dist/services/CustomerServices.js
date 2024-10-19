@@ -101,10 +101,10 @@ class CustomerService {
             }
         });
     }
-    deleteCustomer(dni) {
+    deleteCustomer(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const deletedCount = yield db_1.Customer.destroy({ where: { dni } });
+                const deletedCount = yield db_1.Customer.destroy({ where: { id } });
                 if (deletedCount === 0) {
                     throw new Error("Customer not found");
                 }

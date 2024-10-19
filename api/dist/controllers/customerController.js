@@ -80,7 +80,15 @@ class CustomerController {
     deleteCustomer(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { id } = req.params;
+                const { id, companyId } = req.query;
+                if (!companyId) {
+                    res.status(400).json({ message: "Company id is required" });
+                    return;
+                }
+                if (!id) {
+                    res.status(400).json({ message: "Customer id is required" });
+                    return;
+                }
                 const deleteResult = yield CustomerServices_1.default.deleteCustomer(id);
                 if (deleteResult === true) {
                     res.status(204).json({ success: true });

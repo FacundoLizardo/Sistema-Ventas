@@ -9,5 +9,5 @@ const router = (0, express_1.Router)();
 router.get("/", customerController_1.default.getCustomers);
 router.post("/:companyId", customerController_1.default.postCustomer);
 router.put("/:id", customerController_1.default.putCustomer);
-router.delete("/:id", customerController_1.default.deleteCustomer);
+router.delete("/", customerController_1.default.deleteCustomer);
 module.exports = router;

@@ -44,9 +44,7 @@ class ProductController {
                 const stock = req.body.stock;
                 const data = req.body;
                 if (!companyId) {
-                    res
-                        .status(400)
-                        .json({ message: "CompanyId is required." });
+                    res.status(400).json({ message: "CompanyId is required." });
                     return;
                 }
                 const newProduct = yield ProductsServices_1.default.postProduct(data, companyId, stock);
@@ -81,9 +79,12 @@ class ProductController {
     deleteProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { id } = req.params;
+                const { id, companyId } = req.query;
                 if (!id) {
                     res.status(400).json({ message: "Product id is required" });
+                }
+                if (!companyId) {
+                    res.status(400).json({ message: "Company id is required" });
                 }
                 const deleteProduct = yield ProductsServices_1.default.deleteProduct(id);
                 if (deleteProduct !== true) {

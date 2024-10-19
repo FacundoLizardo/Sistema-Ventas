@@ -54,9 +54,6 @@ class CategoryService {
     deleteCategory(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (!id) {
-                    throw new Error("Id is required.");
-                }
                 const deletedCount = yield db_1.Category.destroy({ where: { id } });
                 if (deletedCount === 0) {
                     throw new Error("Category not found");
