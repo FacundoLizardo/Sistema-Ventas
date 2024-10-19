@@ -10,17 +10,7 @@ export interface StockInterface {
 
 export interface StockCreationInterface extends Omit<StockInterface, "id"> {}
 
-class Stock
-  extends Model<StockInterface, StockCreationInterface>
-  implements StockInterface
-{
-  public id!: string;
-  public quantity!: number;
-  public productId!: string;
-  public branchId!: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
+class Stock extends Model<StockInterface, StockCreationInterface> {}
 
 export default (sequelize: Sequelize) => {
   Stock.init(

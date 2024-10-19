@@ -3,25 +3,27 @@ import { controllerError } from "../utils/controllerError";
 import CustomerService from "../services/CustomerServices";
 
 class CustomerController {
-  async getCustomer(req: Request, res: Response): Promise<void> {
+  async getCustomers(req: Request, res: Response): Promise<void> {
     try {
-      const { companyId, docTipo, docNro } = req.query as {
+      const { companyId, docTipo, docNro, name, id } = req.query as {
         companyId?: string;
         docTipo?: string;
         docNro?: string;
+        name?: string;
+        id?: string;
       };
 
-      if (!companyId || !docTipo || !docNro) {
-        res
-          .status(400)
-          .json({ message: "CustomerId and CompanyId are required" });
+      if (!companyId) {
+        res.status(400).json({ message: "CompanyId are required" });
         return;
       }
 
-      const customer = await CustomerService.getCustomer({
+      const customer = await CustomerService.getCustomers({
         companyId,
         docTipo,
         docNro,
+        name,
+        id,
       });
 
       if (!customer) {
@@ -30,20 +32,6 @@ class CustomerController {
       }
 
       res.status(200).json({ success: true, customer });
-    } catch (error) {
-      controllerError(res, error, 500);
-    }
-  }
-
-  async getCustomers(_req: Request, res: Response): Promise<void> {
-    try {
-      const customers = await CustomerService.getCustomers();
-
-      if (!customers.length) {
-        res.status(404).json({ message: "No customers found" });
-      }
-
-      res.status(200).json({ success: true, customers });
     } catch (error) {
       controllerError(res, error, 500);
     }

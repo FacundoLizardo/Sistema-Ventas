@@ -1,6 +1,6 @@
 import SelectCompany from "@/components/admin/SelectCompany";
 import CompaniesServices from "@/services/companies/CompaniesServices";
-import UsersServices from "@/services/user/UsersServices";
+import UsersServices from "@/services/users/UsersServices";
 import { redirect } from "next/navigation";
 
 export default async function AdminPage() {

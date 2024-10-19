@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ImProfile } from "react-icons/im";
 import Link from "next/link";
-import { IUser } from "@/services/user/UsersServices";
+import { IUser } from "@/services/users/UsersServices";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import {
   Select,

@@ -10,7 +10,7 @@ type ProductFilterConditions = {
 
 class ProductService {
   async getFilteredProducts({ req }: { req: Request }) {
-    const { query, category, page } = req.query;
+    const { query, page } = req.query;
     const pageSize = 6;
     const pageNumber = Number(page) || 1;
 
@@ -27,16 +27,6 @@ class ProductService {
           {
             barcode: {
               [Op.iLike]: `%${query}%`,
-            },
-          },
-        ];
-      }
-
-      if (category) {
-        filterConditions[Op.or] = [
-          {
-            category: {
-              [Op.iLike]: `%${category}%`,
             },
           },
         ];

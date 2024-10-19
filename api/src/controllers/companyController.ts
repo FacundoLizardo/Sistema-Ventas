@@ -43,7 +43,7 @@ class CompanyController {
   async postCompany(req: Request, res: Response): Promise<void> {
     const data = req.body as CompanyInterface;
     try {
-      if (!data.name) {
+      if (!data.razonSocial) {
         res.status(400).json({ message: "Missing information." });
         return;
       }

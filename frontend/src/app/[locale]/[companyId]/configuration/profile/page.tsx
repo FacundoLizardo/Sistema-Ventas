@@ -1,4 +1,4 @@
-import UsersServices from "@/services/user/UsersServices";
+import UsersServices from "@/services/users/UsersServices";
 import ProfileForm from "@/components/configuration/profile/ProfileForm";
 
 export default async function Page({

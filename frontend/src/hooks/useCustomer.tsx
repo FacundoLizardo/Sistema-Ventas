@@ -1,51 +1,51 @@
 "use client";
 
 import { ICustomer } from "@/services/customers/CustomersServices";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import customerService from "../services/customers/CustomersServices";
 
-interface IUseCustomer {
-  companyId: string;
-  docTipo: string;
-  docNro: string;
-  docNroCompleted: boolean;
-}
-
-export default function useCustomer({
-  companyId,
-  docTipo,
-  docNro,
-  docNroCompleted,
-}: IUseCustomer) {
+export default function useCustomer() {
   const [loading, setLoading] = useState(false);
   const [customer, setCustomer] = useState<ICustomer | null>(null);
-  const loadCustomer = async () => {
-    if (!docNro || !companyId || !docTipo) return;
+  const [error, setError] = useState<string | null>(null);
 
+  const loadCustomer = async (
+    companyId: string,
+    docTipo: string,
+    docNro: string
+  ) => {
+    if (!companyId || !docTipo || !docNro) {
+      return;
+    }
     setLoading(true);
+    setError(null);
     try {
       const response = await customerService.get({
         companyId,
         docTipo,
         docNro,
       });
-      
-      setCustomer(response.customer);
+      if (response.customer) {
+        setCustomer(response.customer);
+      } else {
+        setError("No encontrado.");
+        setCustomer(null);
+      }
     } catch (error) {
       console.error("Error loading customer:", error);
+      setError("Error en la búsqueda.");
       setCustomer(null);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
-
-  useEffect(() => {
-    if (docNroCompleted && docNro.length > 1) {
-      loadCustomer();
-    }
-  }, [docNroCompleted]);
 
   return {
     loading,
     customer,
+    error,
+    setError,
+    setCustomer,
+    loadCustomer,
   };
 }

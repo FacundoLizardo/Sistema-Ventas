@@ -1,38 +1,55 @@
 import SalesContainer from "@/components/sales/SalesContainer";
+import { SalesContextProvider } from "@/context/salesContext";
 import CompaniesServices from "@/services/companies/CompaniesServices";
 import ProductsServices from "@/services/products/ProductsServices";
-import UsersServices from "@/services/user/UsersServices";
+import UsersServices from "@/services/users/UsersServices";
+
+export const dynamic = 'force-dynamic';
+
+const fetchData = async (
+  companyId: string,
+  branchId: string,
+  userId: string
+) => {
+  const [userData, productsData, companyData] = await Promise.all([
+    UsersServices.get(userId),
+    ProductsServices.getAll({ companyId, branchId }),
+    CompaniesServices.get(companyId),
+  ]);
+
+  return { userData, productsData, companyData };
+};
 
 export default async function Page({
   params: { companyId },
 }: {
-  params: {
-    locale: string;
-    companyId: string;
-  };
+  params: { companyId: string };
 }) {
   const { userId, branchId } = await UsersServices.userSession();
+  const { userData, productsData, companyData } = await fetchData(
+    companyId,
+    branchId,
+    userId
+  );
 
-  const [userData, productsData, companyData] = await Promise.all([
-    UsersServices.get(userId),
-    ProductsServices.getAll({companyId, branchId}),
-    CompaniesServices.get(companyId),
-  ]);
-
-  const userBranch = userData?.user?.branch
+  const userBranch = userData.user?.branch
     ? `${userData.user.branch.ptoVta} - ${userData.user.branch.name}`
     : "";
-  const products = productsData.products;
-  const company = companyData.company;
 
   return (
     <main className="w-full">
-      <SalesContainer
-        products={products}
-        userBranch={userBranch}
-        company={company}
-        companyId={companyId}
-      />
+      <SalesContextProvider>
+        <SalesContainer
+          products={productsData.products}
+          userBranch={userBranch}
+          company={companyData.company}
+          companyId={companyId}
+          userId={userId}
+          branchId={branchId}
+          userBranchPtoVta={userData.user?.branch?.ptoVta}
+          userName={`${userData.user.firstName} ${userData.user.lastName}`}
+        />
+      </SalesContextProvider>
     </main>
   );
 }

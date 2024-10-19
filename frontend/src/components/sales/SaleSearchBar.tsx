@@ -15,11 +15,16 @@ type SaleSearchBarProps = {
 export default function SaleSearchBar({ products }: SaleSearchBarProps) {
   const { addProduct } = useSales();
   const [open, setOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleProductClick = (product: AfipProducts) => {
     addProduct(product);
     setOpen(false);
   };
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div
@@ -33,6 +38,7 @@ export default function SaleSearchBar({ products }: SaleSearchBarProps) {
           placeholder="Buscar producto o servicio..."
           className="bg-transparent border-none text-primary"
           onClick={() => setOpen(!open)}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
         <SearchIcon className="text-background size-5 mr-4" />
       </div>
@@ -41,28 +47,49 @@ export default function SaleSearchBar({ products }: SaleSearchBarProps) {
         <div className="absolute top-10 h-fit w-full bg-card-foreground rounded-b-md p-2">
           <ScrollArea className="flex flex-col max-h-[250px]">
             <ul className="flex flex-col gap-1 cursor-pointer">
-              {products.map((product) => (
-                <li
-                  key={product.id}
-                  className="flex justify-between hover:bg-muted-foreground p-2 gap-2 rounded"
-                  onClick={() =>
-                    handleProductClick({
-                      id: product.id,
-                      name: product.name,
-                      finalPrice: product.finalPrice,
-                    })
-                  }
-                >
-                  <p>{product.name}</p>
-                  <div>
-                    {product.stock > 0 ? (
-                      <Badge variant="default">Disponible</Badge>
-                    ) : (
-                      <Badge variant="destructive">Agotado</Badge>
-                    )}
-                  </div>
+              {filteredProducts.length > 0 ? (
+                filteredProducts.map((product) => (
+                  <li
+                    key={product.id}
+                    className="flex justify-between hover:bg-muted-foreground p-2 gap-2 rounded"
+                    onClick={() =>
+                      handleProductClick({
+                        id: product.id,
+                        name: product.name,
+                        finalPrice: product.finalPrice,
+                      })
+                    }
+                  >
+                    <p>
+                      {product.name.replace(/\b\w/g, (char) =>
+                        char.toUpperCase()
+                      )}
+                    </p>
+
+                    <div>
+                      {Array.isArray(product.stock) &&
+                      product.stock.length > 0 ? (
+                        <div className="flex flex-col">
+                          {product.stock.map((stockItem, index) => (
+                            <Badge key={index} variant="default">
+                              {stockItem.quantity}{" "}
+                              {stockItem.quantity !== 1
+                                ? "disponibles"
+                                : "disponible"}
+                            </Badge>
+                          ))}
+                        </div>
+                      ) : (
+                        <Badge variant="destructive">Agotado</Badge>
+                      )}
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <li className="text-center text-muted-foreground">
+                  No se encontraron productos
                 </li>
-              ))}
+              )}
             </ul>
 
             <ScrollBar />

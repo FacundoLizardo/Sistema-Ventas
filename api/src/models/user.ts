@@ -26,23 +26,7 @@ export interface UserCreationInterface
     "id" | "address" | "phoneNumber" | "cuit" | "createdAt" | "updatedAt"
   > {}
 
-class User
-  extends Model<UserInterface, UserCreationInterface>
-  implements UserInterface
-{
-  public id!: string;
-  public firstName!: string;
-  public lastName!: string;
-  public email!: string;
-  public password!: string;
-  public address?: string;
-  public phoneNumber?: string;
-  public cuit?: string;
-  public enabled!: boolean;
-  public role!: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
+class User extends Model<UserInterface, UserCreationInterface> {}
 
 export default (sequelize: Sequelize) => {
   User.init(

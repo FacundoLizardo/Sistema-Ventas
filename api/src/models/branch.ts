@@ -20,23 +20,7 @@ export interface BranchCreationInterface
     "id" | "afipId" | "hours" | "phoneNumber"
   > {}
 
-class Branch
-  extends Model<BranchInterface, BranchCreationInterface>
-  implements BranchInterface
-{
-  public id!: string;
-  public ptoVta!: number;
-  public afipId?: string;
-  public name!: string;
-  public location!: string;
-  public isStorage?: boolean;
-  public enable?: boolean;
-  public manager?: string[];
-  public hours?: string;
-  public phoneNumber?: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
+class Branch extends Model<BranchInterface, BranchCreationInterface> {}
 
 export default (sequelize: Sequelize) => {
   Branch.init(

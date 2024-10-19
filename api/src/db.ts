@@ -1,5 +1,4 @@
 import { Sequelize } from "sequelize";
-import pg from "pg";
 import ProductModel from "./models/product";
 import UserModel from "./models/user";
 import BranchModel from "./models/branch";
@@ -11,33 +10,22 @@ import SupplierModel from "./models/suppliers";
 import CashRegisterModel from "./models/cashRegister";
 import CompanyModel from "./models/company";
 import StockModel from "./models/stock";
-import { NODE_ENV, DB_URL, DB_USER, DB_PASSWORD, DB_HOST } from "./config";
+import CategoryModel from "./models/category";
+import SubCategoryModel from "./models/subCategory";
+import { DB_URL } from "./config";
 
 /* ----- Utils ----- */
 export const blueText = "\x1b[34m%s\x1b[0m";
 export const greenText = "\x1b[32m%s\x1b[0m";
 
-if (NODE_ENV === "production" && !DB_URL) {
-  throw new Error("DB_URL must be defined in production environment");
-}
-if (NODE_ENV === "development" && (!DB_USER || !DB_PASSWORD || !DB_HOST)) {
-  throw new Error(
-    "DB_USER, DB_PASSWORD, and DB_HOST must be defined in development environment"
-  );
+if (!DB_URL) {
+  throw new Error("DB_URL must be defined");
 }
 
-const sequelize =
-  NODE_ENV === "production"
-    ? new Sequelize(DB_URL!, {
-        logging: false,
-        dialectModule: pg,
-        dialect: "postgres",
-      })
-    : new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/gpi`, {
-        logging: false,
-        dialectModule: pg,
-        dialect: "postgres",
-      });
+const sequelize = new Sequelize(DB_URL, {
+  logging: false,
+  dialect: "postgres",
+});
 
 export const syncDatabase = async () => {
   try {
@@ -65,6 +53,8 @@ SupplierModel(sequelize);
 CashRegisterModel(sequelize);
 CompanyModel(sequelize);
 StockModel(sequelize);
+CategoryModel(sequelize);
+SubCategoryModel(sequelize);
 
 const {
   Product,
@@ -78,6 +68,8 @@ const {
   CashRegister,
   Company,
   Stock,
+  Category,
+  SubCategory,
 } = sequelize.models;
 
 /* ----- Relationships Setup ----- */
@@ -125,6 +117,24 @@ Stock.belongsTo(User, { foreignKey: "userId" });
 Product.hasMany(Stock, { foreignKey: "productId", as: "stock" });
 Stock.belongsTo(Product, { foreignKey: "productId", as: "stock" });
 
+Category.hasMany(Product, { foreignKey: "categoryId", as: "category" });
+Product.belongsTo(Category, { foreignKey: "categoryId", as: "category" });
+
+Category.hasMany(SubCategory, { foreignKey: "categoryId" });
+SubCategory.belongsTo(Category, { foreignKey: "categoryId" });
+
+SubCategory.hasMany(Product, {
+  foreignKey: "subCategoryId",
+  as: "subCategory",
+});
+Product.belongsTo(SubCategory, {
+  foreignKey: "subCategoryId",
+  as: "subCategory",
+});
+
+Company.hasMany(Category, { foreignKey: "companyId" });
+Category.belongsTo(Company, { foreignKey: "companyId" });
+
 export {
   sequelize,
   Product,
@@ -138,4 +148,6 @@ export {
   CashRegister,
   Company,
   Stock,
+  Category,
+  SubCategory,
 };

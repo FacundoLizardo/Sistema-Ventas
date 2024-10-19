@@ -28,25 +28,7 @@ export interface CustomerCreationInterface
     | "enableDebt"
   > {}
 
-class Customer
-  extends Model<CustomerInterface, CustomerCreationInterface>
-  implements CustomerInterface
-{
-  public id!: string;
-  public customerType!: "person" | "company";
-  public docTipo?: string;
-  public docNro?: string;
-  public firstName?: string;
-  public lastName?: string;
-  public companyName?: string;
-  public email!: string;
-  public address?: string;
-  public phoneNumber?: string;
-  public dateOfBirth?: Date;
-  public enableDebt?: boolean;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
+class Customer extends Model<CustomerInterface, CustomerCreationInterface> {}
 
 export default (sequelize: Sequelize) => {
   Customer.init(

@@ -121,9 +121,9 @@ export default function LoginClient({ locale }: { locale: string }) {
             <ButtonWithLoading
               loading={isSubmitting}
               loadingText="Ingresando..."
-              variant="gradient"
+              variant="outline"
               className="flex flex-row items-center w-full"
-              size={"default"}
+              size={"sm"}
               type="submit"
               disabled={submitDisabled || isSubmitting}
             >
