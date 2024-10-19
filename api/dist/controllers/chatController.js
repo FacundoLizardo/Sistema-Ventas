@@ -1,17 +1,27 @@
-import { Request, Response } from "express";
-import OpenAI from "openai"; // Importar el tipo correcto
-import { OPENAI_API_KEY } from "../config";
-
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const openai_1 = __importDefault(require("openai")); // Importar el tipo correcto
+const config_1 = require("../config");
 // Inicialización de OpenAI con la API key
-const openai = new OpenAI({
-  apiKey: OPENAI_API_KEY,
+const openai = new openai_1.default({
+    apiKey: config_1.OPENAI_API_KEY,
 });
-
-
 // Contexto fijo que describe las capacidades de la aplicación
 const appContext = {
-  role: 'system',
-  content: `Eres un asistente experto en GPI360, una aplicación para la gestión integral de negocios. 
+    role: 'system',
+    content: `Eres un asistente experto en GPI360, una aplicación para la gestión integral de negocios. 
   Actuarás como un vendedor profesional y amigable. 
   Si no puedes responder alguna pregunta, sugiere al usuario que se contacte con nosotros por WhatsApp o por email, 
   respetando el formato de los links y manteniendo una comunicación clara y eficiente.
@@ -93,36 +103,31 @@ Este prompt contiene ahora toda la información esencial sobre GPI360, incluidas
 
   `
 };
-
 class ChatController {
-  async postMessage(
-    req: Request,
-    res: Response
-  ): Promise<void> {
-    try {
-      
-      const { conversation, message } = req.body;
-
-      const messages = [
-        appContext,  // Contexto inicial
-        ...conversation.map((msg: {role: 'user' | 'assistant', content: string}) => ({
-          role: msg.role as 'user' | 'assistant',
-          content: msg.content,
-        })),
-        { role: 'user', content: message },  // El nuevo mensaje del usuario
-      ];
-
-      const response = await openai.chat.completions.create({
-        model: "gpt-4",
-        messages,
-      });
-
-      const assistantMessage = response.choices[0].message?.content;
-      res.json({ response: assistantMessage });
-    } catch (error) {
-      res.status(500).json({ error: "Error al procesar la solicitud" });
+    postMessage(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            try {
+                const { conversation, message } = req.body;
+                const messages = [
+                    appContext, // Contexto inicial
+                    ...conversation.map((msg) => ({
+                        role: msg.role,
+                        content: msg.content,
+                    })),
+                    { role: 'user', content: message }, // El nuevo mensaje del usuario
+                ];
+                const response = yield openai.chat.completions.create({
+                    model: "gpt-4",
+                    messages,
+                });
+                const assistantMessage = (_a = response.choices[0].message) === null || _a === void 0 ? void 0 : _a.content;
+                res.json({ response: assistantMessage });
+            }
+            catch (error) {
+                res.status(500).json({ error: "Error al procesar la solicitud" });
+            }
+        });
     }
-  }
 }
-
-export default new ChatController();
+exports.default = new ChatController();

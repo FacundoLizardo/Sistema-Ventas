@@ -1,12 +1,11 @@
 "use server";
 
 interface IChatMessage {
+  conversation: { role: 'user' | 'assistant'; content: string }[];
   message: string;
 }
 
-export const postChatMessageService = async (
-  params: IChatMessage,
-) => {
+export const postChatMessageService = async (params: IChatMessage) => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chats`,
@@ -18,6 +17,7 @@ export const postChatMessageService = async (
         body: JSON.stringify(params),
       }
     );
+console.log(response);
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
