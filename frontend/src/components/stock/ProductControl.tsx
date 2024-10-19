@@ -10,6 +10,7 @@ import { useEditProduct } from "@/context/editProductContect";
 import BranchProductsTable from "./BranchProductsTable";
 import BranchesProductsTable from "./BranchesProductsTable";
 import { IBranch } from "@/services/branches/BranchesServices";
+import GlobalProductsTable from "./GlobalProductsTable";
 
 type ProductControlProps = {
   products: IProductFull[];
@@ -46,15 +47,20 @@ export default function ProductControl({
     );
   });
 
+  const filteredAllProducts = allProducts.filter((product) => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    return product.name.toLowerCase().includes(lowerCaseSearchTerm);
+  });
+
   return (
     <div>
       <Tabs defaultValue="branch">
         <div className="flex items-center">
           <TabsList>
-            <TabsTrigger value="branch">Inventario Actual</TabsTrigger>
-            <TabsTrigger value="branches">Inventario Sucursales</TabsTrigger>
+            <TabsTrigger value="branch">Stock Actual</TabsTrigger>
+            <TabsTrigger value="branches">Por Sucursal</TabsTrigger>
             <TabsTrigger value="all" className="hidden sm:block">
-              Inventario Total
+              Global
             </TabsTrigger>
           </TabsList>
         </div>
@@ -86,21 +92,44 @@ export default function ProductControl({
         </TabsContent>
         <TabsContent value="branches">
           <Card className="h-[460px]">
-            <CardHeader className="flex md:flex-row justify-between"></CardHeader>
+            <CardHeader className="flex h-12 flex-row items-center justify-between gap-4">
+              <div className="flex border rounded-md bg-background flex-1 items-center gap-2 mt-1.5">
+                <Input
+                  type="text"
+                  placeholder="Buscar por nombre o cetegoría de producto o servicio..."
+                  className="bg-transparent border-none text-primary"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <SearchIcon className="text-muted-foreground size-5 mr-4" />
+              </div>
+            </CardHeader>
             <CardContent>
               <BranchesProductsTable
-                allProducts={allProducts}
+                allProducts={filteredAllProducts}
                 branchesData={branchesData}
               />
             </CardContent>
-            <CardFooter></CardFooter>
           </Card>
         </TabsContent>
         <TabsContent value="all">
           <Card className="h-[460px]">
-            <CardHeader className="flex md:flex-row justify-between"></CardHeader>
-            <CardContent></CardContent>
-            <CardFooter></CardFooter>
+          <CardHeader className="flex h-12 flex-row items-center justify-between gap-4">
+              <div className="flex border rounded-md bg-background flex-1 items-center gap-2 mt-1.5">
+                <Input
+                  type="text"
+                  placeholder="Buscar por nombre o cetegoría de producto o servicio..."
+                  className="bg-transparent border-none text-primary"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <SearchIcon className="text-muted-foreground size-5 mr-4" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <GlobalProductsTable
+                allProducts={filteredAllProducts}
+                branchesData={branchesData}
+              />
+            </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
