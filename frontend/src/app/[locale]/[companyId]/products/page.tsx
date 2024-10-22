@@ -1,32 +1,26 @@
-import ProductControl from "@/components/stock/ProductControl";
-import ProductForm from "@/components/stock/ProductForm";
+import ProductControl from "@/components/products/ProductControl";
+import ProductForm from "@/components/products/ProductForm";
 import { EditProductProvider } from "@/context/editProductContect";
 import BranchesServices from "@/services/branches/BranchesServices";
 import CategoriesServices from "@/services/cetegories/CategoriesServices";
-import ProductsServices, {
-  IProduct,
-} from "@/services/products/ProductsServices";
+import ProductsServices from "@/services/products/ProductsServices";
 import SubCategoriesServices from "@/services/subCetegories/SubCategoriesServices";
 import UsersServices from "@/services/users/UsersServices";
 
 export const dynamic = "force-dynamic";
 
-const fetchData = async (companyId: string, branchId: string) => {
+const fetchData = async (companyId: string) => {
   try {
-    const [productsData, categoriesData, subCategoriesData, branchesData] = await Promise.all(
-      [
+    const [productsData, categoriesData, subCategoriesData, branchesData] =
+      await Promise.all([
         ProductsServices.get({ companyId }),
         CategoriesServices.get({ companyId }),
         SubCategoriesServices.get({ companyId }),
         BranchesServices.getAll(companyId),
-      ]
-    );
+      ]);
 
     return {
-      products: productsData.products.filter((product: IProduct) =>
-        product?.stock?.some((stockItem) => stockItem.branchId === branchId)
-      ),
-      allProducts: productsData.products,
+      products: productsData.products,
       categories: categoriesData.categories.map(
         ({ name, id }: { name: string; id: string }) => ({ name, id })
       ),
@@ -53,16 +47,15 @@ const fetchData = async (companyId: string, branchId: string) => {
   }
 };
 
-export default async function Page({
+export default async function ProductsPage({
   params: { companyId },
 }: {
   params: { companyId: string };
 }) {
   const { userId, branchId, isSuperAdmin, isOwner, isAdmin } =
     await UsersServices.userSession();
-  const { products, allProducts, categories, subCategories, branchesData } = await fetchData(
-    companyId,
-    branchId
+  const { products, categories, subCategories, branchesData } = await fetchData(
+    companyId
   );
 
   return (
@@ -70,7 +63,6 @@ export default async function Page({
       <main className="grid gap-4">
         <ProductControl
           products={products}
-          allProducts={allProducts}
           userId={userId}
           branchId={branchId}
           branchesData={branchesData}

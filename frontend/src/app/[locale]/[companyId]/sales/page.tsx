@@ -13,7 +13,7 @@ const fetchData = async (
 ) => {
   const [userData, productsData, companyData] = await Promise.all([
     UsersServices.get(userId),
-    ProductsServices.getAll({ companyId, branchId }),
+    ProductsServices.get({ companyId, branchId }),
     CompaniesServices.get(companyId),
   ]);
 

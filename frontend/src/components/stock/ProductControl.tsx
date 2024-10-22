@@ -10,7 +10,7 @@ import { useEditProduct } from "@/context/editProductContect";
 import BranchProductsTable from "./BranchProductsTable";
 import BranchesProductsTable from "./BranchesProductsTable";
 import { IBranch } from "@/services/branches/BranchesServices";
-import GlobalProductsTable from "./GlobalProductsTable";
+import GlobalProductsTable from "../stock/GlobalProductsTable";
 
 type ProductControlProps = {
   products: IProductFull[];

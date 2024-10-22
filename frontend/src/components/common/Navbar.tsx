@@ -13,6 +13,7 @@ const navigationLinks = (locale: string, companyId: string) => {
     { href: `${baseURL}/${locale}/${companyId}/dashboard`, name: "Control" },
     { href: `${baseURL}/${locale}/${companyId}/sales`, name: "Ventas" },
     { href: `${baseURL}/${locale}/${companyId}/stock`, name: "Inventario" },
+    { href: `${baseURL}/${locale}/${companyId}/products`, name: "Productos" },
     { href: `${baseURL}/${locale}/${companyId}/cetegories`, name: "Categorías" },
   ];
 

@@ -35,7 +35,6 @@ export interface IProduct {
 
 export interface IProductCreate extends Omit<IProduct, "id"> {
   userId: string;
-  branchId: string;
   categoryId?: string;
   subCategoryId?: string;
 }
@@ -54,7 +53,7 @@ class ProductsServices {
     }
   }
 
-  static async getAll({
+  static async get({
     companyId,
     branchId,
     name,
