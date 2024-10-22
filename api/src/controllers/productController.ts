@@ -35,7 +35,6 @@ class ProductController {
   async postProduct(req: Request, res: Response): Promise<void> {
     try {
       const { companyId } = req.params;
-      const stock = req.body.stock as { branchId: string; quantity: number }[];
       const data = req.body as ProductCreationInterface;
 
       if (!companyId) {
@@ -45,8 +44,7 @@ class ProductController {
 
       const newProduct = await ProductService.postProduct(
         data,
-        companyId,
-        stock
+        companyId
       );
 
       if (!newProduct) {

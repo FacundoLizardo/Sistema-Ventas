@@ -11,7 +11,6 @@ import {
 import { Badge } from "../ui/badge";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { capitalizeWords } from "@/lib/capitalizeWords";
-import { IBranch } from "@/services/branches/BranchesServices";
 import { IProductFull } from "@/services/products/ProductsServices";
 
 type BranchesProductsTableProps = {

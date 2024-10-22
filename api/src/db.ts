@@ -16,7 +16,7 @@ import { DB_URL } from "./config";
 
 /* ----- Utils ----- */
 export const blueText = "\x1b[34m%s\x1b[0m";
-export const greenText = "\x1b[32m%s\x1b[0m";
+export const yellowText = "\x1b[33m%s\x1b[0m";
 
 if (!DB_URL) {
   throw new Error("DB_URL must be defined");
@@ -75,9 +75,6 @@ const {
 /* ----- Relationships Setup ----- */
 // Ordenadas alfabéticamente por el nombre del modelo
 
-Branch.hasMany(Product, { foreignKey: "branchId" });
-Product.belongsTo(Branch, { foreignKey: "branchId" });
-
 Branch.hasMany(Stock, { foreignKey: "branchId" });
 Stock.belongsTo(Branch, { foreignKey: "branchId" });
 
@@ -96,9 +93,6 @@ Operation.belongsTo(Company, { foreignKey: "companyId" });
 Company.hasMany(Product, { foreignKey: "companyId" });
 Product.belongsTo(Company, { foreignKey: "companyId" });
 
-Company.hasMany(Stock, { foreignKey: "companyId" });
-Stock.belongsTo(Company, { foreignKey: "companyId" });
-
 Company.hasMany(User, { foreignKey: "companyId" });
 User.belongsTo(Company, { foreignKey: "companyId" });
 
@@ -110,9 +104,6 @@ Operation.belongsTo(User, { foreignKey: "userId" });
 
 User.hasMany(Product, { foreignKey: "userId" });
 Product.belongsTo(User, { foreignKey: "userId" });
-
-User.hasMany(Stock, { foreignKey: "userId" });
-Stock.belongsTo(User, { foreignKey: "userId" });
 
 Product.hasMany(Stock, { foreignKey: "productId", as: "stock" });
 Stock.belongsTo(Product, { foreignKey: "productId", as: "stock" });

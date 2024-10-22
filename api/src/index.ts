@@ -7,7 +7,7 @@ import mainRouter from "./routes";
 import loginRouter from "./routes/login";
 import { NODE_ENV, PORT } from "./config";
 import { authenticateToken } from "./utils/authenticateToken";
-import { greenText, syncDatabase } from "./db";
+import { yellowText, syncDatabase } from "./db";
 import seedDatabase from "./utils/seedDatabase";
 
 const app = express();
@@ -45,7 +45,7 @@ syncDatabase()
   .then(async () => {
     await seedDatabase();
     app.listen(PORT || 3000, () =>
-      console.log(greenText, `Server running on port ${PORT}`)
+      console.log(yellowText, `Server running on port ${PORT}`)
     );
   })
   .catch((error) => {

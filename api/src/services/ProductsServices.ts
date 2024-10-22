@@ -7,6 +7,7 @@ import {
 } from "../models/product";
 import { serviceError } from "../utils/serviceError";
 import StockServices from "./StockServices";
+import { IncludeOptions } from "sequelize/types";
 
 class ProductService {
   async getProducts({
@@ -21,8 +22,18 @@ class ProductService {
     try {
       const whereCondition: WhereOptions = { companyId };
 
+      const include: IncludeOptions[] = [
+        { model: Category, as: "category" },
+        { model: SubCategory, as: "subCategory" },
+      ];
+
       if (branchId) {
-        whereCondition.branchId = branchId;
+        include.push({
+          model: Stock,
+          as: "stock",
+          required: true,
+          where: { branchId },
+        } as IncludeOptions);
       }
 
       if (name) {
@@ -31,11 +42,7 @@ class ProductService {
 
       const products = await Product.findAll({
         where: whereCondition,
-        include: [
-          { model: Stock, as: "stock" },
-          { model: Category, as: "category" },
-          { model: SubCategory, as: "subCategory" },
-        ],
+        include,
         order: [["name", "ASC"]],
       });
 
@@ -46,10 +53,10 @@ class ProductService {
       serviceError(error);
     }
   }
+
   async postProduct(
     data: ProductCreationInterface,
-    companyId: string,
-    stock: Array<{ branchId: string; quantity: number }>
+    companyId: string
   ): Promise<ProductInterface | string> {
     try {
       const existingProduct = await Product.findOne({
@@ -68,14 +75,6 @@ class ProductService {
       });
 
       if (product) {
-        for (const item of stock) {
-          await StockServices.postStock({
-            branchId: item.branchId,
-            productId: product.getDataValue("id"),
-            quantity: item.quantity,
-          });
-        }
-
         return product.get({ plain: true }) as ProductInterface;
       } else {
         return "Product not created, please try again.";
@@ -135,19 +134,18 @@ export default new ProductService();
 //---------- TESTS ----------
 
 /* 
-      {
-        "name": "Tinto",
-        "category": "Vinos",
-        "cost": 50.00,
-        "finalPrice": 75.00,
-        "discount": 10.00,
-        "profitPercentage": 20,
-        "stock": 100,
-        "enabled": true,
-        "notesDescription": "Descripción de prueba",
-        "taxes": 5.00,
-        "barcode": "231351655648",
-        "branchId": "cb4f49aa-13f0-4b5f-805b-d8242e6987b1",
-        "userId": "b3b10faa-9c9e-425e-acc4-6ec1ad574bda"
+    {
+      "name": "chacabuco",
+      "categoryId": "6022d12f-bb91-4b51-88cc-66cb320912a3",
+      "cost": 222,
+      "finalPrice": 266,
+      "discount": 0,
+      "profitPercentage": 20,
+      "allowNegativeStock": false,
+      "trackStock": false,
+      "minimumStock": 0,
+      "enabled": true,
+      "notesDescription": "",
+      "barcode": "13235265"
     }
 */

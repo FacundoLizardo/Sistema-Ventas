@@ -57,7 +57,7 @@ export default function ProductControl({
       <Tabs defaultValue="branch">
         <div className="flex items-center">
           <TabsList>
-            <TabsTrigger value="branch">Stock Actual</TabsTrigger>
+            <TabsTrigger value="branch">Actual</TabsTrigger>
             <TabsTrigger value="branches">Por Sucursal</TabsTrigger>
             <TabsTrigger value="all" className="hidden sm:block">
               Global
