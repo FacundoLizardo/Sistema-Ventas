@@ -1,4 +1,4 @@
-import { WhereOptions } from "sequelize";
+import { Op, WhereOptions } from "sequelize";
 import { Product, Stock, Category, SubCategory } from "../db";
 import {
   ProductInterface,
@@ -37,7 +37,9 @@ class ProductService {
       }
 
       if (name) {
-        whereCondition.name = name;
+        whereCondition.name = {
+          [Op.like]: `%${name}%`,
+        };
       }
 
       const products = await Product.findAll({

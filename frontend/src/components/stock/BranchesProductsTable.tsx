@@ -34,7 +34,7 @@ export default function BranchesProductsTable({
   console.log("branchesData", branchesData);
   
   return (
-    <ScrollArea className="flex flex-col h-[350px]">
+    <ScrollArea className="flex flex-col h-[600px]">
       <Table>
         <TableHeader>
           <UITableRow>
@@ -64,7 +64,7 @@ export default function BranchesProductsTable({
                   </Badge>
                 </TableCell>
                 <TableCell className="p-2 text-center">
-                  {getBranchNameById(product.branchId, branchesData)}
+                  
                 </TableCell>
                 <TableCell className="p-2 text-center">
                   {product?.stock?.map((stock) => stock.quantity)}

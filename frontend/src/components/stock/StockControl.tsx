@@ -2,22 +2,28 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { SearchIcon } from "lucide-react";
-import { Card, CardHeader, CardContent } from "../ui/card";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+  CardDescription,
+} from "../ui/card";
 import { IProductFull } from "@/services/products/ProductsServices";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { useEditProduct } from "@/context/editProductContect";
-import BranchProductsTable from "./BranchProductsTable";
+import BranchStockTable from "./BranchStockTable";
 import BranchesProductsTable from "./BranchesProductsTable";
 import { IBranch } from "@/services/branches/BranchesServices";
-import GlobalProductsTable from "../stock/GlobalProductsTable";
+import GlobalProductsTable from "./GlobalProductsTable";
+import StockForm from "./StockForm";
 
 type ProductControlProps = {
   products: IProductFull[];
   allProducts: IProductFull[];
   userId: string;
   branchId: string;
-  categories: string[];
   isSuperAdmin: boolean;
   isOwner: boolean;
   isAdmin: boolean;
@@ -25,7 +31,7 @@ type ProductControlProps = {
   branchesData: IBranch[];
 };
 
-export default function ProductControl({
+export default function StockControl({
   products,
   allProducts,
   branchId,
@@ -64,9 +70,17 @@ export default function ProductControl({
             </TabsTrigger>
           </TabsList>
         </div>
-        <TabsContent value="branch">
-          <Card className="h-[460px]">
-            <CardHeader className="flex h-12 flex-row items-center justify-between gap-4">
+        <TabsContent value="branch" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Stock de la Sucursal</CardTitle>
+              <CardDescription>
+                Gestiona el stock de productos en tu sucursal. Selecciona un
+                producto y ajusta su cantidad según sea necesario para mantener
+                un inventario actualizado.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               <div className="flex border rounded-md bg-background flex-1 items-center gap-2 mt-1.5">
                 <Input
                   type="text"
@@ -76,9 +90,7 @@ export default function ProductControl({
                 />
                 <SearchIcon className="text-muted-foreground size-5 mr-4" />
               </div>
-            </CardHeader>
-            <CardContent>
-              <BranchProductsTable
+              <BranchStockTable
                 products={filteredProducts}
                 selectProduct={selectProduct}
                 branchId={branchId}
@@ -89,10 +101,19 @@ export default function ProductControl({
               />
             </CardContent>
           </Card>
+          <StockForm companyId={companyId} />
         </TabsContent>
         <TabsContent value="branches">
-          <Card className="h-[460px]">
-            <CardHeader className="flex h-12 flex-row items-center justify-between gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Stock por Sucursales</CardTitle>
+              <CardDescription>
+                Explora el inventario de productos y servicios en todas tus
+                sucursales, presentado de manera clara y estructurada para un
+                fácil seguimiento.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               <div className="flex border rounded-md bg-background flex-1 items-center gap-2 mt-1.5">
                 <Input
                   type="text"
@@ -102,8 +123,6 @@ export default function ProductControl({
                 />
                 <SearchIcon className="text-muted-foreground size-5 mr-4" />
               </div>
-            </CardHeader>
-            <CardContent>
               <BranchesProductsTable
                 allProducts={filteredAllProducts}
                 branchesData={branchesData}
@@ -112,8 +131,16 @@ export default function ProductControl({
           </Card>
         </TabsContent>
         <TabsContent value="all">
-          <Card className="h-[460px]">
-            <CardHeader className="flex h-12 flex-row items-center justify-between gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Stock Global de la Compañía</CardTitle>
+              <CardDescription>
+                Visualiza el inventario de productos a nivel global en toda la
+                compañía. Obtén una perspectiva clara del stock disponible en
+                todas las sucursales sin realizar modificaciones.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               <div className="flex border rounded-md bg-background flex-1 items-center gap-2 mt-1.5">
                 <Input
                   type="text"
@@ -123,11 +150,7 @@ export default function ProductControl({
                 />
                 <SearchIcon className="text-muted-foreground size-5 mr-4" />
               </div>
-            </CardHeader>
-            <CardContent>
-              <GlobalProductsTable
-                allProducts={filteredAllProducts}
-              />
+              <GlobalProductsTable allProducts={filteredAllProducts} />
             </CardContent>
           </Card>
         </TabsContent>

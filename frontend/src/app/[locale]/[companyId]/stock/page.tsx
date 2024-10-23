@@ -1,5 +1,4 @@
-import ProductControl from "@/components/stock/ProductControl";
-import ProductForm from "@/components/stock/ProductForm";
+import StockControl from "@/components/stock/StockControl";
 import { EditProductProvider } from "@/context/editProductContect";
 import BranchesServices from "@/services/branches/BranchesServices";
 import CategoriesServices from "@/services/cetegories/CategoriesServices";
@@ -13,14 +12,13 @@ export const dynamic = "force-dynamic";
 
 const fetchData = async (companyId: string, branchId: string) => {
   try {
-    const [productsData, categoriesData, subCategoriesData, branchesData] = await Promise.all(
-      [
+    const [productsData, categoriesData, subCategoriesData, branchesData] =
+      await Promise.all([
         ProductsServices.get({ companyId }),
         CategoriesServices.get({ companyId }),
         SubCategoriesServices.get({ companyId }),
         BranchesServices.getAll(companyId),
-      ]
-    );
+      ]);
 
     return {
       products: productsData.products.filter((product: IProduct) =>
@@ -60,7 +58,7 @@ export default async function Page({
 }) {
   const { userId, branchId, isSuperAdmin, isOwner, isAdmin } =
     await UsersServices.userSession();
-  const { products, allProducts, categories, subCategories, branchesData } = await fetchData(
+  const { products, allProducts, branchesData } = await fetchData(
     companyId,
     branchId
   );
@@ -68,24 +66,16 @@ export default async function Page({
   return (
     <EditProductProvider>
       <main className="grid gap-4">
-        <ProductControl
+        <StockControl
           products={products}
           allProducts={allProducts}
           userId={userId}
           branchId={branchId}
           branchesData={branchesData}
-          categories={categories}
           companyId={companyId}
           isSuperAdmin={isSuperAdmin}
           isOwner={isOwner}
           isAdmin={isAdmin}
-        />
-        <ProductForm
-          categories={categories}
-          subCategories={subCategories}
-          branchId={branchId}
-          companyId={companyId}
-          userId={userId}
         />
       </main>
     </EditProductProvider>

@@ -21,7 +21,7 @@ export default function GlobalProductsTable({
   allProducts,
 }: BranchesProductsTableProps) {
   return (
-    <ScrollArea className="flex flex-col h-[350px]">
+    <ScrollArea className="flex flex-col h-[600px]">
       <Table>
         <TableHeader>
           <UITableRow>

@@ -36,6 +36,7 @@ import {
 import { capitalizeWords } from "@/lib/capitalizeWords";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import StockForm from "./StockForm";
 
 type BranchProductsTableProps = {
   products: IProduct[];
@@ -47,7 +48,7 @@ type BranchProductsTableProps = {
   isAdmin: boolean;
 };
 
-const BranchProductsTable = ({
+const BranchStockTable = ({
   products,
   branchId,
   selectProduct,
@@ -58,52 +59,8 @@ const BranchProductsTable = ({
 }: BranchProductsTableProps) => {
   const router = useRouter();
 
-  const handleDelete = (customerId: string) => {
-    try {
-      const request = ProductsServices.delete({ companyId, id: customerId });
-
-      toast.promise(request, {
-        loading: "Eliminando...",
-        success: () => {
-          router.refresh();
-          return "El producto fue eliminado con éxito.";
-        },
-        error: (error) => {
-          console.error("Error al eliminar:", error);
-          return `Error al eliminar el producto.`;
-        },
-      });
-    } catch (error) {
-      console.error("Error en el bloque catch:", error);
-      toast.error("Error al eliminar el producto.");
-    }
-  };
-
-  const handleActivate = async (productId: string, currentStatus: boolean) => {
-    try {
-      const newStatus = !currentStatus;
-      const request = ProductsServices.put({
-        productId,
-        enabled: newStatus,
-      });
-
-      toast.promise(request, {
-        loading: "Actualizando estado...",
-        success: () => {
-          router.refresh();
-          return `El producto fue ${
-            newStatus ? "activado" : "desactivado"
-          } con éxito.`;
-        },
-        error: (error) => {
-          console.error("Error al modificar el estado:", error);
-          return `Error al modificar el estado del producto.`;
-        },
-      });
-    } catch (error) {
-      console.error("Error en el bloque catch:", error);
-      toast.error("Error al modificar el estado del producto.");
-    }
+  const handleDelete = async (id: string) => {
+    console.log(id);
   };
 
   const canDeleteProduct = isSuperAdmin || isAdmin || isOwner;
@@ -111,7 +68,7 @@ const BranchProductsTable = ({
   const canEditProduct = isSuperAdmin || isAdmin || isOwner;
 
   return (
-    <ScrollArea className="flex flex-col h-[350px]">
+    <ScrollArea className="flex flex-col h-[600px]">
       <Table>
         <TableHeader>
           <UITableRow>
@@ -148,7 +105,11 @@ const BranchProductsTable = ({
                   </Badge>
                 </TableCell>
                 <TableCell className="px-2 py-0 text-center">
-                  {product?.finalPrice ? `$ ${product?.finalPrice}` : <span className="text-xs text-primary">n/d</span>}
+                  {product?.finalPrice ? (
+                    `$ ${product?.finalPrice}`
+                  ) : (
+                    <span className="text-xs text-primary">n/d</span>
+                  )}
                 </TableCell>
                 <TableCell
                   className={
@@ -219,37 +180,6 @@ const BranchProductsTable = ({
                           </AlertDialog>
                         </DropdownMenuItem>
                       )}
-                      {canEditProduct && (
-                        <DropdownMenuItem asChild>
-                          <AlertDialog>
-                            <AlertDialogTrigger className="px-2 py-1.5 hover:bg-accent hover:text-accent-foreground rounded-md">
-                              {" "}
-                              {product.enabled ? "Desactivar" : "Activar"}
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  ¿{product.enabled ? "Desactivar" : "Activar"}{" "}
-                                  producto?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Esta acción puede ser revertida.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() =>
-                                    handleActivate(product.id, product.enabled)
-                                  }
-                                >
-                                  Confirmar
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </DropdownMenuItem>
-                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -264,4 +194,4 @@ const BranchProductsTable = ({
   );
 };
 
-export default BranchProductsTable;
+export default BranchStockTable;
