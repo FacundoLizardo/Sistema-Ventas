@@ -113,13 +113,15 @@ class ChatController {
       ];
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-3.5-turbo",
         messages,
       });
 
       const assistantMessage = response.choices[0].message?.content;
       res.json({ response: assistantMessage });
     } catch (error) {
+      console.log({error});
+      
       res.status(500).json({ error: "Error al procesar la solicitud" });
     }
   }

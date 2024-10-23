@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import LoginClient from "./LoginForm";
 import { cookies } from "next/headers";
-import ChatComponent from "@/components/openai/chat";
 import Logo from "@/components/common/Logo";
+import { BubbleChat } from "@/components/common/BubbleChat";
 
 export default async function Page({
   params,
@@ -27,14 +27,16 @@ export default async function Page({
   }
 
   return (
-    <div className="grid md:grid-cols-2 h-screen justify-center items-center gap-4">
-      <div className="flex place-content-center">
-        <Logo />
+    <div className="absolute">
+      <div className="relative grid md:grid-cols-2 h-screen justify-center items-center gap-4">
+        <div className="flex place-content-center">
+          <Logo />
+        </div>
+        <div className="flex place-content-center">
+          <LoginClient locale={locale || "default"} />
+        </div>
       </div>
-      <div className="flex place-content-center">
-        <LoginClient locale={locale || "default"} />
-      </div>
-      <ChatComponent />
+      <BubbleChat />
     </div>
   );
 }

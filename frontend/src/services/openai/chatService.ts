@@ -17,7 +17,7 @@ export const postChatMessageService = async (params: IChatMessage) => {
         body: JSON.stringify(params),
       }
     );
-console.log(response);
+    console.log(response);
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
