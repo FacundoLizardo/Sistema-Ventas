@@ -27,7 +27,7 @@ export default async function Page({
   }
 
   return (
-    <div className="absolute">
+    <>
       <div className="relative grid md:grid-cols-2 h-screen justify-center items-center gap-4">
         <div className="flex place-content-center">
           <Logo />
@@ -37,6 +37,6 @@ export default async function Page({
         </div>
       </div>
       <BubbleChat />
-    </div>
+    </>
   );
 }
