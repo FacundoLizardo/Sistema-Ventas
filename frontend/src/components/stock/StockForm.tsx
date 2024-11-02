@@ -27,6 +27,7 @@ import { Form } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { toast } from "sonner";
 
 async function handleGetProduct({
   companyId,
@@ -69,6 +70,22 @@ export default function StockForm({ companyId }: StockFormProps) {
     mode: "onChange",
   });
 
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const request = await StockServices.post({
+      companyId,
+      data,
+    });
+
+    toast.promise(Promise.resolve(request), {
+      loading: "Creando el stock...",
+      success: () => {
+        form.reset();
+        return "El stock fue creado con éxito.";
+      },
+      error: "Error al crear el stock.",
+    });
+  };
+
   const debouncedSearch = useRef(
     debounce(async (value: string) => {
       if (value.trim().length <= 1) {
@@ -107,7 +124,7 @@ export default function StockForm({ companyId }: StockFormProps) {
 
   return (
     <Form {...form}>
-      <form>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card>
           <CardHeader>
             <CardTitle>Gestión de stock</CardTitle>
