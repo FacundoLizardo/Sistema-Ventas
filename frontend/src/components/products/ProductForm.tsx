@@ -263,7 +263,7 @@ export default function ProductForm({
                   ? "Actualizando el producto..."
                   : "Creando el producto..."
               }
-              variant="gradient"
+              variant="default"
               size={"sm"}
               type="submit"
               disabled={submitDisabled}
